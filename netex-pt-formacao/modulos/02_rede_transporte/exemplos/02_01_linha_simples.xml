@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 02_01 — Linha de Autocarro Simples em NeTEx
+  =====================================================
+  Curso: NeTEx PT Formação — Módulo 2: Rede de Transporte
+  Fonte dos dados: STCP Porto, Linha 200 [DATA-03]
+
+  O que este ficheiro demonstra:
+  - Line com código público, modo de transporte e apresentação visual
+  - Direction (duas direções da linha)
+  - 5 ScheduledStopPoint representativos da Linha 200
+  - Route com lista de RoutePoint (sequência topológica)
+  - ServiceJourneyPattern com StopPointInJourneyPattern (padrão de paragens)
+  - Como referenciar objetos entre si (ref=)
+
+  Este é o exemplo MÍNIMO — suficiente para descrever uma linha num perfil básico.
+  Para o exemplo completo com todas as 30 paragens e ambas as direções, ver 02_02_linha_completa.xml.
+
+  Referências:
+  - [STD-01] CEN/TS 16614-1:2024 (NeTEx Parte 1)
+  - [PT-01]  IMT. Perfil Nacional NeTEx Portugal
+  - [DATA-03] STCP. Feed GTFS Porto, versão Escolar 228 (2026-04-30)
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <ParticipantRef>PT:STCP</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:STCP:CompositeFrame:STCP_L200_Simples:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+      </validBetween>
+      <frames>
+
+        <!-- ResourceFrame: operador e autoridade (ver Módulo 1) -->
+        <ResourceFrame id="PT:STCP:ResourceFrame:L200_RF:LOC" version="1">
+          <organisations>
+            <Operator id="PT:STCP:Operator:STCP:LOC" version="1">
+              <Name>Sociedade de Transportes Colectivos do Porto, E.I.M., S.A.</Name>
+              <ShortName>STCP</ShortName>
+              <PublicCode>STCP</PublicCode>
+            </Operator>
+          </organisations>
+        </ResourceFrame>
+
+        <!--
+          ServiceFrame: contém a definição da rede lógica.
+          Este é o frame principal deste módulo.
+        -->
+        <ServiceFrame id="PT:STCP:ServiceFrame:L200_SF:LOC" version="1">
+
+          <!--
+            Network: agrupamento de linhas sob uma marca comum.
+            A rede STCP Porto agrega todas as linhas de autocarro.
+          -->
+          <Network id="PT:STCP:Network:STCP_Porto:LOC" version="1">
+            <Name>Rede de Autocarros STCP — Porto</Name>
+            <ShortName>STCP</ShortName>
+            <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+          </Network>
+
+          <!--
+            directions: as direções possíveis da linha.
+            A Linha 200 tem duas direções:
+            - Direção "Castelo do Queijo" (IDA, direction_id=0 no GTFS)
+            - Direção "Bolhão" (VOLTA, direction_id=1 no GTFS)
+
+            No GTFS, a direção é apenas direction_id=0 ou 1, com trip_headsign.
+            Em NeTEx, a Direction é uma entidade com identidade própria e nome descritivo.
+          -->
+          <directions>
+            <Direction id="PT:STCP:Direction:200_CQ:LOC" version="1">
+              <Name>Castelo do Queijo</Name>
+            </Direction>
+            <Direction id="PT:STCP:Direction:200_BL:LOC" version="1">
+              <Name>Bolhão</Name>
+            </Direction>
+          </directions>
+
+          <!--
+            lines: lista de linhas comerciais.
+            Neste exemplo, apenas a Linha 200.
+          -->
+          <lines>
+            <!--
+              Line: representa a linha como os passageiros a conhecem.
+              NÃO contém a sequência de paragens — isso é a Route.
+
+              Campos mapeados do GTFS routes.txt:
+                route_id         → id
+                agency_id        → OperatorRef/ref
+                route_short_name → PublicCode
+                route_long_name  → Name
+                route_type=3     → TransportMode=bus
+                route_color      → Presentation/Colour
+                route_text_color → Presentation/TextColour
+                route_url        → Url
+            -->
+            <Line id="PT:STCP:Line:200:LOC" version="1">
+              <Name>Bolhão — Castelo do Queijo</Name>
+              <ShortName>200</ShortName>
+              <PublicCode>200</PublicCode>
+              <TransportMode>bus</TransportMode>
+              <TransportSubmode>
+                <BusSubmode>localBus</BusSubmode>
+              </TransportSubmode>
+              <Presentation>
+                <Colour>187EC2</Colour>
+                <TextColour>FFFFFF</TextColour>
+              </Presentation>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+              <NetworkRef ref="PT:STCP:Network:STCP_Porto:LOC" version="1"/>
+              <Url>https://www.stcp.pt/pt/viajar/linhas/?linha=200</Url>
+            </Line>
+          </lines>
+
+          <!--
+            scheduledStopPoints: pontos lógicos de paragem.
+            Neste exemplo simplificado, usamos 5 paragens representativas.
+
+            ScheduledStopPoint = o ponto de paragem do ponto de vista do horário.
+            É um conceito LÓGICO — não é o edifício físico (isso é StopPlace/Quay).
+
+            Campos mapeados do GTFS stops.txt:
+              stop_id   → id (com formato NeTEx)
+              stop_name → Name
+              stop_lat  → Location/Latitude
+              stop_lon  → Location/Longitude
+              (zone_id  → tariffZones, ver Módulo 6)
+          -->
+          <scheduledStopPoints>
+
+            <!--
+              Bolhão — terminal de partida da Linha 200.
+              GTFS: stop_id=BLRB1, lat=41.151868, lon=-8.607115, zone_id=PRT1
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1">
+              <Name>Bolhão</Name>
+              <Location>
+                <Longitude>-8.607115</Longitude>
+                <Latitude>41.151868</Latitude>
+              </Location>
+            </ScheduledStopPoint>
+
+            <!--
+              Carmo — paragem no centro histórico.
+              GTFS: stop_id=CMO, lat=41.147223, lon=-8.616926, zone_id=PRT1
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1">
+              <Name>Carmo</Name>
+              <Location>
+                <Longitude>-8.616926</Longitude>
+                <Latitude>41.147223</Latitude>
+              </Location>
+            </ScheduledStopPoint>
+
+            <!--
+              Praça da Galiza — fronteira aproximada entre centro e zona ribeirinha.
+              GTFS: stop_id=PRG4, lat=41.152531, lon=-8.627041, zone_id=PRT1
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:PRG4:LOC" version="1">
+              <Name>Praça da Galiza</Name>
+              <Location>
+                <Longitude>-8.627041</Longitude>
+                <Latitude>41.152531</Latitude>
+              </Location>
+            </ScheduledStopPoint>
+
+            <!--
+              Mercado da Foz — zona costeira ocidental do Porto.
+              GTFS: stop_id=MFZ1, lat=41.155048, lon=-8.673343, zone_id=PRT2
+
+              Nota: a mudança de zona tarifária (PRT1 → PRT2) ocorre entre a
+              paragem de Lordelo (LRD1, seq. 15) e esta.
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1">
+              <Name>Mercado da Foz</Name>
+              <Location>
+                <Longitude>-8.673343</Longitude>
+                <Latitude>41.155048</Latitude>
+              </Location>
+            </ScheduledStopPoint>
+
+            <!--
+              Castelo do Queijo — terminal da linha, junto à costa.
+              GTFS: stop_id=CQ10, lat=41.167422, lon=-8.689127, zone_id=PRT2
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1">
+              <Name>Castelo do Queijo</Name>
+              <Location>
+                <Longitude>-8.689127</Longitude>
+                <Latitude>41.167422</Latitude>
+              </Location>
+            </ScheduledStopPoint>
+
+          </scheduledStopPoints>
+
+          <!--
+            routes: sequências ordenadas de pontos por direção.
+            Uma Line tem pelo menos uma Route por direção.
+
+            Route vs Line:
+            - Line  = identidade comercial (o "200")
+            - Route = topologia (sequência concreta de pontos no espaço)
+          -->
+          <routes>
+            <!--
+              Route 200 IDA (Bolhão → Castelo do Queijo).
+              Contém a lista ordenada de RoutePoint.
+
+              Correspondência GTFS: um subset de trips.txt com direction_id=0.
+              No GTFS, a sequência de paragens está em stop_times.txt, não em trips.txt.
+              No NeTEx, a Route é reutilizável — a sequência de pontos existe independentemente das viagens.
+            -->
+            <Route id="PT:STCP:Route:200_IDA:LOC" version="1">
+              <Name>200 — Bolhão → Castelo do Queijo</Name>
+              <lineRef ref="PT:STCP:Line:200:LOC" version="1"/>
+              <DirectionRef ref="PT:STCP:Direction:200_CQ:LOC" version="1"/>
+              <DirectionType>outbound</DirectionType>
+
+              <!--
+                pointsInSequence: lista de RoutePoint na ordem do percurso.
+                Cada RoutePoint referencia um ScheduledStopPoint.
+
+                Nota: numa Route mais detalhada, os RoutePoint também podem
+                incluir RouteLink com geometria GeoJSON/GML.
+                Neste exemplo simplificado, usamos apenas os 5 pontos principais.
+              -->
+              <pointsInSequence>
+
+                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_01:LOC" version="1"
+                                       order="1">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+                  <ForAlighting>false</ForAlighting>  <!-- terminal de partida: não se sai aqui -->
+                  <ForBoarding>true</ForBoarding>
+                </PointInJourneyPattern>
+
+                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_02:LOC" version="1"
+                                       order="2">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                </PointInJourneyPattern>
+
+                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_03:LOC" version="1"
+                                       order="3">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:PRG4:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                </PointInJourneyPattern>
+
+                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_04:LOC" version="1"
+                                       order="4">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                </PointInJourneyPattern>
+
+                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_05:LOC" version="1"
+                                       order="5">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>false</ForBoarding>  <!-- terminal: não se embarca aqui -->
+                </PointInJourneyPattern>
+
+              </pointsInSequence>
+            </Route>
+          </routes>
+
+          <!--
+            journeyPatterns: padrões de viagem reutilizáveis.
+            Um ServiceJourneyPattern lista as paragens de uma viagem na sua ordem,
+            com informação adicional sobre embarque/desembarque.
+
+            Porque existe além da Route?
+            A Route descreve a topologia (pontos no espaço).
+            O ServiceJourneyPattern descreve o padrão comercial de uma viagem
+            (que paragens são servidas, qual é o destino, qual o padrão horário).
+            Uma Route pode ser usada por múltiplos ServiceJourneyPattern
+            (ex: viagem normal vs. viagem expresso que salta algumas paragens).
+          -->
+          <journeyPatterns>
+            <ServiceJourneyPattern id="PT:STCP:ServiceJourneyPattern:200_IDA_NORMAL:LOC" version="1">
+              <Name>200 IDA — Normal (todas as paragens)</Name>
+              <RouteRef ref="PT:STCP:Route:200_IDA:LOC" version="1"/>
+              <DirectionRef ref="PT:STCP:Direction:200_CQ:LOC" version="1"/>
+              <DestinationDisplayRef ref="PT:STCP:DestinationDisplay:CQ:LOC" version="1"/>
+
+              <pointsInSequence>
+
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_01:LOC" version="1"
+                                           order="1">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+                  <ForAlighting>false</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                  <DestinationDisplayRef ref="PT:STCP:DestinationDisplay:CQ:LOC" version="1"/>
+                </StopPointInJourneyPattern>
+
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_02:LOC" version="1"
+                                           order="2">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                </StopPointInJourneyPattern>
+
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_03:LOC" version="1"
+                                           order="3">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:PRG4:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                </StopPointInJourneyPattern>
+
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_04:LOC" version="1"
+                                           order="4">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                </StopPointInJourneyPattern>
+
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_05:LOC" version="1"
+                                           order="5">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>false</ForBoarding>
+                </StopPointInJourneyPattern>
+
+              </pointsInSequence>
+            </ServiceJourneyPattern>
+          </journeyPatterns>
+
+          <!--
+            destinationDisplays: os letreiros de destino mostrados nos veículos.
+            Em GTFS, este é o campo trip_headsign em trips.txt.
+            Em NeTEx, é uma entidade reutilizável referenciada por StopPointInJourneyPattern.
+          -->
+          <destinationDisplays>
+            <DestinationDisplay id="PT:STCP:DestinationDisplay:CQ:LOC" version="1">
+              <FrontText>Castelo do Queijo</FrontText>
+            </DestinationDisplay>
+            <DestinationDisplay id="PT:STCP:DestinationDisplay:BL:LOC" version="1">
+              <FrontText>Bolhão</FrontText>
+            </DestinationDisplay>
+          </destinationDisplays>
+
+        </ServiceFrame>
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+</PublicationDelivery>

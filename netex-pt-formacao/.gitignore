@@ -1,0 +1,27 @@
+# ===========================
+# Planos internos (não enviar para git)
+# ===========================
+PLANO_IMPLEMENTACAO.md
+netex_pt_formacao_plano.md
+
+# ===========================
+# Ficheiros de sistema
+# ===========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# Editores e IDEs
+# ===========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===========================
+# Temporários
+# ===========================
+*.tmp
+*.bak

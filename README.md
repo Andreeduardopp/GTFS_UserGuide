@@ -191,6 +191,268 @@ By following this end-to-end process — from rigorous field data collection, th
 
 ---
 
+# 2. Repository Overview
+
+This repository is organised as a small, dependency-light Python package named **PID-GTFS**, located under `PID-GTFS/`. The package provides a complete pipeline for working with GTFS data: validating raw records, persisting them in a referentially-consistent SQLite database, ingesting official GTFS ZIP feeds, exporting standards-compliant feeds back out, and checking the quality of those feeds with a pure-Python validator. The goal of the package is to embody the end-to-end data lifecycle described in Section 1 as a reusable library that any transit agency, app developer, or researcher can drop into their own project.
+
+The package layout is deliberately flat and consists of five modules under `src/pid_gfts/` plus a test suite under `tests/`:
+
+```
+PID-GTFS/
+├── pyproject.toml
+├── README.md
+└── src/pid_gtfs/
+    ├── __init__.py        # public API surface and top-level aliases
+    ├── schemas.py         # Pydantic v2 models for every GTFS table
+    ├── database.py        # SQLite persistence layer (GtfsDatabase)
+    ├── importer.py        # GTFS .zip → GtfsDatabase pipeline
+    ├── exporter.py        # GtfsDatabase → GTFS .zip pipeline
+    └── validator.py       # Pure-Python GTFS feed validator
+```
+
+The sub-sections below describe each module, why it matters within the broader GTFS lifecycle, and the main methods it exposes.
+
+## 2.1 `schemas.py` — Typed GTFS Models
+
+**Purpose.** This module defines Pydantic v2 models that mirror every standard GTFS table — plus the GTFS-ride extension — field-for-field. Each model encodes the data types, enumerations, and constraints documented in the GTFS specification, so that any record reaching the database has already been type-checked, range-checked, and cleaned of stray whitespace or empty strings.
+
+**Importance.** Schemas are the first line of defence described in Section 1.3 (Data Structure). Without a typed layer, invalid values such as a `route_type` outside the permitted integer codes, a `direction_id` other than 0 or 1, or a malformed `HH:MM:SS` time can silently enter the database and propagate into the exported feed. By expressing these rules once, in Python, the package guarantees that every downstream operation (import, upsert, export) sees only well-formed data.
+
+**Main exports.**
+- `GTFS_TABLE_MODELS` — a `dict` mapping each table name (`"agency"`, `"stops"`, `"routes"`, `"trips"`, `"stop_times"`, `"calendar"`, `"calendar_dates"`, `"shapes"`, `"frequencies"`, `"transfers"`, `"feed_info"`, plus the GTFS-ride tables) to its corresponding Pydantic model class. This is the single source of truth used by the importer and the database layer.
+- Model classes: `GtfsAgency`, `GtfsStop`, `GtfsRoute`, `GtfsTrip`, `GtfsStopTime`, `GtfsCalendar`, `GtfsCalendarDate`, `GtfsShape`, `GtfsFrequency`, `GtfsTransfer`, `GtfsFeedInfo`, `GtfsBoardAlight`, `GtfsRidership`, `GtfsRideFeedInfo`, `GtfsTripCapacity`.
+- Enums: `LocationType`, `RouteType`, `DirectionId`, `WheelchairAccessible`, `BikesAllowed`, `PickupDropOffType`, `ContinuousPickupDropOff` — integer-coded to match the values accepted by the GTFS spec.
+
+## 2.2 `database.py` — Persistence Layer (`GtfsDatabase`)
+
+**Purpose.** A thin wrapper around a single SQLite file that mirrors GTFS with full referential integrity. The schema is created on demand, foreign keys are enforced (`PRAGMA foreign_keys = ON`), primary keys are defined for every table, and deletions happen in a foreign-key-safe order. The caller owns the path — the module has no knowledge of any particular project layout or data-lake convention.
+
+**Importance.** This module is the concrete realisation of the "centralized relational database" recommended in Section 1.2. Storing GTFS data in a structured, constraint-enforced store — rather than in loose CSV or XLSX files — is what prevents orphaned `trip_id` references, duplicate `stop_id` entries, and the many other subtle inconsistencies that flat files allow. The module also provides an integrity-checking routine that reports violations, giving agencies an objective measure of data quality before the feed is exported.
+
+**Main methods.**
+- `GtfsDatabase(db_path)` — open (or create) a GTFS database at the given path; schema is created idempotently.
+- `GtfsDatabase.from_slug(slug, root=None)` — convenience constructor that places the file at `<root>/<slug>.db`.
+- `connect()` — open a raw `sqlite3.Connection` with FK enforcement enabled.
+- `upsert(table_name, records)` — validate each record through the matching Pydantic model and insert-or-replace in a single transaction; returns an `InsertResult` with counts and error messages.
+- `get_records(table_name, limit, offset)` — paginated read.
+- `count(table_name)` — row count for a single table.
+- `delete(table_name, ids)` — remove records by primary key (supporting composite keys via `"a|b"` notation).
+- `clear(table_name)` / `clear_all()` — wipe a single table or the whole database in FK-safe order.
+- `check_integrity()` — scan for orphaned foreign keys and return an `IntegrityReport`.
+- `summary()` — dictionary with row counts, file size, schema version, timestamps, and integrity status.
+- Module-level helper `upsert_records_on_conn(conn, table_name, records)` — used by the importer to batch many upserts inside one connection-scoped transaction.
+
+## 2.3 `importer.py` — GTFS ZIP Ingestion
+
+**Purpose.** Accepts a complete GTFS `.zip` feed (from a path on disk or a file-like object) and populates a `GtfsDatabase`. Members are never extracted to disk; each file is streamed via `ZipFile.open` and parsed with `csv.DictReader`. Zip-bomb and size guards run before any CSV parsing: archives larger than 500 MB compressed, individual members larger than 1 GB uncompressed, or archives with more than 50 members are rejected outright.
+
+**Importance.** Reliable ingestion is essential both for agencies that receive feeds from upstream systems (scheduling software, contractors, aggregated national feeds) and for analysts who need to query third-party GTFS data. The importer gives callers explicit control over how new data should interact with existing data via four import modes, so it can serve both initial-load and incremental-update workflows.
+
+**Main API.**
+- `preview_gtfs_zip(source) -> GtfsZipPreview` — inspect an archive without writing anything: which tables are present, which are missing, row counts, and unknown files.
+- `import_gtfs_zip(db, source, *, mode=ImportMode.REPLACE, chunk_size=5000) -> GtfsImportResult` — perform the import. Tables are loaded in FK-safe order (`agency → feed_info → calendar → … → stop_times → GTFS-ride tables`).
+- `ImportMode` — `REPLACE` (wipe then load), `MERGE` (insert-or-replace over existing data), `MERGE_PARTIAL` (like `MERGE` but accepts archives that don't carry every required file, for incremental updates), `ABORT_IF_NOT_EMPTY` (safety mode that refuses to write over non-empty databases).
+- `GtfsImportResult` — per-table counts (`inserted_by_table`, `failed_by_table`), cleared/skipped tables, capped error messages, and total duration.
+- `GtfsImportError` — raised for non-recoverable failures (bad zip, guard-rail breach, missing required files).
+
+## 2.4 `exporter.py` — GTFS Feed Publication
+
+**Purpose.** Reads from a `GtfsDatabase` and produces a standards-compliant `.zip` archive of `.txt` CSV files ready for publication. The exporter writes UTF-8 content with CRLF line endings and minimal quoting (matching GTFS conventions), omits columns that are entirely null, and emits files in the canonical GTFS order. A pre-export validation step and a 0–100 feed-completeness score are included.
+
+**Importance.** Exporting is the final step of the data lifecycle described in Section 1.5. The exporter enforces the rules that make the feed usable by downstream consumers: required tables must be populated, at least one of `calendar`/`calendar_dates` must have records, and the output is written atomically to a single file. The completeness score provides an objective, weighted summary (required 60% / recommended 25% / optional & GTFS-ride 15%) that agencies can track over time as a data-quality KPI.
+
+**Main API.**
+- `validate_before_export(db) -> ValidationResult` — block export if any required table is empty; surface warnings for missing recommended tables (`feed_info`, `shapes`).
+- `compute_feed_completeness(db) -> FeedCompleteness` — weighted score plus per-table breakdown.
+- `export_gtfs_feed(db, out_path, *, include_ride=True, validate=True) -> ExportResult` — write the `.zip` file; returns the path, the list of included files, the total record count, the completeness score, and any warnings.
+
+## 2.5 `validator.py` — Pure-Python Feed Validator
+
+**Purpose.** A JVM-free alternative to the official MobilityData Canonical GTFS Validator. It reads an exported GTFS `.zip` (no database required) and runs a battery of spec checks: required file presence, required field presence, primary-key uniqueness, referential integrity (`trips ↔ routes`, `trips ↔ service`, `stop_times ↔ trips`, `stop_times ↔ stops`), time/date/coordinate/color format checks, logical checks such as `start_date ≤ end_date` and strictly-increasing `stop_sequence` per trip, and `route_type` validation.
+
+**Importance.** As described in Section 1.4, validation before publication is a non-negotiable best practice. Bundling a lightweight Python validator directly in the package means this check can be run as part of automated CI pipelines, pre-commit hooks, or ad-hoc Python scripts, without needing to install and invoke a separate Java tool. It complements — it does not replace — the Canonical Validator for final certification before publication.
+
+**Main API.**
+- `validate_gfts_feed(zip_path) -> GtfsValidationReport` — run every check and return a structured report.
+- `GtfsValidationReport` — aggregate with `is_valid`, `error_count`, `warning_count`, `info_count`, and a list of `GtfsValidationIssue` entries (severity, file, field, row, message).
+
+## 2.6 Tests (`tests/`)
+
+The test suite under `PID-GTFS/tests/` exercises the three main moving parts of the package:
+
+- `test_schemas.py` — round-trip validation of each Pydantic model, covering required fields, enum values, and type coercion.
+- `test_database.py` — upsert / delete / clear / integrity-check behaviour, including FK enforcement and the `InsertResult` / `IntegrityReport` contracts.
+- `test_importer_exporter.py` — end-to-end pipeline tests: import a GTFS `.zip`, verify per-table counts, export it back out, and assert the resulting archive is byte-compatible with the expectations of the validator and downstream consumers.
+- `conftest.py` — shared fixtures that build temporary GTFS archives and `GtfsDatabase` instances on a per-test basis.
+
+## 2.7 Public API Summary
+
+All the symbols most users need are re-exported from the package root (`pid_gtfs/__init__.py`) so that typical usage is a single import:
+
+```python
+from pid_gtfs import (
+    GtfsDatabase,
+    import_gtfs_zip, preview_gtfs_zip, ImportMode,
+    export_gtfs_feed, validate_before_export, compute_feed_completeness,
+)
+
+db = GtfsDatabase("feeds/agency_x.db")
+preview = preview_gtfs_zip("feeds/agency_x.zip")
+import_gtfs_zip(db, "feeds/agency_x.zip", mode=ImportMode.REPLACE)
+export_gtfs_feed(db, "out/agency_x_gtfs.zip")
+```
+
+The top-level aliases `preview_zip`, `import_zip`, and `export_zip` are also provided for brevity.
+
+---
+
+# 3. Building a GTFS Feed from Scratch
+
+## 3.1 Introduction
+GTFS (General Transit Feed Specification) is the global standard for public transportation schedules and geographic information. A GTFS feed is fundamentally a relational database exported as a series of comma-separated values (CSV) files contained within a .zip archive.
+
+Standardizing transit data into this format is essential for everything from routing engines (like Google Maps) to feeding clean, structured inputs into long-term forecasting models.
+
+A valid GTFS feed requires a minimum of 6 text files:
+
+*   `agency.txt` - Your transit operator details.
+*   `stops.txt` - The geographic positions of your stops.
+*   `routes.txt` - A list of your bus/train routes.
+*   `calendar.txt` - The operational days and service windows.
+*   `trips.txt` - Specific journeys made on your routes (linking routes to schedules).
+*   `stop_times.txt` - The arrival and departure times at each stop for each specific trip.
+
+## 3.2 Practical Example: Two Intersecting Routes
+Let's imagine your transit agency is OptiBus. You operate two routes:
+
+*   **Route 1**: The "Downtown Loop" (Runs Monday–Friday).
+*   **Route 2**: The "University Express" (Runs Weekends).
+
+Here is how you map this multi-route system into the 6 required GTFS files.
+
+### Step 1: Define Your Agency (`agency.txt`)
+This file establishes the operator. If your feed contains data from multiple transit companies, you would list all of them here and use the `agency_id` to link routes to their specific operators.
+
+```csv
+agency_id,agency_name,agency_url,agency_timezone
+optibus,OptiBus,https://www.optibus.example.com,Europe/Lisbon
+```
+
+### Step 2: Define Your Stops (`stops.txt`)
+This file acts as your spatial nodes. We map them using latitude and longitude. Let's define three stops. Stop A will act as a transfer hub used by both routes.
+
+```csv
+stop_id,stop_name,stop_lat,stop_lon
+STOP_A,Downtown Transfer Hub,41.442530,-8.291770
+STOP_B,South Commercial District,41.432530,-8.295770
+STOP_C,University Campus,41.453530,-8.281770
+```
+
+### Step 3: Define Your Routes (`routes.txt`)
+This file catalogs your lines. The `route_type` is crucial for routing engines to know the mode of transport (3 represents a standard bus, 0 is a tram, 2 is rail).
+
+```csv
+route_id,agency_id,route_short_name,route_long_name,route_type
+R_1,optibus,1,Downtown Loop,3
+R_2,optibus,2,University Express,3
+```
+
+### Step 4: Define Service Days (`calendar.txt`)
+Instead of hardcoding dates into trips, GTFS uses "service IDs" as a scheduling abstraction. This makes it easy to apply broad operational rules (e.g., a standard weekday schedule vs. a weekend schedule) across thousands of trips.
+
+```csv
+service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date
+WEEKDAY_SERVICE,1,1,1,1,1,0,0,20260101,20261231
+WEEKEND_SERVICE,0,0,0,0,0,1,1,20260101,20261231
+```
+> [!NOTE]
+> 1 means active, and 0 means inactive. The dates format is YYYYMMDD. This allows you to plan seasonal route changes well in advance.
+
+### Step 5: Define Your Trips (`trips.txt`)
+A route is just an abstract concept; a trip is a physical vehicle executing that route at a specific time. You must generate a unique `trip_id` for every single run.
+
+```csv
+route_id,service_id,trip_id
+R_1,WEEKDAY_SERVICE,TRIP_R1_0800
+R_1,WEEKDAY_SERVICE,TRIP_R1_0900
+R_2,WEEKEND_SERVICE,TRIP_R2_1000
+```
+
+### Step 6: Define Your Stop Times (`stop_times.txt`)
+This is the heaviest file in the feed. It maps the timeline of every stop on every trip. Notice how the trips navigate through the stops defined in Step 2.
+
+```csv
+trip_id,arrival_time,departure_time,stop_id,stop_sequence
+TRIP_R1_0800,08:00:00,08:00:00,STOP_A,1
+TRIP_R1_0800,08:15:00,08:15:00,STOP_B,2
+TRIP_R1_0900,09:00:00,09:00:00,STOP_A,1
+TRIP_R1_0900,09:15:00,09:15:00,STOP_B,2
+TRIP_R2_1000,10:00:00,10:00:00,STOP_C,1
+TRIP_R2_1000,10:30:00,10:30:00,STOP_A,2
+```
+> [!IMPORTANT]
+> The `stop_sequence` guarantees the strict topological ordering of the route, which is vital for routing algorithms. Arrival and departure times can differ if you want to model a vehicle laying over at a transit hub.
+
+## 3.3 Adding Ridership Data: The GTFS-ride Extension
+While standard GTFS dictates where and when your transit network operates, it does not record how many people actually use it. To bridge the gap between scheduled service and actual human demand—which is an essential step when feeding historical data into time-series prediction and demand forecasting pipelines—you can use the GTFS-ride extension.
+
+GTFS-ride is an open data standard designed specifically for storing, sharing, and analyzing fixed-route transit ridership data. It functions as an add-on to your standard GTFS feed, utilizing the exact same `trip_id` and `stop_id` keys to link passenger counts directly to your operational schedules.
+
+### Required and Optional Files
+To implement GTFS-ride, you generate additional CSV text files and include them in the same `.zip` archive as your standard GTFS files.
+
+*   `ride_feed_info.txt` **(Required)**: Provides metadata specific to the source and attributes of your supplementary ridership files.
+*   `board_alight.txt` **(Optional)**: Tracks boardings and alightings (passengers getting on and off) at the individual stop-level.
+*   `trip_capacity.txt` **(Optional)**: Identifies the maximum passenger capacities of the specific vehicles used for service.
+*   `ridership.txt` **(Optional)**: Supplies ridership counts aggregated at various levels.
+*   `rider_trip.txt` **(Optional)**: Contains anonymized data regarding specific individual rider trips.
+
+### Practical Example: `board_alight.txt`
+Let's assume you have Automated Passenger Counter (APC) data from the 8:00 AM "Downtown Loop" trip (`TRIP_R1_0800`) established in Step 5 of the main guide. You recorded that 15 people boarded at Stop A, and 5 got off at Stop B.
+
+#### 1. Define the Feed Metadata (`ride_feed_info.txt`)
+```csv
+ride_files,ride_start_date,ride_end_date,gtfs_ride_version
+6,20260101,20261231,v1.2
+```
+
+#### 2. Map the Boardings and Alightings (`board_alight.txt`)
+Notice how seamlessly the transit usage maps against your established spatial and schedule data.
+```csv
+trip_id,stop_id,stop_sequence,record_use,schedule_relationship,boardings,alightings,current_load
+TRIP_R1_0800,STOP_A,1,0,0,15,0,15
+TRIP_R1_0800,STOP_B,2,0,0,2,5,12
+```
+*   **boardings**: The number of passengers entering the vehicle at the stop.
+*   **alightings**: The number of passengers exiting the vehicle at the stop.
+*   **current_load**: A field calculating either the percentage or integer count of the passenger load at that specific stop.
+
+### Data Engineering Integration
+From an engineering perspective, standardizing your collection around GTFS-ride creates a robust, highly structured data standard perfect for long-term strategic planning.
+
+In your ETL pipeline, you would extract raw APC sensor data, transform it using Pandas to join against your internal transit schedules, and load the aggregated passenger flows into `board_alight.txt`. This resulting dataset serves as the ideal, clean historical context required to train machine learning models and MLOps architectures for predicting future urban transit demand.
+
+## 3.4 Assembly and Validation
+*   **Directory Setup**: Create an isolated directory (e.g., `gtfs_export_v1`).
+*   **File Generation**: Save the datasets above with their exact `.txt` filenames.
+*   **Encoding**: Ensure all files are strictly formatted as CSVs with **UTF-8 encoding** (this prevents character corruption in stop names).
+*   **Compression**: Select only the text files and compress them into `gtfs.zip`. Do not zip the parent folder, or feed validators will fail to read the root directory.
+
+## 3.5 Engineering Implementation & ETL Automation
+Manually typing GTFS files is impossible at scale. In a modern data engineering context, generating a GTFS feed is typically handled as the final loading step of an automated ETL pipeline:
+
+*   **Extract**: Pull the raw operational data from an upstream relational database (e.g., PostgreSQL/PostGIS) or an external API hub.
+*   **Transform (Python/Pandas)**: 
+    *   Clean and normalize the raw data.
+    *   Use Pandas DataFrames to perform table joins and map internal primary keys to GTFS-compliant string formats (e.g., `agency_id`, `stop_id`).
+    *   Generate the strict topologies required for the `stop_sequence` column.
+*   **Load (Export)**: Export the DataFrames using `df.to_csv(filename, index=False)`.
+*   **Archive & Distribute**: 
+    *   Utilize Python's built-in `zipfile` module to package the generated `.txt` files into an in-memory zip archive (using `io.BytesIO`).
+    *   Serve the resulting `.zip` directly via an API endpoint (e.g., a FastAPI route) or upload it to a cloud storage bucket for consumption by downstream analytics applications. 
+
+---
+
 ## References
 
 [1] MobilityData. "About - General Transit Feed Specification." *GTFS.org*. [https://gtfs.org/about/](https://gtfs.org/about/)
