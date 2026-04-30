@@ -10,17 +10,19 @@ Dirigido a técnicos de operadores de transporte público portugueses.
 
 | Módulo | Título | Estado |
 |--------|--------|--------|
-| 00 | Antes de Começar | 📋 Planeado |
-| 01 | Conceitos Base | 📋 Planeado |
-| 02 | Rede de Transporte | 📋 Planeado |
-| 03 | Horários e Calendários | 📋 Planeado |
-| 04 | Multimodalidade e StopPlace | 📋 Planeado |
-| 05 | Acessibilidade | 📋 Planeado |
-| 06 | Tarifas (Introdução) | 📋 Planeado |
-| 07 | Perfil NeTEx Portugal | 📋 Planeado |
-| 08 | Ferramentas Práticas | 📋 Planeado |
+| [00](modulos/00_antes_de_comecar/README.md) | Antes de Começar | ✅ Completo |
+| [01](modulos/01_conceitos_base/README.md) | Conceitos Base | ✅ Completo |
+| [02](modulos/02_rede_transporte/README.md) | Rede de Transporte | ✅ Completo |
+| [03](modulos/03_horarios_calendarios/README.md) | Horários e Calendários | ✅ Completo |
+| [04](modulos/04_multimodalidade/README.md) | Multimodalidade e StopPlace | ✅ Completo |
+| [05](modulos/05_acessibilidade/README.md) | Acessibilidade | ✅ Completo |
+| [06](modulos/06_tarifas_introducao/README.md) | Tarifas (Introdução) | ✅ Completo |
+| [07](modulos/07_perfil_netex_portugal/README.md) | Perfil NeTEx Portugal | ✅ Completo |
+| [08](modulos/08_ferramentas_praticas/README.md) | Ferramentas Práticas | ✅ Completo |
 
 **Legenda**: ✅ Completo · 🚧 Em Progresso · 📋 Planeado
+
+> **Progresso**: 9/9 módulos completos ✅. Rede âncora: STCP Porto, Linha 200.
 
 ## 🎯 Público-alvo
 

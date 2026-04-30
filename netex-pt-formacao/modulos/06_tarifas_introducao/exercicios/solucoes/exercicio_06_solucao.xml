@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SOLUÇÃO — Exercício 6: Tarifas — Navegante Municipal Lisboa
+  =============================================================
+  Módulo 6 — Tarifas (Introdução)
+
+  Respostas às Questões de Reflexão:
+
+  1. Andante (zonas) vs Navegante (passe plano):
+     No Andante, há um PreassignedFareProduct por zona (Z2, Z3, Z4...),
+     cada um com o seu TariffZoneRef específico. O preço depende de quantas
+     zonas o passageiro atravessa — o sistema calcula na validação.
+     No Navegante Municipal, há UMA zona (toda Lisboa) e UM produto
+     (passe plano). O NeTEx adapta-se perfeitamente: basta ter uma
+     TariffZone e um PreassignedFareProduct sem condição de limite de zonas.
+     A diferença está em QUANTAS zonas e produtos se definem, não na estrutura.
+
+  2. Interoperabilidade (passe válido em múltiplos operadores):
+     Em NeTEx, a interoperabilidade é modelada ao nível da Authority:
+       - A Authority "Transportes Lisboa" (ou AML — Área Metropolitana de Lisboa)
+         é a entidade que define o sistema Navegante e os seus produtos.
+       - O FareFrame tem ParticipantRef=PT:AML (não PT:Carris).
+       - Os operadores (Carris, Metro Lisboa, CP, Transtejo) são referenciados
+         como OperatorRef nos ServiceJourney dos seus respetivos horários.
+     Um sistema de pesquisa de percursos verifica: "este FareProduct é válido
+     nesta Authority? Sim → pode usar em todos os operadores desta Authority."
+     Alternativa mais explícita: criar um AuthorityRef dentro do FareProduct
+     ou usar um FareFrame com múltiplos OperatorRef listados.
+
+  3. Renovação mensal (UsageValidityPeriod):
+     a) Validade de 1 mês:
+        <UsageValidityPeriod>
+          <UsageTrigger>activation</UsageTrigger>  <!-- conta desde ativação, não compra -->
+          <StandardDuration>P1M</StandardDuration> <!-- P1M = 1 mês em ISO 8601 -->
+        </UsageValidityPeriod>
+     b) Renovação automática:
+        Não há um elemento NeTEx específico para renovação automática —
+        isso é um processo de negócio (billing), não de modelação de dados.
+        O que o NeTEx modela é que o produto tem validade de 1 mês.
+        A renovação seria um novo título (novo PreassignedFareProduct
+        com nova data de ativação), possivelmente via SalesChannel
+        com PaymentMethod=directDebit.
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <!--
+    ParticipantRef=PT:AML (Área Metropolitana de Lisboa) porque o Navegante
+    é definido pela autoridade metropolitana, não pela Carris individualmente.
+    Ver Questão de Reflexão 2.
+  -->
+  <ParticipantRef>PT:AML</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:AML:CompositeFrame:Navegante_Municipal_M06:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <!-- PARTE D: ServiceFrame com paragens ligadas à zona Navegante -->
+        <ServiceFrame id="PT:Carris:ServiceFrame:Navegante_SvF:LOC" version="1">
+          <scheduledStopPoints>
+
+            <ScheduledStopPoint id="PT:Carris:ScheduledStopPoint:ROS1:LOC" version="1">
+              <Name>Rossio</Name>
+              <tariffZones>
+                <TariffZoneRef ref="PT:Carris:TariffZone:Lisboa_Municipal:LOC" version="1"/>
+              </tariffZones>
+            </ScheduledStopPoint>
+
+            <ScheduledStopPoint id="PT:Carris:ScheduledStopPoint:MRQ1:LOC" version="1">
+              <Name>Marquês de Pombal</Name>
+              <tariffZones>
+                <TariffZoneRef ref="PT:Carris:TariffZone:Lisboa_Municipal:LOC" version="1"/>
+              </tariffZones>
+            </ScheduledStopPoint>
+
+            <ScheduledStopPoint id="PT:Carris:ScheduledStopPoint:BEL1:LOC" version="1">
+              <Name>Belém</Name>
+              <tariffZones>
+                <TariffZoneRef ref="PT:Carris:TariffZone:Lisboa_Municipal:LOC" version="1"/>
+              </tariffZones>
+            </ScheduledStopPoint>
+
+          </scheduledStopPoints>
+        </ServiceFrame>
+
+        <!-- PARTES A + B + C: FareFrame com TariffZone, FareProduct, SalesOfferPackage -->
+        <FareFrame id="PT:AML:FareFrame:Navegante_Municipal_FF:LOC" version="1">
+          <Name>Navegante Municipal Lisboa 2026</Name>
+
+          <!-- PARTE A: TariffZone -->
+          <tariffZones>
+            <!--
+              Ao contrário do Andante (múltiplas zonas Z2-Z10), o Navegante
+              Municipal tem UMA zona que cobre toda a cidade de Lisboa.
+              Ver Questão de Reflexão 1.
+            -->
+            <TariffZone id="PT:Carris:TariffZone:Lisboa_Municipal:LOC" version="1">
+              <Name>Navegante Municipal — Lisboa</Name>
+              <ShortName>LX-MUN</ShortName>
+            </TariffZone>
+          </tariffZones>
+
+          <!-- PARTE B: FareProduct -->
+          <fareProducts>
+
+            <!--
+              Navegante Municipal — passe mensal para toda a rede Carris Lisboa.
+              Diferença chave do Andante: não é bilhete simples (PreassignedFareProduct
+              de 1 viagem) mas um PASSE MENSAL de viagens ilimitadas.
+              A modelação completa do passe mensal usa UsageValidityPeriod
+              com StandardDuration=P1M — ver Questão de Reflexão 3.
+            -->
+            <PreassignedFareProduct id="PT:Carris:FareProduct:Navegante_Municipal:LOC" version="1">
+              <Name>Navegante Municipal</Name>
+              <Description>Passe mensal para toda a rede Carris Lisboa. Viagens ilimitadas durante 1 mês após ativação. Requer cartão Navegante.</Description>
+
+              <conditionSummary>
+                <TravelDocumentType>electronicDocument</TravelDocumentType>
+                <RequiresCard>true</RequiresCard>
+                <RequiresReservation>false</RequiresReservation>
+              </conditionSummary>
+
+              <fareStructureElements>
+                <FareStructureElement id="PT:Carris:FSE:Navegante_Municipal_01:LOC" version="1">
+                  <Name>Viagens ilimitadas em toda a zona Lisboa Municipal</Name>
+                  <TariffZoneRef ref="PT:Carris:TariffZone:Lisboa_Municipal:LOC" version="1"/>
+                </FareStructureElement>
+              </fareStructureElements>
+            </PreassignedFareProduct>
+
+            <!--
+              Navegante Municipal Jovem — desconto 50% para jovens até 23 anos.
+              Modelado como PreassignedFareProduct separado neste nível introdutório.
+              A modelação completa usa SaleDiscountRight referenciando o produto base.
+            -->
+            <PreassignedFareProduct id="PT:Carris:FareProduct:Navegante_Jovem:LOC" version="1">
+              <Name>Navegante Municipal — Jovem (até 23 anos)</Name>
+              <Description>Passe mensal Navegante Municipal com desconto 50% para jovens até 23 anos. Requer comprovativo de idade no 1.º carregamento.</Description>
+
+              <conditionSummary>
+                <TravelDocumentType>electronicDocument</TravelDocumentType>
+                <RequiresCard>true</RequiresCard>
+                <RequiresReservation>false</RequiresReservation>
+              </conditionSummary>
+
+              <fareStructureElements>
+                <FareStructureElement id="PT:Carris:FSE:Navegante_Jovem_01:LOC" version="1">
+                  <Name>Viagens ilimitadas — jovem, zona Lisboa Municipal</Name>
+                  <TariffZoneRef ref="PT:Carris:TariffZone:Lisboa_Municipal:LOC" version="1"/>
+                </FareStructureElement>
+              </fareStructureElements>
+            </PreassignedFareProduct>
+
+          </fareProducts>
+
+          <!-- PARTE C: SalesOfferPackage — 3 canais de venda -->
+          <salesOfferPackages>
+
+            <!-- Canal 1: Máquinas automáticas -->
+            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:Naval_Maquina:LOC" version="1">
+              <Name>Navegante Municipal — Máquina automática</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Carris:SOPE:Naval_Maquina_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Carris:FareProduct:Navegante_Municipal:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+            <!-- Canal 2: App Lisboa Move-Me (canal digital) -->
+            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:Naval_App:LOC" version="1">
+              <Name>Navegante Municipal — App Lisboa Move-Me</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Carris:SOPE:Naval_App_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Carris:FareProduct:Navegante_Municipal:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+            <!-- Canal 3: Balcões Carris -->
+            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:Naval_Balcao:LOC" version="1">
+              <Name>Navegante Municipal — Balcão Carris</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Carris:SOPE:Naval_Balcao_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Carris:FareProduct:Navegante_Municipal:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+          </salesOfferPackages>
+
+        </FareFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

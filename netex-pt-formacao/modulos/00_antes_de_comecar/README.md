@@ -6,7 +6,7 @@
 
 Após completar este módulo, o leitor será capaz de:
 
-- Explicar o que é o NeTEx e a sua importância para operadores públicos portugueses
+- Explicar o que é o NeTEx e a sua importância para operadores públicos portugueses 
 - Distinguir GTFS e NeTEx em termos de cobertura, profundidade e modelo conceptual
 - Situar o NeTEx no ecossistema: Transmodel → NeTEx → SIRI → NAP
 - Identificar as obrigações regulatórias europeias aplicáveis em Portugal

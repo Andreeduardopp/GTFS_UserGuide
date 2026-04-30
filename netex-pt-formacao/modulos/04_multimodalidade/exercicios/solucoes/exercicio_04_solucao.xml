@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SOLUÇÃO — Exercício 4: Multimodalidade e StopPlace
+  ====================================================
+  Módulo 4 — Multimodalidade e StopPlace
+
+  Respostas às Questões de Reflexão:
+
+  1. Centralização vs. distribuição (ParticipantRef):
+     O responsável natural pelo SiteFrame de infraestrutura partilhada é a
+     Autoridade de Transportes (IMT ou Autoridade de Transportes do Porto —
+     TIP/AMUP), não o operador. A infraestrutura (paragens, plataformas)
+     pertence à entidade pública; os horários e serviços pertencem a cada
+     operador. A separação no NeTEx reflete esta responsabilidade real:
+       - SiteFrame com ParticipantRef=PT:IMT (ou PT:AMUP)
+       - TimetableFrame com ParticipantRef=PT:STCP (ou PT:MetroPorto)
+     Vantagem: uma única "verdade" sobre a paragem física, consultada por
+     todos os operadores. Desvantagem: requer coordenação entre entidades.
+
+  2. Duas plataformas de metro (sentidos opostos):
+     Na estação Trindade, a Linha A/B/C vai em sentido diferente da Linha E/F.
+     A solução correta em NeTEx é ter dois Quay:
+       - Quay:Trindade_Metro_PlatA — "Plataforma Azul (Estádio / Senhor de Matosinhos)"
+         com TransportMode=metro e QuayType=metroPlatform
+       - Quay:Trindade_Metro_PlatB — "Plataforma Laranja (Aeroporto / Trofa / Maia / Póvoa)"
+     Cada linha teria um PassengerStopAssignment diferente apontando para o
+     Quay correto consoante a direção (inbound/outbound).
+
+  3. Versioning para obras / relocalização temporária:
+     Abordagem correta em NeTEx:
+       a) MANTER o Quay original com validBetween até à data das obras:
+          <Quay id="...Trindade_TRD1:LOC" version="1">
+            <validBetween><FromDate>2026-04-30</FromDate><ToDate>2025-03-15</ToDate></validBetween>
+       b) CRIAR um novo Quay com version="2" e as novas coordenadas:
+          <Quay id="...Trindade_TRD1:LOC" version="2">
+            <validBetween><FromDate>2025-03-15</FromDate><ToDate>2025-09-30</ToDate></validBetween>
+            <Centroid>... (Rua de Passos Manuel) ...</Centroid>
+       c) CRIAR um Quay version="3" quando as obras terminam (volta à posição original)
+     Desta forma, um sistema de planificação que consulte para uma data específica
+     obtém sempre as coordenadas corretas para essa data. Nada é eliminado —
+     o histórico fica preservado no modelo NeTEx.
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <!--
+    ParticipantRef=PT:IMT porque a infraestrutura física (StopPlace, Quay)
+    é responsabilidade da autoridade pública, não do operador.
+    Ver Questão de Reflexão 1.
+  -->
+  <ParticipantRef>PT:IMT</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:IMT:CompositeFrame:Trindade_M04:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <!-- PARTE A + PARTE B: SiteFrame com StopPlace e PathLink -->
+        <SiteFrame id="PT:IMT:SiteFrame:Trindade_SF:LOC" version="1">
+
+          <stopPlaces>
+
+            <!-- StopPlace de autocarros STCP — Trindade -->
+            <StopPlace id="PT:STCP:StopPlace:Trindade:LOC" version="1">
+              <Name>Trindade</Name>
+              <Centroid>
+                <Location>
+                  <!-- Centróide aproximado do conjunto das 3 paragens -->
+                  <Longitude>-8.612293</Longitude>
+                  <Latitude>41.149483</Latitude>
+                </Location>
+              </Centroid>
+              <StopPlaceType>onstreetBus</StopPlaceType>
+              <TransportMode>bus</TransportMode>
+
+              <quays>
+
+                <!-- TRD1 — sentido variável conforme a linha -->
+                <Quay id="PT:STCP:Quay:Trindade_TRD1:LOC" version="1">
+                  <Name>Trindade — TRD1</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.612300</Longitude>
+                      <Latitude>41.149540</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+                <!-- TRD2 -->
+                <Quay id="PT:STCP:Quay:Trindade_TRD2:LOC" version="1">
+                  <Name>Trindade — TRD2</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.612080</Longitude>
+                      <Latitude>41.149210</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+                <!-- TRD3 -->
+                <Quay id="PT:STCP:Quay:Trindade_TRD3:LOC" version="1">
+                  <Name>Trindade — TRD3</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.612500</Longitude>
+                      <Latitude>41.149700</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+              </quays>
+            </StopPlace>
+
+            <!-- StopPlace de metro — Estação Trindade -->
+            <StopPlace id="PT:MetroPorto:StopPlace:Trindade_Metro:LOC" version="1">
+              <Name>Trindade (Metro)</Name>
+              <Centroid>
+                <Location>
+                  <Longitude>-8.611700</Longitude>
+                  <Latitude>41.149380</Latitude>
+                </Location>
+              </Centroid>
+              <StopPlaceType>metroStation</StopPlaceType>
+              <TransportMode>metro</TransportMode>
+
+              <quays>
+                <!--
+                  Simplificação: um único Quay para as 5 linhas.
+                  Ver Questão de Reflexão 2 para a solução com 2 plataformas.
+                -->
+                <Quay id="PT:MetroPorto:Quay:Trindade_Metro_Plat:LOC" version="1">
+                  <Name>Trindade — Metro (Linhas A/B/C/E/F)</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.611700</Longitude>
+                      <Latitude>41.149380</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>metroPlatform</QuayType>
+                </Quay>
+              </quays>
+
+            </StopPlace>
+
+          </stopPlaces>
+
+          <!-- PARTE B: PathLink entre paragens de autocarro e metro -->
+          <pathLinks>
+
+            <!--
+              PathLink TRD1 → Metro: 3 minutos
+              TRD1 está mais perto da entrada da estação de metro
+            -->
+            <PathLink id="PT:IMT:PathLink:Trindade_TRD1_Metro:LOC" version="1">
+              <Name>TRD1 → Metro Trindade</Name>
+              <From>
+                <PlaceRef ref="PT:STCP:Quay:Trindade_TRD1:LOC"
+                          nameOfRefClass="Quay" version="1"/>
+              </From>
+              <To>
+                <PlaceRef ref="PT:MetroPorto:StopPlace:Trindade_Metro:LOC"
+                          nameOfRefClass="StopPlace" version="1"/>
+              </To>
+              <TransferDuration>
+                <DefaultDuration>PT3M</DefaultDuration>
+              </TransferDuration>
+              <PublicUse>all</PublicUse>
+            </PathLink>
+
+            <!--
+              PathLink TRD2 → Metro: 4 minutos
+              TRD2 está ligeiramente mais afastada da entrada do metro
+            -->
+            <PathLink id="PT:IMT:PathLink:Trindade_TRD2_Metro:LOC" version="1">
+              <Name>TRD2 → Metro Trindade</Name>
+              <From>
+                <PlaceRef ref="PT:STCP:Quay:Trindade_TRD2:LOC"
+                          nameOfRefClass="Quay" version="1"/>
+              </From>
+              <To>
+                <PlaceRef ref="PT:MetroPorto:StopPlace:Trindade_Metro:LOC"
+                          nameOfRefClass="StopPlace" version="1"/>
+              </To>
+              <TransferDuration>
+                <DefaultDuration>PT4M</DefaultDuration>
+              </TransferDuration>
+              <PublicUse>all</PublicUse>
+            </PathLink>
+
+          </pathLinks>
+
+        </SiteFrame>
+
+        <!-- PARTE C: ServiceFrame com SSP e PassengerStopAssignment -->
+        <ServiceFrame id="PT:STCP:ServiceFrame:Trindade_SvF:LOC" version="1">
+
+          <scheduledStopPoints>
+
+            <!--
+              Três ScheduledStopPoint, um por stop_id GTFS.
+              Todos têm o mesmo nome "Trindade" pois são pontos no mesmo lugar.
+              As coordenadas físicas ficam nos Quay (não aqui).
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:TRD1:LOC" version="1">
+              <Name>Trindade</Name>
+            </ScheduledStopPoint>
+
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:TRD2:LOC" version="1">
+              <Name>Trindade</Name>
+            </ScheduledStopPoint>
+
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:TRD3:LOC" version="1">
+              <Name>Trindade</Name>
+            </ScheduledStopPoint>
+
+          </scheduledStopPoints>
+
+          <stopAssignments>
+
+            <!-- TRD1 → StopPlace Trindade → Quay TRD1 -->
+            <PassengerStopAssignment
+                id="PT:STCP:PSA:TRD1_Trindade:LOC"
+                version="1"
+                order="1">
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:TRD1:LOC" version="1"/>
+              <StopPlaceRef ref="PT:STCP:StopPlace:Trindade:LOC" version="1"/>
+              <QuayRef ref="PT:STCP:Quay:Trindade_TRD1:LOC" version="1"/>
+            </PassengerStopAssignment>
+
+            <!-- TRD2 → StopPlace Trindade → Quay TRD2 -->
+            <PassengerStopAssignment
+                id="PT:STCP:PSA:TRD2_Trindade:LOC"
+                version="1"
+                order="1">
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:TRD2:LOC" version="1"/>
+              <StopPlaceRef ref="PT:STCP:StopPlace:Trindade:LOC" version="1"/>
+              <QuayRef ref="PT:STCP:Quay:Trindade_TRD2:LOC" version="1"/>
+            </PassengerStopAssignment>
+
+            <!-- TRD3 → StopPlace Trindade → Quay TRD3 -->
+            <PassengerStopAssignment
+                id="PT:STCP:PSA:TRD3_Trindade:LOC"
+                version="1"
+                order="1">
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:TRD3:LOC" version="1"/>
+              <StopPlaceRef ref="PT:STCP:StopPlace:Trindade:LOC" version="1"/>
+              <QuayRef ref="PT:STCP:Quay:Trindade_TRD3:LOC" version="1"/>
+            </PassengerStopAssignment>
+
+          </stopAssignments>
+
+        </ServiceFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

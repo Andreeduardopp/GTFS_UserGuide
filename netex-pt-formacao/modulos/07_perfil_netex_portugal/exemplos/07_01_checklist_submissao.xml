@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 07_01 — Ficheiro NeTEx mínimo conforme com o Perfil PT
+  ================================================================
+  Módulo 7 — Perfil NeTEx Portugal
+
+  Este ficheiro demonstra um NeTEx MÍNIMO VÁLIDO conforme com o Perfil
+  Nacional NeTEx Portugal (PT-EPIP), pronto para submissão ao NAP Portugal.
+
+  CHECKLIST DE CONFORMIDADE COM O PERFIL PT:
+  ✅ PublicationTimestamp presente
+  ✅ ParticipantRef presente e no formato correto
+  ✅ CompositeFrame com validBetween
+  ✅ ResourceFrame: Authority com M-fields (id, version, Name, ContactDetails/Email)
+  ✅ ResourceFrame: Operator com M-fields (id, version, Name, ContactDetails/Url)
+  ✅ ServiceFrame: Network (id, version, Name)
+  ✅ ServiceFrame: Line com TransportMode e PublicCode
+  ✅ ServiceFrame: ScheduledStopPoint com Name
+  ✅ ServiceFrame: Route com LineRef
+  ✅ ServiceFrame: ServiceJourneyPattern com RouteRef
+  ✅ ServiceFrame: PassengerStopAssignment com SSP+StopPlace+Quay
+  ✅ SiteFrame: StopPlace com StopPlaceType e Centroid
+  ✅ SiteFrame: Quay com QuayType e Centroid
+  ✅ ServiceCalendarFrame: DayType + OperatingDay + DayTypeAssignment
+  ✅ TimetableFrame: ServiceJourney com DayTypeRefs + JourneyPatternRef
+  ✅ TimetabledPassingTime com ArrivalTime/DepartureTime
+  ✅ Todos os IDs no formato PT:<org>:<tipo>:<id>:LOC
+  ✅ Todos os version="1"
+  ✅ Encoding UTF-8
+
+  ERROS COMUNS EVITADOS:
+  ❌ ID sem prefixo PT: → ✅ todos com PT:STCP:...
+  ❌ ref para ID inexistente → ✅ todos os ref resolvem
+  ❌ version="0" ou ausente → ✅ todos com version="1"
+  ❌ Campo Name ausente → ✅ todos os objetos têm Name
+  ❌ TransportMode ausente na Line → ✅ TransportMode=bus
+
+  Fonte: IMT. "Perfil Nacional NeTEx Portugal." [PT-01]
+         CEN/TS 16614-1:2024 (NeTEx Parte 1). [STD-01]
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <!-- M: PublicationTimestamp — data/hora de geração do ficheiro (UTC) -->
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+
+  <!-- M: ParticipantRef — código do operador no formato PT:<org> -->
+  <ParticipantRef>PT:STCP</ParticipantRef>
+
+  <dataObjects>
+
+    <!-- CompositeFrame agrupa todos os outros frames -->
+    <CompositeFrame id="PT:STCP:CompositeFrame:STCP_L200_Perfil_PT:LOC" version="1">
+
+      <!-- M: validBetween — período de validade dos dados -->
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+
+      <frames>
+
+        <!-- ══════════════════════════════════════════════════════
+             RESOURCEFRAME — Authority e Operator (M obrigatório)
+             ══════════════════════════════════════════════════════ -->
+        <ResourceFrame id="PT:STCP:ResourceFrame:STCP_RF:LOC" version="1">
+          <organisations>
+
+            <!--
+              Authority: a entidade reguladora/autoridade de transporte.
+              Campos M: id, version, Name, ContactDetails/Email, OrganisationType
+            -->
+            <Authority id="PT:IMT:Authority:IMT:LOC" version="1">
+              <Name>IMT — Instituto da Mobilidade e dos Transportes</Name>
+              <ContactDetails>
+                <Email>info@imt-ip.pt</Email>
+                <Url>https://www.imt-ip.pt</Url>
+              </ContactDetails>
+              <OrganisationType>authority</OrganisationType>
+            </Authority>
+
+            <!--
+              Operator: o operador de transporte.
+              Campos M: id, version, Name, ContactDetails/Url, OrganisationType
+            -->
+            <Operator id="PT:STCP:Operator:STCP:LOC" version="1">
+              <Name>STCP — Sociedade de Transportes Colectivos do Porto</Name>
+              <ShortName>STCP</ShortName>
+              <ContactDetails>
+                <Url>https://www.stcp.pt</Url>
+                <Email>geral@stcp.pt</Email>
+                <Phone>+351 225 071 000</Phone>
+              </ContactDetails>
+              <OrganisationType>operator</OrganisationType>
+            </Operator>
+
+          </organisations>
+        </ResourceFrame>
+
+        <!-- ══════════════════════════════════════════════════════
+             SITEFRAME — StopPlace e Quay (M obrigatório)
+             ══════════════════════════════════════════════════════ -->
+        <SiteFrame id="PT:STCP:SiteFrame:STCP_L200_SF:LOC" version="1">
+          <stopPlaces>
+
+            <!--
+              StopPlace: campos M = id, version, Name, StopPlaceType, Centroid/Location
+            -->
+            <StopPlace id="PT:STCP:StopPlace:Bolhao:LOC" version="1">
+              <Name>Bolhão</Name>
+              <Centroid>
+                <Location>
+                  <Longitude>-8.607115</Longitude>
+                  <Latitude>41.151868</Latitude>
+                </Location>
+              </Centroid>
+              <StopPlaceType>onstreetBus</StopPlaceType>
+              <TransportMode>bus</TransportMode>
+              <quays>
+                <!--
+                  Quay: campos M = id, version, Name, QuayType, Centroid/Location
+                -->
+                <Quay id="PT:STCP:Quay:Bolhao_IDA:LOC" version="1">
+                  <Name>Bolhão — Sentido Castelo do Queijo</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.607115</Longitude>
+                      <Latitude>41.151868</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+              </quays>
+            </StopPlace>
+
+            <StopPlace id="PT:STCP:StopPlace:CasteloQueijo:LOC" version="1">
+              <Name>Castelo do Queijo</Name>
+              <Centroid>
+                <Location>
+                  <Longitude>-8.676240</Longitude>
+                  <Latitude>41.168930</Latitude>
+                </Location>
+              </Centroid>
+              <StopPlaceType>onstreetBus</StopPlaceType>
+              <TransportMode>bus</TransportMode>
+              <quays>
+                <Quay id="PT:STCP:Quay:CQ10:LOC" version="1">
+                  <Name>Castelo do Queijo</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.676240</Longitude>
+                      <Latitude>41.168930</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+              </quays>
+            </StopPlace>
+
+          </stopPlaces>
+        </SiteFrame>
+
+        <!-- ══════════════════════════════════════════════════════
+             SERVICEFRAME — Rede, Linhas, Paragens, Horário-Padrão
+             ══════════════════════════════════════════════════════ -->
+        <ServiceFrame id="PT:STCP:ServiceFrame:STCP_L200_SvF:LOC" version="1">
+
+          <Network id="PT:STCP:Network:STCP:LOC" version="1">
+            <Name>Rede STCP Porto</Name>
+          </Network>
+
+          <lines>
+            <!--
+              Line: campos M = id, version, Name, TransportMode, PublicCode
+            -->
+            <Line id="PT:STCP:Line:200:LOC" version="1">
+              <Name>Linha 200 — Bolhão / Castelo do Queijo</Name>
+              <ShortName>200</ShortName>
+              <!-- M: PublicCode — o número visível ao público -->
+              <PublicCode>200</PublicCode>
+              <!-- M: TransportMode — modo de transporte -->
+              <TransportMode>bus</TransportMode>
+              <NetworkRef ref="PT:STCP:Network:STCP:LOC" version="1"/>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+            </Line>
+          </lines>
+
+          <scheduledStopPoints>
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1">
+              <Name>Bolhão</Name>
+            </ScheduledStopPoint>
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1">
+              <Name>Castelo do Queijo</Name>
+            </ScheduledStopPoint>
+          </scheduledStopPoints>
+
+          <routePoints>
+            <RoutePoint id="PT:STCP:RoutePoint:BLRB1:LOC" version="1">
+              <projections>
+                <PointProjection id="PT:STCP:PP:BLRB1:LOC" version="1" order="1">
+                  <ProjectedPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+                </PointProjection>
+              </projections>
+            </RoutePoint>
+            <RoutePoint id="PT:STCP:RoutePoint:CQ10:LOC" version="1">
+              <projections>
+                <PointProjection id="PT:STCP:PP:CQ10:LOC" version="1" order="1">
+                  <ProjectedPointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
+                </PointProjection>
+              </projections>
+            </RoutePoint>
+          </routePoints>
+
+          <routes>
+            <!--
+              Route: campos M = id, version, LineRef, pointsInSequence
+            -->
+            <Route id="PT:STCP:Route:200_IDA:LOC" version="1">
+              <Name>200 IDA — Bolhão → Castelo do Queijo</Name>
+              <LineRef ref="PT:STCP:Line:200:LOC" version="1"/>
+              <DirectionType>outbound</DirectionType>
+              <pointsInSequence>
+                <PointOnRoute id="PT:STCP:POR:200_IDA_01:LOC" version="1" order="1">
+                  <RoutePointRef ref="PT:STCP:RoutePoint:BLRB1:LOC" version="1"/>
+                </PointOnRoute>
+                <PointOnRoute id="PT:STCP:POR:200_IDA_30:LOC" version="1" order="30">
+                  <RoutePointRef ref="PT:STCP:RoutePoint:CQ10:LOC" version="1"/>
+                </PointOnRoute>
+              </pointsInSequence>
+            </Route>
+          </routes>
+
+          <journeyPatterns>
+            <!--
+              ServiceJourneyPattern: campos M = id, version, RouteRef, pointsInSequence
+            -->
+            <ServiceJourneyPattern id="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1">
+              <Name>200 IDA — Padrão Normal</Name>
+              <RouteRef ref="PT:STCP:Route:200_IDA:LOC" version="1"/>
+              <pointsInSequence>
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_01:LOC" version="1" order="1">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+                  <ForAlighting>false</ForAlighting>
+                  <ForBoarding>true</ForBoarding>
+                </StopPointInJourneyPattern>
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_30:LOC" version="1" order="30">
+                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
+                  <ForAlighting>true</ForAlighting>
+                  <ForBoarding>false</ForBoarding>
+                </StopPointInJourneyPattern>
+              </pointsInSequence>
+            </ServiceJourneyPattern>
+          </journeyPatterns>
+
+          <!--
+            PassengerStopAssignment: campos M = ScheduledStopPointRef + StopPlaceRef + QuayRef
+          -->
+          <stopAssignments>
+            <PassengerStopAssignment id="PT:STCP:PSA:BLRB1_Bolhao:LOC" version="1" order="1">
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+              <StopPlaceRef ref="PT:STCP:StopPlace:Bolhao:LOC" version="1"/>
+              <QuayRef ref="PT:STCP:Quay:Bolhao_IDA:LOC" version="1"/>
+            </PassengerStopAssignment>
+            <PassengerStopAssignment id="PT:STCP:PSA:CQ10_CasteloQueijo:LOC" version="1" order="1">
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
+              <StopPlaceRef ref="PT:STCP:StopPlace:CasteloQueijo:LOC" version="1"/>
+              <QuayRef ref="PT:STCP:Quay:CQ10:LOC" version="1"/>
+            </PassengerStopAssignment>
+          </stopAssignments>
+
+        </ServiceFrame>
+
+        <!-- ══════════════════════════════════════════════════════
+             SERVICECALENDARFRAME — Calendário de serviço
+             ══════════════════════════════════════════════════════ -->
+        <ServiceCalendarFrame id="PT:STCP:ServiceCalendarFrame:STCP_SCF:LOC" version="1">
+          <dayTypes>
+            <DayType id="PT:STCP:DayType:DiasUteis:LOC" version="1">
+              <Name>Dias Úteis</Name>
+              <properties>
+                <PropertyOfDay>
+                  <DaysOfWeek>Monday Tuesday Wednesday Thursday Friday</DaysOfWeek>
+                </PropertyOfDay>
+              </properties>
+            </DayType>
+          </dayTypes>
+          <operatingDays>
+            <OperatingDay id="PT:STCP:OperatingDay:20260430:LOC" version="1">
+              <CalendarDate>2026-04-30</CalendarDate>
+            </OperatingDay>
+          </operatingDays>
+          <dayTypeAssignments>
+            <DayTypeAssignment id="PT:STCP:DTA:DU_20260430:LOC" version="1" order="1">
+              <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260430:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+          </dayTypeAssignments>
+        </ServiceCalendarFrame>
+
+        <!-- ══════════════════════════════════════════════════════
+             TIMETABLEFRAME — Horários
+             ══════════════════════════════════════════════════════ -->
+        <TimetableFrame id="PT:STCP:TimetableFrame:STCP_L200_TF:LOC" version="1">
+          <vehicleJourneys>
+            <!--
+              ServiceJourney: campos M = id, version, DayTypeRefs, JourneyPatternRef
+            -->
+            <ServiceJourney id="PT:STCP:ServiceJourney:200_DU_0600:LOC" version="1">
+              <Name>200 IDA — Dias Úteis 06:00</Name>
+              <DayTypeRefs>
+                <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              </DayTypeRefs>
+              <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+              <passingTimes>
+                <!--
+                  TimetabledPassingTime: M = StopPointInJourneyPatternRef +
+                  (DepartureTime ou ArrivalTime)
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"/>
+                  <DepartureTime>06:00:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
+                  <ArrivalTime>06:40:00</ArrivalTime>
+                </TimetabledPassingTime>
+              </passingTimes>
+            </ServiceJourney>
+          </vehicleJourneys>
+        </TimetableFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

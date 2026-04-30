@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 06_01 — Sistema Andante Porto em NeTEx
+  ================================================
+  Módulo 6 — Tarifas (Introdução)
+
+  O Andante é o sistema de transportes intermodal de Porto. O cartão Andante
+  permite viajar em STCP (autocarro), Metro do Porto, CP (linha do Porto) e
+  outros operadores da Área Metropolitana do Porto com um único título.
+
+  O sistema é baseado em ZONAS:
+    Z2 — até 2 zonas percorridas (centro do Porto)
+    Z3 — até 3 zonas percorridas
+    Z4 — até 4 zonas percorridas
+    ... até Z10
+
+  Uma viagem da Linha 200 de Bolhão (Z2) a Castelo do Queijo (Z4) requer
+  um título Z4 (porque atravessa zonas Z2 → Z3 → Z4).
+
+  COMPARAÇÃO GTFS → NeTEx:
+  ─────────────────────────────────────────────────────────────────────────
+  GTFS fare_attributes.txt:         NeTEx:
+    fare_id=andante_z2               FareProduct id=...Z2_Simples
+    price=1.20                       FarePrice/Amount=1.20
+    currency_type=EUR                FarePrice/Currency=EUR
+    fare_rules.txt zone_id=Z2        TariffZone id=...Z2
+    stops.txt zone_id=Z2             ScheduledStopPoint/tariffZones/TariffZoneRef
+  ─────────────────────────────────────────────────────────────────────────
+  O NeTEx adiciona: condições de uso, canais de venda, descontos, passes.
+
+  Fonte: CEN/TS 16614-1:2024 (Parte 1) [STD-01]
+         CEN/TS 16614-3:2024 (Parte 3 — Fares) [STD-03]
+  Dados: andante.net (preços e zonas do sistema Andante Porto)
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <!--
+    ParticipantRef=PT:Andante porque os dados tarifários são da autoridade
+    Andante (TIP — Transportes Intermodais do Porto), não da STCP.
+    A separação entre quem define tarifas e quem opera serviços é um
+    princípio fundamental do NeTEx.
+  -->
+  <ParticipantRef>PT:Andante</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:Andante:CompositeFrame:Andante_Porto_M06:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             ServiceFrame — ScheduledStopPoint com TariffZone
+             As paragens têm as suas zonas tarifárias definidas aqui.
+             ═══════════════════════════════════════════════════════════════ -->
+        <ServiceFrame id="PT:STCP:ServiceFrame:L200_Tarifas_SvF:LOC" version="1">
+          <scheduledStopPoints>
+
+            <!--
+              Bolhão (BLRB1) está na zona Z2 do sistema Andante.
+              Em GTFS, este campo seria stops.txt: zone_id=Z2.
+              Em NeTEx, a ligação é feita por referência explícita ao TariffZone.
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1">
+              <Name>Bolhão</Name>
+              <tariffZones>
+                <TariffZoneRef ref="PT:Andante:TariffZone:Z2:LOC" version="1"/>
+              </tariffZones>
+            </ScheduledStopPoint>
+
+            <!-- Carmo está também em Z2 (centro histórico do Porto) -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1">
+              <Name>Carmo</Name>
+              <tariffZones>
+                <TariffZoneRef ref="PT:Andante:TariffZone:Z2:LOC" version="1"/>
+              </tariffZones>
+            </ScheduledStopPoint>
+
+            <!--
+              Marechal Fontaine (MFZ1) está em Z3 — periferia imediata do Porto.
+              Uma viagem de Bolhão (Z2) a MFZ1 (Z3) requer bilhete Z3.
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1">
+              <Name>Marechal Fontaine</Name>
+              <tariffZones>
+                <TariffZoneRef ref="PT:Andante:TariffZone:Z3:LOC" version="1"/>
+              </tariffZones>
+            </ScheduledStopPoint>
+
+            <!--
+              Castelo do Queijo (CQ10) está em Z4 — extremidade da linha.
+              Uma viagem de Bolhão a CQ10 atravessa Z2 → Z3 → Z4 → requer Z4.
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1">
+              <Name>Castelo do Queijo</Name>
+              <tariffZones>
+                <TariffZoneRef ref="PT:Andante:TariffZone:Z4:LOC" version="1"/>
+              </tariffZones>
+            </ScheduledStopPoint>
+
+          </scheduledStopPoints>
+        </ServiceFrame>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             FareFrame — Zonas, Produtos e Canais de Venda Andante
+             ═══════════════════════════════════════════════════════════════ -->
+        <FareFrame id="PT:Andante:FareFrame:Andante_Porto_FF:LOC" version="1">
+          <Name>Andante Porto — Tarifas Base 2026</Name>
+
+          <!-- ─────────────────────────────────────────────────────────
+               tariffZones — Definição das zonas geográficas de tarifa
+               Equivale ao zone_id do GTFS, mas como entidade NeTEx
+               com id e versão próprios.
+               ───────────────────────────────────────────────────────── -->
+          <tariffZones>
+
+            <!--
+              Zona Z2 — viagem dentro de até 2 zonas Andante.
+              Cobre essencialmente o centro do Porto (Bolhão, Aliados,
+              Trindade, Carmo, etc.)
+            -->
+            <TariffZone id="PT:Andante:TariffZone:Z2:LOC" version="1">
+              <Name>Andante Z2</Name>
+              <ShortName>Z2</ShortName>
+            </TariffZone>
+
+            <!-- Zona Z3 — até 3 zonas (periferia imediata do Porto) -->
+            <TariffZone id="PT:Andante:TariffZone:Z3:LOC" version="1">
+              <Name>Andante Z3</Name>
+              <ShortName>Z3</ShortName>
+            </TariffZone>
+
+            <!-- Zona Z4 — até 4 zonas (ex: Castelo do Queijo na Linha 200) -->
+            <TariffZone id="PT:Andante:TariffZone:Z4:LOC" version="1">
+              <Name>Andante Z4</Name>
+              <ShortName>Z4</ShortName>
+            </TariffZone>
+
+          </tariffZones>
+
+          <!-- ─────────────────────────────────────────────────────────
+               fareProducts — Os produtos tarifários (títulos de transporte)
+               ───────────────────────────────────────────────────────── -->
+          <fareProducts>
+
+            <!--
+              PreassignedFareProduct = título com condições pré-definidas.
+              Este é o tipo base para bilhetes simples e passes.
+
+              BILHETE SIMPLES Z2:
+              Válido para 1 viagem de até 2 zonas, durante 75 minutos
+              após validação, em qualquer operador da AMP.
+              Preço: 1,20 € (carre Andante necessário).
+              Em GTFS: fare_id=andante_z2, price=1.20, currency_type=EUR
+            -->
+            <PreassignedFareProduct id="PT:Andante:FareProduct:Z2_Simples:LOC" version="1">
+              <Name>Andante — 1 Viagem Z2</Name>
+              <Description>Bilhete simples para viagem até 2 zonas Andante. Válido 75 minutos após validação. Requer cartão Andante.</Description>
+
+              <!--
+                conditionSummary = resumo das condições de uso.
+                Para consulta rápida pelos sistemas de planificação.
+              -->
+              <conditionSummary>
+                <!-- O título está num documento eletrónico (cartão Andante) -->
+                <TravelDocumentType>electronicDocument</TravelDocumentType>
+                <!-- Requer cartão Andante físico ou app — não pode ser comprado in loco -->
+                <RequiresCard>true</RequiresCard>
+                <RequiresReservation>false</RequiresReservation>
+              </conditionSummary>
+
+              <!--
+                fareStructureElements descrevem as regras tarifárias em detalhe.
+                Para este exemplo introdutório, simplificamos com um único elemento.
+                A modelação completa usa GenericParameterAssignment com
+                UsageValidityPeriod, TariffZoneIntervals, etc. [STD-03]
+              -->
+              <fareStructureElements>
+                <FareStructureElement id="PT:Andante:FSE:Z2_Simples_01:LOC" version="1">
+                  <Name>Validade 75 minutos, máximo Z2</Name>
+
+                  <!-- Referência às zonas válidas para este produto -->
+                  <TariffZoneRef ref="PT:Andante:TariffZone:Z2:LOC" version="1"/>
+
+                </FareStructureElement>
+              </fareStructureElements>
+
+            </PreassignedFareProduct>
+
+            <!--
+              BILHETE SIMPLES Z3 — mesmo conceito, 3 zonas
+            -->
+            <PreassignedFareProduct id="PT:Andante:FareProduct:Z3_Simples:LOC" version="1">
+              <Name>Andante — 1 Viagem Z3</Name>
+              <Description>Bilhete simples para viagem até 3 zonas Andante. Válido 75 minutos após validação.</Description>
+              <conditionSummary>
+                <TravelDocumentType>electronicDocument</TravelDocumentType>
+                <RequiresCard>true</RequiresCard>
+                <RequiresReservation>false</RequiresReservation>
+              </conditionSummary>
+              <fareStructureElements>
+                <FareStructureElement id="PT:Andante:FSE:Z3_Simples_01:LOC" version="1">
+                  <Name>Validade 75 minutos, máximo Z3</Name>
+                  <TariffZoneRef ref="PT:Andante:TariffZone:Z3:LOC" version="1"/>
+                </FareStructureElement>
+              </fareStructureElements>
+            </PreassignedFareProduct>
+
+            <!--
+              BILHETE SIMPLES Z4 — para a viagem completa Bolhão → Castelo do Queijo
+            -->
+            <PreassignedFareProduct id="PT:Andante:FareProduct:Z4_Simples:LOC" version="1">
+              <Name>Andante — 1 Viagem Z4</Name>
+              <Description>Bilhete simples para viagem até 4 zonas Andante. Válido 75 minutos após validação.</Description>
+              <conditionSummary>
+                <TravelDocumentType>electronicDocument</TravelDocumentType>
+                <RequiresCard>true</RequiresCard>
+                <RequiresReservation>false</RequiresReservation>
+              </conditionSummary>
+              <fareStructureElements>
+                <FareStructureElement id="PT:Andante:FSE:Z4_Simples_01:LOC" version="1">
+                  <Name>Validade 75 minutos, máximo Z4</Name>
+                  <TariffZoneRef ref="PT:Andante:TariffZone:Z4:LOC" version="1"/>
+                </FareStructureElement>
+              </fareStructureElements>
+            </PreassignedFareProduct>
+
+            <!--
+              ANDANTE 24 HORAS — passe diário (introdução ao conceito de passe)
+              Permite viagens ilimitadas durante 24 horas após primeira validação.
+              Em GTFS não existe forma de modelar este produto.
+            -->
+            <PreassignedFareProduct id="PT:Andante:FareProduct:24h_Z4:LOC" version="1">
+              <Name>Andante 24H — Zonas 1-4</Name>
+              <Description>Passe de 24 horas para todas as zonas até Z4. Viagens ilimitadas durante 24 horas após primeira validação.</Description>
+              <conditionSummary>
+                <TravelDocumentType>electronicDocument</TravelDocumentType>
+                <RequiresCard>true</RequiresCard>
+                <RequiresReservation>false</RequiresReservation>
+              </conditionSummary>
+            </PreassignedFareProduct>
+
+          </fareProducts>
+
+          <!-- ─────────────────────────────────────────────────────────
+               salesOfferPackages — Como os títulos são vendidos/adquiridos
+               Não existe equivalente em GTFS.
+               ───────────────────────────────────────────────────────── -->
+          <salesOfferPackages>
+
+            <!--
+              Compra nas máquinas automáticas Andante (em estações de metro,
+              interfaces de autocarro, etc.)
+            -->
+            <SalesOfferPackage id="PT:Andante:SalesOfferPackage:Z2_Maquina:LOC" version="1">
+              <Name>Andante Z2 — Máquina automática</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Andante:SOPE:Z2_Maquina_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Andante:FareProduct:Z2_Simples:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+            <SalesOfferPackage id="PT:Andante:SalesOfferPackage:Z3_Maquina:LOC" version="1">
+              <Name>Andante Z3 — Máquina automática</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Andante:SOPE:Z3_Maquina_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Andante:FareProduct:Z3_Simples:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+            <SalesOfferPackage id="PT:Andante:SalesOfferPackage:Z4_Maquina:LOC" version="1">
+              <Name>Andante Z4 — Máquina automática</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Andante:SOPE:Z4_Maquina_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Andante:FareProduct:Z4_Simples:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+            <!--
+              Passe 24h disponível em máquina e online (andante.net)
+              Exemplo de produto com dois canais de venda
+            -->
+            <SalesOfferPackage id="PT:Andante:SalesOfferPackage:24h_Maquina:LOC" version="1">
+              <Name>Andante 24H — Máquina automática</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Andante:SOPE:24h_Maquina_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Andante:FareProduct:24h_Z4:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+            <SalesOfferPackage id="PT:Andante:SalesOfferPackage:24h_Online:LOC" version="1">
+              <Name>Andante 24H — Online (andante.net)</Name>
+              <salesOfferPackageElements>
+                <SalesOfferPackageElement id="PT:Andante:SOPE:24h_Online_01:LOC" version="1" order="1">
+                  <FareProductRef ref="PT:Andante:FareProduct:24h_Z4:LOC" version="1"/>
+                </SalesOfferPackageElement>
+              </salesOfferPackageElements>
+            </SalesOfferPackage>
+
+          </salesOfferPackages>
+
+        </FareFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

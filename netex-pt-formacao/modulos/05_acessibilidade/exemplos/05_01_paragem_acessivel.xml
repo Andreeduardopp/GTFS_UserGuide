@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 05_01 — Acessibilidade em NeTEx
+  =========================================
+  Módulo 5 — Acessibilidade
+
+  Este ficheiro demonstra dois cenários de acessibilidade:
+
+  CENÁRIO A: Paragem Bolhão IDA (BLRB1) — totalmente acessível
+    Paragem renovada com lancil rebaixado, piso tátil, abrigo acessível
+    e autocarro de piso baixo com rampa automática.
+
+  CENÁRIO B: Paragem Antiga — com limitações parciais
+    Paragem com lancil alto sem rebaixamento, sem piso tátil,
+    sem sinais sonoros, atendida por autocarro sem rampa.
+
+  ESTRUTURA:
+    1. SiteFrame — dois Quay com AccessibilityAssessment de infraestrutura
+    2. ServiceFrame — dois ServiceJourney com AccessibilityAssessment de veículo
+
+  COMPARAÇÃO GTFS → NeTEx:
+    GTFS wheelchair_boarding=1 (paragem acessível)  → Quay/AccessibilityAssessment/WheelchairAccess=yes
+    GTFS wheelchair_accessible=1 (viagem acessível) → ServiceJourney/AccessibilityAssessment/WheelchairAccess=yes
+    GTFS: sem campo para deficiência visual/auditiva → NeTEx: AudibleSignalsAvailable, VisualSignsAvailable
+
+  Fonte: CEN/TS 16614-1:2024 (NeTEx Parte 1) [STD-01]
+         CEN/TS 16614-6:2024 (NeTEx Parte 6 — EPIAP) [STD-06]
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <ParticipantRef>PT:STCP</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:STCP:CompositeFrame:Acessibilidade_M05:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             SiteFrame — Acessibilidade da INFRAESTRUTURA (paragens)
+             Responde à pergunta: "o passageiro consegue aceder à paragem?"
+             ═══════════════════════════════════════════════════════════════ -->
+        <SiteFrame id="PT:STCP:SiteFrame:Acessibilidade_SF:LOC" version="1">
+
+          <stopPlaces>
+
+            <StopPlace id="PT:STCP:StopPlace:Bolhao:LOC" version="1">
+              <Name>Bolhão</Name>
+              <Centroid>
+                <Location>
+                  <Longitude>-8.607115</Longitude>
+                  <Latitude>41.151868</Latitude>
+                </Location>
+              </Centroid>
+              <StopPlaceType>onstreetBus</StopPlaceType>
+              <TransportMode>bus</TransportMode>
+
+              <quays>
+
+                <!-- ─────────────────────────────────────────────────────
+                     CENÁRIO A — Quay totalmente acessível (BLRB1)
+                     Paragem renovada: lancil rebaixado, piso tátil,
+                     abrigo com banco, painel digital de informação,
+                     botão de chamada sonora.
+                     GTFS: wheelchair_boarding=1
+                     ───────────────────────────────────────────────────── -->
+                <Quay id="PT:STCP:Quay:Bolhao_IDA:LOC" version="2">
+                  <Name>Bolhão — Sentido Castelo do Queijo</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.607115</Longitude>
+                      <Latitude>41.151868</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+
+                  <!--
+                    AccessibilityAssessment da INFRAESTRUTURA:
+                    Avalia as condições FÍSICAS da paragem, independentemente
+                    do veículo que a serve.
+
+                    MobilityImpairedAccess="yes" → avaliação geral positiva.
+                    É o campo mais visível — os sistemas de pesquisa filtram por aqui.
+                  -->
+                  <AccessibilityAssessment id="PT:STCP:AA:Quay_Bolhao_IDA:LOC" version="1">
+                    <MobilityImpairedAccess>yes</MobilityImpairedAccess>
+                    <limitations>
+                      <AccessibilityLimitation>
+
+                        <!--
+                          WheelchairAccess=yes:
+                          Existe lancil rebaixado a 0cm (nível do asfalto).
+                          O passageiro de cadeira de rodas consegue aceder sem assistência.
+                          Equivale a wheelchair_boarding=1 no GTFS.
+                        -->
+                        <WheelchairAccess>yes</WheelchairAccess>
+
+                        <!--
+                          StepFreeAccess=yes:
+                          Não há degraus no percurso desde o passeio até ao bordo da paragem.
+                          Inclui rebaixamentos de passeio nas proximidades.
+                        -->
+                        <StepFreeAccess>yes</StepFreeAccess>
+
+                        <!--
+                          EscalatorFreeAccess=yes:
+                          Não há escadas rolantes no percurso (paragem à superfície).
+                          Para paragem de rua, este campo é tipicamente "yes".
+                        -->
+                        <EscalatorFreeAccess>yes</EscalatorFreeAccess>
+
+                        <!--
+                          LiftFreeAccess=yes:
+                          Não é necessário elevador para aceder à paragem.
+                          (Relevante para estações subterrâneas; para paragem de rua = yes)
+                        -->
+                        <LiftFreeAccess>yes</LiftFreeAccess>
+
+                        <!--
+                          AudibleSignalsAvailable=yes:
+                          Existe poste com botão de chamada sonora para passageiros cegos.
+                          O sistema anuncia sonoramente qual o próximo veículo.
+                          NÃO EXISTE equivalente no GTFS — é informação nova em NeTEx.
+                        -->
+                        <AudibleSignalsAvailable>yes</AudibleSignalsAvailable>
+
+                        <!--
+                          VisualSignsAvailable=yes:
+                          Existe painel digital com próximas partidas + nome das linhas.
+                          Inclui piso tátil (lista de guia) desde o passeio até ao bordo.
+                          NÃO EXISTE equivalente no GTFS.
+                        -->
+                        <VisualSignsAvailable>yes</VisualSignsAvailable>
+
+                      </AccessibilityLimitation>
+                    </limitations>
+                  </AccessibilityAssessment>
+
+                </Quay>
+
+                <!-- ─────────────────────────────────────────────────────
+                     CENÁRIO B — Quay com limitações (paragem antiga)
+                     Paragem não renovada: lancil alto, sem piso tátil,
+                     só placa de nome, sem abrigo, passeio estreito.
+                     GTFS: wheelchair_boarding=2 (não acessível)
+                     ─────────────────────────────────────────────────────
+                     NOTA: Este Quay é fictício para fins pedagógicos.
+                     ───────────────────────────────────────────────────── -->
+                <Quay id="PT:STCP:Quay:Exemplo_Antigo:LOC" version="1">
+                  <Name>Exemplo — Paragem com Limitações</Name>
+                  <Centroid>
+                    <Location>
+                      <!-- Coordenadas fictícias para este exemplo pedagógico -->
+                      <Longitude>-8.607400</Longitude>
+                      <Latitude>41.151200</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+
+                  <AccessibilityAssessment id="PT:STCP:AA:Quay_Antigo:LOC" version="1">
+                    <!--
+                      MobilityImpairedAccess=partial:
+                      É possível aceder mas com condicionalismos significativos.
+                      Um utilizador de cadeira de rodas manual pode conseguir com assistência;
+                      uma cadeira elétrica larga pode não conseguir.
+                    -->
+                    <MobilityImpairedAccess>partial</MobilityImpairedAccess>
+                    <limitations>
+                      <AccessibilityLimitation>
+
+                        <!--
+                          WheelchairAccess=partial:
+                          Lancil de 15cm — muito elevado para cadeiras de rodas.
+                          Possível com grande esforço ou assistência de terceiros.
+                          Em GTFS isto seria wheelchair_boarding=1 (tecnicamente "possível")
+                          ou 2 ("não possível") — o valor binário não captura "difícil".
+                        -->
+                        <WheelchairAccess>partial</WheelchairAccess>
+
+                        <!-- Sem degraus no passeio de aproximação -->
+                        <StepFreeAccess>yes</StepFreeAccess>
+
+                        <!-- Paragem de rua, sem escadas rolantes -->
+                        <EscalatorFreeAccess>yes</EscalatorFreeAccess>
+
+                        <!-- Paragem de rua, sem elevador -->
+                        <LiftFreeAccess>yes</LiftFreeAccess>
+
+                        <!--
+                          AudibleSignalsAvailable=no:
+                          Não existe qualquer sinal sonoro.
+                          Um passageiro cego não tem forma de identificar a paragem
+                          ou ser alertado quando o veículo se aproxima.
+                        -->
+                        <AudibleSignalsAvailable>no</AudibleSignalsAvailable>
+
+                        <!--
+                          VisualSignsAvailable=partial:
+                          Existe apenas a placa com o nome da paragem.
+                          Não há painel de próximas partidas, não há piso tátil.
+                          "partial" = alguma informação visual, mas incompleta.
+                        -->
+                        <VisualSignsAvailable>partial</VisualSignsAvailable>
+
+                      </AccessibilityLimitation>
+                    </limitations>
+                  </AccessibilityAssessment>
+
+                </Quay>
+
+              </quays>
+            </StopPlace>
+
+          </stopPlaces>
+        </SiteFrame>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             ServiceFrame — Acessibilidade do VEÍCULO (viagens)
+             Responde à pergunta: "o veículo desta viagem é acessível?"
+             ═══════════════════════════════════════════════════════════════ -->
+        <ServiceFrame id="PT:STCP:ServiceFrame:Acessibilidade_SvF:LOC" version="1">
+
+          <scheduledStopPoints>
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1">
+              <Name>Bolhão</Name>
+            </ScheduledStopPoint>
+          </scheduledStopPoints>
+
+        </ServiceFrame>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             TimetableFrame — ServiceJourney com AccessibilityAssessment
+             ═══════════════════════════════════════════════════════════════ -->
+        <TimetableFrame id="PT:STCP:TimetableFrame:Acessibilidade_TF:LOC" version="1">
+          <vehicleJourneys>
+
+            <!-- ─────────────────────────────────────────────────────────
+                 CENÁRIO A — Viagem com veículo acessível (piso baixo + rampa)
+                 GTFS: wheelchair_accessible=1
+                 ───────────────────────────────────────────────────────── -->
+            <ServiceJourney id="PT:STCP:ServiceJourney:200_DU_0600_ACESS:LOC" version="1">
+              <Name>200 IDA — Dias Úteis 06:00 (veículo acessível)</Name>
+              <DayTypeRefs>
+                <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              </DayTypeRefs>
+              <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+
+              <!--
+                AccessibilityAssessment do VEÍCULO (não da paragem):
+                Avalia se o autocarro desta viagem concreta é acessível.
+                Pode variar de viagem para viagem (nem todos os autocarros
+                da frota têm piso baixo ou rampa operacional).
+
+                Este AccessibilityAssessment está no ServiceJourney porque
+                é específico desta viagem — o mesmo ScheduledStopPoint pode
+                ter uma viagem acessível de manhã e uma não-acessível à tarde
+                se veículos diferentes forem escalonados.
+              -->
+              <AccessibilityAssessment id="PT:STCP:AA:SJ_200_DU_0600:LOC" version="1">
+                <!--
+                  MobilityImpairedAccess=yes:
+                  Este veículo (autocarro de piso baixo com rampa automática)
+                  está totalmente preparado para passageiros com mobilidade condicionada.
+                  Equivale a wheelchair_accessible=1 no GTFS trips.txt.
+                -->
+                <MobilityImpairedAccess>yes</MobilityImpairedAccess>
+                <limitations>
+                  <AccessibilityLimitation>
+                    <!--
+                      WheelchairAccess=yes:
+                      Piso baixo (baixa ao nível da paragem) + rampa automática.
+                      Capacidade para 1 cadeira de rodas (espaço reservado no interior).
+                    -->
+                    <WheelchairAccess>yes</WheelchairAccess>
+
+                    <!-- Piso baixo = sem degraus na entrada do veículo -->
+                    <StepFreeAccess>yes</StepFreeAccess>
+
+                    <!--
+                      AudibleSignalsAvailable=yes:
+                      Sistema de anúncios sonoros: anuncia a próxima paragem em voz.
+                      Muito importante para passageiros cegos.
+                    -->
+                    <AudibleSignalsAvailable>yes</AudibleSignalsAvailable>
+
+                    <!--
+                      VisualSignsAvailable=yes:
+                      Painel interior com nome da próxima paragem.
+                      Ecrã frontal exterior com número e destino da linha.
+                    -->
+                    <VisualSignsAvailable>yes</VisualSignsAvailable>
+
+                  </AccessibilityLimitation>
+                </limitations>
+              </AccessibilityAssessment>
+
+              <passingTimes>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"/>
+                  <DepartureTime>06:00:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
+                  <ArrivalTime>06:40:00</ArrivalTime>
+                </TimetabledPassingTime>
+              </passingTimes>
+            </ServiceJourney>
+
+            <!-- ─────────────────────────────────────────────────────────
+                 CENÁRIO B — Viagem com veículo não acessível (autocarro antigo)
+                 GTFS: wheelchair_accessible=2
+                 ───────────────────────────────────────────────────────── -->
+            <ServiceJourney id="PT:STCP:ServiceJourney:200_DU_2230_NACESS:LOC" version="1">
+              <Name>200 IDA — Dias Úteis 22:30 (veículo não acessível)</Name>
+              <DayTypeRefs>
+                <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              </DayTypeRefs>
+              <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+
+              <!--
+                Viagem noturna com autocarro de frota mais antiga.
+                Piso alto, escada de 3 degraus na entrada.
+                Sem sistema de anúncios sonoros.
+                GTFS: wheelchair_accessible=2
+              -->
+              <AccessibilityAssessment id="PT:STCP:AA:SJ_200_DU_2230:LOC" version="1">
+                <!--
+                  MobilityImpairedAccess=no:
+                  Este veículo não está preparado para passageiros
+                  com mobilidade condicionada. Equivale a wheelchair_accessible=2.
+                -->
+                <MobilityImpairedAccess>no</MobilityImpairedAccess>
+                <limitations>
+                  <AccessibilityLimitation>
+                    <!-- Escada de 3 degraus na entrada → não acessível a cadeira de rodas -->
+                    <WheelchairAccess>no</WheelchairAccess>
+
+                    <!-- Degraus na entrada = StepFreeAccess=no -->
+                    <StepFreeAccess>no</StepFreeAccess>
+
+                    <!-- Sem sistema de anúncios sonoros -->
+                    <AudibleSignalsAvailable>no</AudibleSignalsAvailable>
+
+                    <!--
+                      VisualSignsAvailable=partial:
+                      Só o ecrã frontal exterior (número/destino da linha).
+                      Sem painel interior de próxima paragem.
+                    -->
+                    <VisualSignsAvailable>partial</VisualSignsAvailable>
+
+                  </AccessibilityLimitation>
+                </limitations>
+              </AccessibilityAssessment>
+
+              <passingTimes>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"/>
+                  <DepartureTime>22:30:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
+                  <ArrivalTime>23:15:00</ArrivalTime>
+                </TimetabledPassingTime>
+              </passingTimes>
+            </ServiceJourney>
+
+          </vehicleJourneys>
+        </TimetableFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

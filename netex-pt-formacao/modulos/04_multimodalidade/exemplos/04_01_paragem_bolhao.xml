@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 04_01 — Paragem Bolhão (Porto) em NeTEx
+  =================================================
+  Módulo 4 — Multimodalidade e StopPlace
+
+  Este ficheiro demonstra a separação entre camada LÓGICA e camada FÍSICA
+  para a paragem Bolhão da STCP em Porto.
+
+  COMPARAÇÃO GTFS → NeTEx:
+  ─────────────────────────────────────────────────────────────────────────
+  GTFS stops.txt:                    NeTEx:
+    BLRB1  Bolhão  41.151868  ...  →  Quay (plataforma IDA)
+    BLRB2  Bolhão  41.151672  ...  →  Quay (plataforma VOLTA)
+    (sem relação estrutural)       →  StopPlace "Bolhão" (agrupa os Quay)
+    stop_id como ponto lógico      →  ScheduledStopPoint (camada lógica)
+    (mistura físico e lógico)      →  PassengerStopAssignment (ponte)
+  ─────────────────────────────────────────────────────────────────────────
+
+  O que este ficheiro contém:
+    1. SiteFrame — StopPlace "Bolhão" com 2 Quay (IDA e VOLTA)
+    2. ServiceFrame — 2 ScheduledStopPoint + PassengerStopAssignment
+
+  DADOS REAIS: Paragens BLRB1 e BLRB2 do feed GTFS STCP Porto (Abr 2026)
+  Fonte: STCP. Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30). [DATA-03]
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <!-- ParticipantRef identifica o sistema/organização que produz este ficheiro -->
+  <ParticipantRef>PT:STCP</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:STCP:CompositeFrame:Bolhao_M04:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PARTE 1 — SiteFrame (camada FÍSICA)
+             O SiteFrame não tem equivalente direto em GTFS.
+             É aqui que vivem os objetos físicos: StopPlace, Quay, etc.
+             ═══════════════════════════════════════════════════════════════ -->
+        <SiteFrame id="PT:STCP:SiteFrame:Bolhao_SF:LOC" version="1">
+
+          <stopPlaces>
+
+            <!--
+              StopPlace = o lugar físico (o cruzamento, a praça, o edifício)
+              Em GTFS, "Bolhão" seria um stop com location_type=1 (parent_station)
+              ou simplesmente inexistente se não houver hierarquia definida.
+
+              StopPlaceType="onstreetBus" → paragem de autocarro à beira-de-estrada
+              (vs. metroStation, railStation, busStation, etc.)
+            -->
+            <StopPlace id="PT:STCP:StopPlace:Bolhao:LOC" version="1">
+              <Name>Bolhão</Name>
+
+              <!--
+                Centroid = coordenadas do CENTRO DO LUGAR (o cruzamento/praça).
+                Em GTFS, o stop com location_type=1 tem as coordenadas do centro.
+                Em NeTEx, cada Quay tem as suas próprias coordenadas — o Centroid
+                do StopPlace é apenas o centróide geográfico do conjunto.
+              -->
+              <Centroid>
+                <Location>
+                  <Longitude>-8.607115</Longitude>
+                  <Latitude>41.151868</Latitude>
+                </Location>
+              </Centroid>
+
+              <!-- StopPlaceType classifica o tipo físico da instalação -->
+              <StopPlaceType>onstreetBus</StopPlaceType>
+
+              <!--
+                TransportMode = modo de transporte principal deste StopPlace.
+                Um StopPlace monomodal (só autocarros) tem TransportMode=bus.
+                Um StopPlace multimodal teria TransportMode=unknown ou omite este campo
+                e usa os TransportMode de cada Quay individualmente.
+              -->
+              <TransportMode>bus</TransportMode>
+
+              <!--
+                quays = lista das plataformas de embarque dentro deste StopPlace.
+                Em GTFS, estas seriam paragens com location_type=0 e parent_station=BLRB_PAR
+                (se a hierarquia estivesse definida). Em NeTEx, a hierarquia é XML nativa.
+              -->
+              <quays>
+
+                <!--
+                  Quay = a plataforma específica onde o veículo pára e os passageiros embarcam.
+                  BLRB1 no GTFS corresponde à paragem de autocarro sentido IDA (Castelo do Queijo).
+                  Em NeTEx, este Quay tem as COORDENADAS EXATAS da plataforma, não do lugar geral.
+                -->
+                <Quay id="PT:STCP:Quay:Bolhao_IDA:LOC" version="1">
+                  <Name>Bolhão — Sentido Castelo do Queijo</Name>
+
+                  <!-- Coordenadas desta plataforma específica — equivale ao stop_lat/stop_lon do BLRB1 -->
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.607115</Longitude>
+                      <Latitude>41.151868</Latitude>
+                    </Location>
+                  </Centroid>
+
+                  <!-- QuayType=busStop → plataforma de autocarro (não railway platform, etc.) -->
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+                <!--
+                  BLRB2 = paragem de autocarro sentido VOLTA (Bolhão).
+                  Em GTFS são dois stop_id separados sem ligação estrutural entre si.
+                  Em NeTEx, estão explicitamente dentro do mesmo StopPlace,
+                  tornando a relação imediatamente visível no modelo.
+                -->
+                <Quay id="PT:STCP:Quay:Bolhao_VOLTA:LOC" version="1">
+                  <Name>Bolhão — Sentido Aliados / Centro</Name>
+
+                  <!-- Coordenadas ligeiramente diferentes — BLRB2 está na outra face da rua -->
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.607192</Longitude>
+                      <Latitude>41.151672</Latitude>
+                    </Location>
+                  </Centroid>
+
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+              </quays>
+            </StopPlace>
+
+          </stopPlaces>
+        </SiteFrame>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PARTE 2 — ServiceFrame (camada LÓGICA + ligação)
+             Contém os ScheduledStopPoint (pontos lógicos de paragem)
+             e os PassengerStopAssignment (a ponte físico↔lógico).
+             ═══════════════════════════════════════════════════════════════ -->
+        <ServiceFrame id="PT:STCP:ServiceFrame:Bolhao_SvF:LOC" version="1">
+
+          <!--
+            scheduledStopPoints = pontos lógicos de paragem.
+            Estes são os pontos que os horários (ServiceJourney) referenciam.
+            Em GTFS, stop_id serve ao mesmo tempo como ponto lógico E localização física.
+            Em NeTEx, ScheduledStopPoint só tem o nome e os atributos de serviço —
+            as coordenadas físicas ficam no Quay (ligado pelo PassengerStopAssignment).
+          -->
+          <scheduledStopPoints>
+
+            <!--
+              ScheduledStopPoint BLRB1 = o conceito "veículo pára aqui no horário da Linha 200 IDA".
+              Não tem coordenadas — é uma abstração lógica.
+              As coordenadas físicas estão no Quay:Bolhao_IDA (ligado abaixo).
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1">
+              <Name>Bolhão</Name>
+            </ScheduledStopPoint>
+
+            <!--
+              ScheduledStopPoint BLRB2 = o conceito "veículo pára aqui no horário da Linha 200 VOLTA".
+              Existe um SSP separado para cada ponto de paragem lógico —
+              mas ambos pertencem ao mesmo StopPlace físico.
+            -->
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:BLRB2:LOC" version="1">
+              <Name>Bolhão</Name>
+            </ScheduledStopPoint>
+
+          </scheduledStopPoints>
+
+          <!--
+            stopAssignments = a ponte entre a camada lógica e a camada física.
+            Cada PassengerStopAssignment liga um ScheduledStopPoint a um Quay específico.
+
+            PORQUÊ ter esta ligação separada?
+            - Flexibilidade temporal: durante obras, o mesmo SSP pode ser redirigido
+              para um Quay temporário sem alterar os horários.
+            - Múltiplas linhas: várias linhas podem usar o mesmo Quay —
+              cada uma tem o seu PassengerStopAssignment.
+          -->
+          <stopAssignments>
+
+            <!--
+              PassengerStopAssignment IDA:
+              ScheduledStopPoint BLRB1 (lógico) → StopPlace Bolhão (físico geral)
+                                                → Quay Bolhao_IDA (plataforma específica IDA)
+
+              order="1" → sequência de prioridade se houver múltiplas atribuições
+            -->
+            <PassengerStopAssignment
+                id="PT:STCP:PSA:BLRB1_Bolhao_IDA:LOC"
+                version="1"
+                order="1">
+
+              <!-- O ponto lógico (referenciado nos horários) -->
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+
+              <!-- O lugar físico geral (o StopPlace) -->
+              <StopPlaceRef ref="PT:STCP:StopPlace:Bolhao:LOC" version="1"/>
+
+              <!-- A plataforma específica onde o passageiro deve ir -->
+              <QuayRef ref="PT:STCP:Quay:Bolhao_IDA:LOC" version="1"/>
+
+            </PassengerStopAssignment>
+
+            <!--
+              PassengerStopAssignment VOLTA:
+              ScheduledStopPoint BLRB2 → StopPlace Bolhão → Quay Bolhao_VOLTA
+            -->
+            <PassengerStopAssignment
+                id="PT:STCP:PSA:BLRB2_Bolhao_VOLTA:LOC"
+                version="1"
+                order="1">
+
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB2:LOC" version="1"/>
+              <StopPlaceRef ref="PT:STCP:StopPlace:Bolhao:LOC" version="1"/>
+              <QuayRef ref="PT:STCP:Quay:Bolhao_VOLTA:LOC" version="1"/>
+
+            </PassengerStopAssignment>
+
+          </stopAssignments>
+
+        </ServiceFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

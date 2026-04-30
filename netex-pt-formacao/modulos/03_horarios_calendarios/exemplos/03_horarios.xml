@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 03 — Horários e Calendários NeTEx
+  ==========================================
+  Curso: NeTEx PT Formação — Módulo 3: Horários e Calendários
+  Fonte dos dados: STCP Porto, Linha 200 [DATA-03]
+
+  O que este ficheiro demonstra:
+  - ServiceCalendarFrame com 3 DayType (Dias Úteis, Sábados, Domingos/Feriados)
+  - OperatingDay para as primeiras semanas do feed (Abr–Mai 2026)
+  - DayTypeAssignment a ligar DayType e OperatingDay
+  - TimetableFrame com 3 ServiceJourney (uma por tipo de dia)
+  - TimetabledPassingTime para 5 paragens representativas
+  - Referência ao ServiceJourneyPattern do Módulo 2 (reutilização)
+
+  Dados reais do feed GTFS (trips 200_0_1|228|D1|T6|N2, D2|T2|N2, D3|T2|N2):
+  Partida 06:00 de Bolhão nas três variantes de serviço.
+
+  Referências:
+  - [STD-01] CEN/TS 16614-1:2024
+  - [STD-02] CEN/TS 16614-2:2024 (Horários)
+  - [PT-01]  IMT. Perfil Nacional NeTEx Portugal
+  - [DATA-03] STCP. Feed GTFS Porto, versão Escolar 228 (2026-04-30)
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <ParticipantRef>PT:STCP</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:STCP:CompositeFrame:STCP_L200_Horarios:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <!--
+          ResourceFrame (resumido — ver Módulo 1 para versão completa)
+        -->
+        <ResourceFrame id="PT:STCP:ResourceFrame:Horarios_RF:LOC" version="1">
+          <organisations>
+            <Operator id="PT:STCP:Operator:STCP:LOC" version="1">
+              <Name>Sociedade de Transportes Colectivos do Porto, E.I.M., S.A.</Name>
+              <ShortName>STCP</ShortName>
+            </Operator>
+          </organisations>
+        </ResourceFrame>
+
+        <!--
+          =========================================================
+          SERVICE CALENDAR FRAME
+          =========================================================
+          Contém os calendários de operação:
+          - DayType: os tipos de dia (quem são os "dias úteis", "sábados", etc.)
+          - OperatingDay: as datas concretas do ano
+          - DayTypeAssignment: a ligação entre DayType e OperatingDay
+
+          Equivalência GTFS:
+            calendar_dates.txt ≈ OperatingDay + DayTypeAssignment
+            (a STCP usa apenas calendar_dates.txt, sem calendar.txt)
+        -->
+        <ServiceCalendarFrame id="PT:STCP:ServiceCalendarFrame:2026-2027:LOC" version="1">
+
+          <!--
+            dayTypes: definição dos tipos de dia de serviço.
+            Correspondem aos service_id do GTFS:
+              "DIAS UTEIS"          → DayType DiasUteis
+              "SÁBADOS"             → DayType Sabados
+              "DOMINGOS|FERIADOS"   → DayType DomingosFeriados
+          -->
+          <dayTypes>
+
+            <!--
+              DayType "Dias Úteis": segunda a sexta, exceto feriados.
+              A propriedade DaysOfWeek é informativa — as datas concretas
+              são definidas pelos DayTypeAssignment abaixo.
+            -->
+            <DayType id="PT:STCP:DayType:DiasUteis:LOC" version="1">
+              <Name>Dias Úteis</Name>
+              <ShortName>DU</ShortName>
+              <properties>
+                <PropertyOfDay>
+                  <!--
+                    DaysOfWeek: indica os dias da semana em que este DayType
+                    normalmente opera. É informativo; a verdade vem dos DayTypeAssignment.
+                    Valores possíveis: Monday Tuesday Wednesday Thursday Friday Saturday Sunday
+                  -->
+                  <DaysOfWeek>Monday Tuesday Wednesday Thursday Friday</DaysOfWeek>
+                </PropertyOfDay>
+              </properties>
+            </DayType>
+
+            <!-- DayType "Sábados": opera aos sábados -->
+            <DayType id="PT:STCP:DayType:Sabados:LOC" version="1">
+              <Name>Sábados</Name>
+              <ShortName>SAB</ShortName>
+              <properties>
+                <PropertyOfDay>
+                  <DaysOfWeek>Saturday</DaysOfWeek>
+                </PropertyOfDay>
+              </properties>
+            </DayType>
+
+            <!--
+              DayType "Domingos e Feriados": opera aos domingos e feriados nacionais.
+              Note que feriados que caem em dias de semana também usam este serviço,
+              por isso o DaysOfWeek inclui Sunday mas não é suficiente — os feriados
+              são explicitados nos DayTypeAssignment.
+            -->
+            <DayType id="PT:STCP:DayType:DomingosFeriados:LOC" version="1">
+              <Name>Domingos e Feriados</Name>
+              <ShortName>DF</ShortName>
+              <properties>
+                <PropertyOfDay>
+                  <DaysOfWeek>Sunday</DaysOfWeek>
+                </PropertyOfDay>
+              </properties>
+            </DayType>
+
+          </dayTypes>
+
+          <!--
+            operatingDays: as datas concretas de operação.
+            Um OperatingDay por data em calendar_dates.txt.
+
+            Aqui mostramos apenas as primeiras 7 datas do feed (Abr–Mai 2026)
+            para ilustrar o padrão. O feed completo tem ~365 OperatingDay.
+
+            calendar_dates.txt:
+              DIAS UTEIS,20260430,1          → OperatingDay 20260430 (quinta-feira)
+              DOMINGOS|FERIADOS,20260501,1   → OperatingDay 20260501 (1.º de Maio — Feriado)
+              SÁBADOS,20260502,1             → OperatingDay 20260502 (sábado)
+              DOMINGOS|FERIADOS,20260503,1   → OperatingDay 20260503 (domingo)
+              DIAS UTEIS,20260504,1          → OperatingDay 20260504 (segunda-feira)
+              DIAS UTEIS,20260505,1          → OperatingDay 20260505 (terça-feira)
+              DOMINGOS|FERIADOS,20260510,1   → OperatingDay 20260510 (domingo)
+          -->
+          <operatingDays>
+
+            <!--
+              2026-04-30: quinta-feira normal → Dias Úteis
+              (primeiro dia do feed)
+            -->
+            <OperatingDay id="PT:STCP:OperatingDay:20260430:LOC" version="1">
+              <CalendarDate>2026-04-30</CalendarDate>
+            </OperatingDay>
+
+            <!--
+              2026-05-01: 1.º de Maio — Dia do Trabalhador, feriado nacional.
+              Apesar de ser quinta-feira, opera como Domingos/Feriados.
+              Isto ilustra porque a STCP usa calendar_dates.txt e não calendar.txt:
+              a regra "segunda a sexta" tem exceções (feriados).
+            -->
+            <OperatingDay id="PT:STCP:OperatingDay:20260501:LOC" version="1">
+              <CalendarDate>2026-05-01</CalendarDate>
+            </OperatingDay>
+
+            <!-- 2026-05-02: sábado → Sábados -->
+            <OperatingDay id="PT:STCP:OperatingDay:20260502:LOC" version="1">
+              <CalendarDate>2026-05-02</CalendarDate>
+            </OperatingDay>
+
+            <!-- 2026-05-03: domingo → Domingos/Feriados -->
+            <OperatingDay id="PT:STCP:OperatingDay:20260503:LOC" version="1">
+              <CalendarDate>2026-05-03</CalendarDate>
+            </OperatingDay>
+
+            <!-- 2026-05-04: segunda-feira → Dias Úteis -->
+            <OperatingDay id="PT:STCP:OperatingDay:20260504:LOC" version="1">
+              <CalendarDate>2026-05-04</CalendarDate>
+            </OperatingDay>
+
+            <!-- 2026-05-05: terça-feira → Dias Úteis -->
+            <OperatingDay id="PT:STCP:OperatingDay:20260505:LOC" version="1">
+              <CalendarDate>2026-05-05</CalendarDate>
+            </OperatingDay>
+
+            <!-- 2026-05-10: domingo → Domingos/Feriados -->
+            <OperatingDay id="PT:STCP:OperatingDay:20260510:LOC" version="1">
+              <CalendarDate>2026-05-10</CalendarDate>
+            </OperatingDay>
+
+          </operatingDays>
+
+          <!--
+            dayTypeAssignments: a ligação entre DayType e OperatingDay.
+            order: sequência arbitrária mas necessária pelo schema.
+
+            Leitura: "no dia 20260430, opera o DayType DiasUteis"
+          -->
+          <dayTypeAssignments>
+
+            <!-- 2026-04-30 (quinta) → Dias Úteis -->
+            <DayTypeAssignment id="PT:STCP:DTA:DU_20260430:LOC" version="1" order="1">
+              <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260430:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+
+            <!-- 2026-05-01 (feriado) → Domingos/Feriados, NÃO Dias Úteis -->
+            <DayTypeAssignment id="PT:STCP:DTA:DF_20260501:LOC" version="1" order="2">
+              <DayTypeRef ref="PT:STCP:DayType:DomingosFeriados:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260501:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+
+            <!-- 2026-05-02 (sábado) → Sábados -->
+            <DayTypeAssignment id="PT:STCP:DTA:SAB_20260502:LOC" version="1" order="3">
+              <DayTypeRef ref="PT:STCP:DayType:Sabados:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260502:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+
+            <!-- 2026-05-03 (domingo) → Domingos/Feriados -->
+            <DayTypeAssignment id="PT:STCP:DTA:DF_20260503:LOC" version="1" order="4">
+              <DayTypeRef ref="PT:STCP:DayType:DomingosFeriados:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260503:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+
+            <!-- 2026-05-04 (segunda) → Dias Úteis -->
+            <DayTypeAssignment id="PT:STCP:DTA:DU_20260504:LOC" version="1" order="5">
+              <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260504:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+
+            <!-- 2026-05-05 (terça) → Dias Úteis -->
+            <DayTypeAssignment id="PT:STCP:DTA:DU_20260505:LOC" version="1" order="6">
+              <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260505:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+
+            <!-- 2026-05-10 (domingo) → Domingos/Feriados -->
+            <DayTypeAssignment id="PT:STCP:DTA:DF_20260510:LOC" version="1" order="7">
+              <DayTypeRef ref="PT:STCP:DayType:DomingosFeriados:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260510:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+
+          </dayTypeAssignments>
+
+        </ServiceCalendarFrame>
+
+        <!--
+          =========================================================
+          TIMETABLE FRAME
+          =========================================================
+          Contém as ServiceJourney — as viagens concretas com horários.
+
+          Cada ServiceJourney:
+          1. Referencia o ServiceJourneyPattern (do Módulo 2) — ONDE para
+          2. Referencia um DayType (acima) — QUANDO opera
+          3. Lista os TimetabledPassingTime — A QUE HORAS passa em cada paragem
+
+          Neste exemplo: 3 viagens para a partida das 06:00 de Bolhão,
+          uma por tipo de dia (Dias Úteis, Sábados, Domingos/Feriados).
+          Usamos apenas 5 paragens para manter a legibilidade.
+
+          Dados reais do feed GTFS [DATA-03]:
+            DU:  trip 200_0_1|228|D1|T6|N2  (serviço DIAS UTEIS)
+            SAB: trip 200_0_1|228|D2|T2|N2  (serviço SÁBADOS)
+            DF:  trip 200_0_1|228|D3|T2|N2  (serviço DOMINGOS|FERIADOS)
+        -->
+        <TimetableFrame id="PT:STCP:TimetableFrame:L200_2026-2027:LOC" version="1">
+
+          <vehicleJourneys>
+
+            <!--
+              ─────────────────────────────────────────────────────
+              ServiceJourney 1: DIAS ÚTEIS, partida 06:00 de Bolhão
+              GTFS: trip_id = 200_0_1|228|D1|T6|N2
+              ─────────────────────────────────────────────────────
+
+              wheelchair_accessible=1 em GTFS → AccessibilityAssessment com
+              WheelchairAccess=yes em NeTEx.
+            -->
+            <ServiceJourney id="PT:STCP:ServiceJourney:200_DU_0600:LOC" version="1">
+              <Name>200 IDA — Dias Úteis 06:00</Name>
+
+              <!--
+                DayTypeRefs: a que tipo(s) de dia esta viagem opera.
+                Uma viagem pode operar em múltiplos DayType (ex: "dias úteis e sábados"),
+                mas aqui cada viagem tem exatamente um DayType.
+              -->
+              <DayTypeRefs>
+                <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              </DayTypeRefs>
+
+              <!--
+                JourneyPatternRef: referência ao padrão de paragens (do Módulo 2).
+                A ServiceJourney não repete a lista de paragens — apenas os tempos.
+                Os StopPointInJourneyPatternRef nos TimetabledPassingTime
+                são o elo de ligação entre o tempo e a paragem.
+              -->
+              <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
+
+              <!--
+                OperatorRef: quem opera esta viagem específica.
+                Normalmente o mesmo operador da Line, mas em contratos
+                de subconcessão pode ser diferente.
+              -->
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+
+              <!--
+                Acessibilidade: wheelchair_accessible=1 no GTFS
+                → AccessibilityAssessment com limitações conhecidas.
+                Em NeTEx, a acessibilidade pode ser mais granular (ver Módulo 5).
+              -->
+              <AccessibilityAssessment id="PT:STCP:AA:200_DU_0600:LOC" version="1">
+                <MobilityImpairedAccess>yes</MobilityImpairedAccess>
+                <limitations>
+                  <AccessibilityLimitation>
+                    <WheelchairAccess>yes</WheelchairAccess>
+                  </AccessibilityLimitation>
+                </limitations>
+              </AccessibilityAssessment>
+
+              <!--
+                passingTimes: os tempos de passagem em cada paragem.
+                Cada TimetabledPassingTime corresponde a uma linha de stop_times.txt.
+
+                StopPointInJourneyPatternRef: referência ao ponto no padrão (do Módulo 2).
+                Estes ref's devem corresponder aos StopPointInJourneyPattern definidos
+                no ServiceJourneyPattern PT:STCP:SJP:200_IDA_NORMAL:LOC.
+
+                Nota: neste exemplo usamos apenas 5 das 30 paragens (SPIJP 01, 06, 09, 23, 30).
+                Um ficheiro real teria todos os 30 TimetabledPassingTime.
+              -->
+              <passingTimes>
+
+                <!--
+                  Paragem 1: Bolhão (seq. 1 no padrão)
+                  Terminal de partida — apenas DepartureTime (não há chegada antes da partida).
+                  GTFS: arrival_time=06:00:00, departure_time=06:00:00
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"/>
+                  <DepartureTime>06:00:00</DepartureTime>
+                </TimetabledPassingTime>
+
+                <!--
+                  Paragem 6: Carmo
+                  Paragem intermédia — ArrivalTime = DepartureTime (sem espera).
+                  Dias Úteis: 5 min de percurso desde o Bolhão.
+                  GTFS: arrival_time=06:05:00, departure_time=06:05:00
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_06:LOC" version="1"/>
+                  <ArrivalTime>06:05:00</ArrivalTime>
+                  <DepartureTime>06:05:00</DepartureTime>
+                </TimetabledPassingTime>
+
+                <!--
+                  Paragem 9: Praça da Galiza
+                  GTFS: 06:10:00
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_09:LOC" version="1"/>
+                  <ArrivalTime>06:10:00</ArrivalTime>
+                  <DepartureTime>06:10:00</DepartureTime>
+                </TimetabledPassingTime>
+
+                <!--
+                  Paragem 23: Mercado da Foz
+                  GTFS: 06:21:00
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_23:LOC" version="1"/>
+                  <ArrivalTime>06:21:00</ArrivalTime>
+                  <DepartureTime>06:21:00</DepartureTime>
+                </TimetabledPassingTime>
+
+                <!--
+                  Paragem 30: Castelo do Queijo (terminal)
+                  Terminal de chegada — apenas ArrivalTime (o veículo não parte daqui para esta linha).
+                  GTFS: arrival_time=06:27:00, departure_time=06:27:00
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
+                  <ArrivalTime>06:27:00</ArrivalTime>
+                </TimetabledPassingTime>
+
+              </passingTimes>
+            </ServiceJourney>
+
+            <!--
+              ─────────────────────────────────────────────────────
+              ServiceJourney 2: SÁBADOS, partida 06:00 de Bolhão
+              GTFS: trip_id = 200_0_1|228|D2|T2|N2
+              ─────────────────────────────────────────────────────
+              Diferença face a Dias Úteis: Carmo a 06:04 (1 min mais rápido).
+            -->
+            <ServiceJourney id="PT:STCP:ServiceJourney:200_SAB_0600:LOC" version="1">
+              <Name>200 IDA — Sábados 06:00</Name>
+              <DayTypeRefs>
+                <DayTypeRef ref="PT:STCP:DayType:Sabados:LOC" version="1"/>
+              </DayTypeRefs>
+              <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+              <AccessibilityAssessment id="PT:STCP:AA:200_SAB_0600:LOC" version="1">
+                <MobilityImpairedAccess>yes</MobilityImpairedAccess>
+                <limitations>
+                  <AccessibilityLimitation>
+                    <WheelchairAccess>yes</WheelchairAccess>
+                  </AccessibilityLimitation>
+                </limitations>
+              </AccessibilityAssessment>
+              <passingTimes>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"/>
+                  <DepartureTime>06:00:00</DepartureTime>
+                </TimetabledPassingTime>
+                <!--
+                  Sábados: Carmo a 06:04 (vs 06:05 em dias úteis)
+                  Tráfego mais leve no sábado de manhã.
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_06:LOC" version="1"/>
+                  <ArrivalTime>06:04:00</ArrivalTime>
+                  <DepartureTime>06:04:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_09:LOC" version="1"/>
+                  <ArrivalTime>06:10:00</ArrivalTime>
+                  <DepartureTime>06:10:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_23:LOC" version="1"/>
+                  <ArrivalTime>06:21:00</ArrivalTime>
+                  <DepartureTime>06:21:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
+                  <ArrivalTime>06:27:00</ArrivalTime>
+                </TimetabledPassingTime>
+              </passingTimes>
+            </ServiceJourney>
+
+            <!--
+              ─────────────────────────────────────────────────────
+              ServiceJourney 3: DOMINGOS E FERIADOS, partida 06:00
+              GTFS: trip_id = 200_0_1|228|D3|T2|N2
+              ─────────────────────────────────────────────────────
+              Mesmo horário que Sábados para a partida das 06:00.
+              A diferença entre Sábados e Domingos/Feriados é a
+              frequência e os horários das outras partidas (menos viagens).
+            -->
+            <ServiceJourney id="PT:STCP:ServiceJourney:200_DF_0600:LOC" version="1">
+              <Name>200 IDA — Domingos/Feriados 06:00</Name>
+              <DayTypeRefs>
+                <DayTypeRef ref="PT:STCP:DayType:DomingosFeriados:LOC" version="1"/>
+              </DayTypeRefs>
+              <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+              <AccessibilityAssessment id="PT:STCP:AA:200_DF_0600:LOC" version="1">
+                <MobilityImpairedAccess>yes</MobilityImpairedAccess>
+                <limitations>
+                  <AccessibilityLimitation>
+                    <WheelchairAccess>yes</WheelchairAccess>
+                  </AccessibilityLimitation>
+                </limitations>
+              </AccessibilityAssessment>
+              <passingTimes>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"/>
+                  <DepartureTime>06:00:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_06:LOC" version="1"/>
+                  <ArrivalTime>06:04:00</ArrivalTime>
+                  <DepartureTime>06:04:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_09:LOC" version="1"/>
+                  <ArrivalTime>06:10:00</ArrivalTime>
+                  <DepartureTime>06:10:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_23:LOC" version="1"/>
+                  <ArrivalTime>06:21:00</ArrivalTime>
+                  <DepartureTime>06:21:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
+                  <ArrivalTime>06:27:00</ArrivalTime>
+                </TimetabledPassingTime>
+              </passingTimes>
+            </ServiceJourney>
+
+          </vehicleJourneys>
+        </TimetableFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+</PublicationDelivery>

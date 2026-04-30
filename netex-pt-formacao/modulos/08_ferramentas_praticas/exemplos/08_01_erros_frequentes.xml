@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 08_01 — Os 10 Erros Mais Frequentes na Submissão ao NAP Portugal
+  ==========================================================================
+  Módulo 8 — Ferramentas Práticas
+
+  Este ficheiro documenta os 10 erros mais frequentes que o validador do NAP
+  Portugal reporta, com o código de erro, a causa, e a correção correta.
+
+  COMO USAR ESTE FICHEIRO:
+  Cada secção abaixo mostra o PADRÃO ERRADO (em comentário) seguido do
+  PADRÃO CORRETO (no XML válido).
+
+  ERROS DOCUMENTADOS:
+  ERR-01: ParticipantRef sem prefixo "PT:"
+  ERR-02: ID sem namespace IFOPT
+  ERR-03: version="0" em vez de version="1"
+  ERR-04: Referência para ID inexistente
+  ERR-05: Campo Name em falta
+  ERR-06: PublicCode em falta na Line
+  ERR-07: StopPlaceType em falta no StopPlace
+  ERR-08: Centroid em falta no Quay
+  ERR-09: validBetween sem ToDate
+  ERR-10: DepartureTime em falta no terminal de partida
+
+  Fonte: Experiência prática de implementação e documentação IMT [PT-01]
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+
+  <!--
+    ERR-01: ParticipantRef sem prefixo "PT:"
+    ─────────────────────────────────────────
+    ERRADO:   <ParticipantRef>STCP</ParticipantRef>
+    CORRECTO: <ParticipantRef>PT:STCP</ParticipantRef>
+
+    O Perfil PT exige o prefixo "PT:" para identificar que a organização
+    é portuguesa. O NAP rejeita qualquer ParticipantRef sem este prefixo.
+  -->
+  <ParticipantRef>PT:STCP</ParticipantRef>
+
+  <dataObjects>
+    <!--
+      ERR-09: validBetween sem ToDate
+      ────────────────────────────────
+      ERRADO:
+        <validBetween>
+          <FromDate>2026-04-30</FromDate>
+        </validBetween>
+      CORRECTO: Sempre incluir ToDate.
+
+      O NAP Portugal requer que todos os dados tenham uma data de fim
+      explícita para gestão do ciclo de vida dos dados.
+    -->
+    <CompositeFrame id="PT:STCP:CompositeFrame:Erros_M08:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <ResourceFrame id="PT:STCP:ResourceFrame:Erros_RF:LOC" version="1">
+          <organisations>
+
+            <!--
+              ERR-02: ID sem namespace IFOPT
+              ──────────────────────────────
+              ERRADO:   <Authority id="AutoridadeIMT" version="1">
+              ERRADO:   <Authority id="IMT:Authority:IMT" version="1">
+              CORRECTO: <Authority id="PT:IMT:Authority:IMT:LOC" version="1">
+
+              O formato obrigatório é: PT:<org>:<TipoObjecto>:<idLocal>:LOC
+              Cada parte é obrigatória, incluindo o sufixo :LOC.
+            -->
+            <Authority id="PT:IMT:Authority:IMT:LOC" version="1">
+              <!--
+                ERR-05: Campo Name em falta
+                ─────────────────────────────
+                ERRADO:   <Authority id="..."> (sem Name)
+                CORRECTO: Todos os objectos principais devem ter Name.
+              -->
+              <Name>IMT — Instituto da Mobilidade e dos Transportes</Name>
+              <ContactDetails>
+                <Email>info@imt-ip.pt</Email>
+              </ContactDetails>
+              <OrganisationType>authority</OrganisationType>
+            </Authority>
+
+            <!--
+              ERR-03: version="0" em vez de version="1"
+              ──────────────────────────────────────────
+              ERRADO:   <Operator id="..." version="0">
+              CORRECTO: <Operator id="..." version="1">
+
+              O Perfil PT exige version ≥ 1 (inteiro positivo).
+              version="0" é ambíguo e causa erros em sistemas que usam
+              o número de versão para ordenar actualizações.
+            -->
+            <Operator id="PT:STCP:Operator:STCP:LOC" version="1">
+              <Name>STCP</Name>
+              <ContactDetails>
+                <Url>https://www.stcp.pt</Url>
+              </ContactDetails>
+              <OrganisationType>operator</OrganisationType>
+            </Operator>
+
+          </organisations>
+        </ResourceFrame>
+
+        <SiteFrame id="PT:STCP:SiteFrame:Erros_SF:LOC" version="1">
+          <stopPlaces>
+
+            <!--
+              ERR-07: StopPlaceType em falta no StopPlace
+              ─────────────────────────────────────────────
+              ERRADO:   <StopPlace id="..."> (sem StopPlaceType)
+              CORRECTO: StopPlaceType é campo M (obrigatório) no Perfil PT.
+              Valores: onstreetBus, onstreetTram, metroStation, railStation,
+                       busStation, ferryTerminal, multimodal, etc.
+            -->
+            <StopPlace id="PT:STCP:StopPlace:Bolhao:LOC" version="1">
+              <Name>Bolhão</Name>
+              <Centroid>
+                <Location>
+                  <Longitude>-8.607115</Longitude>
+                  <Latitude>41.151868</Latitude>
+                </Location>
+              </Centroid>
+              <StopPlaceType>onstreetBus</StopPlaceType>
+              <quays>
+
+                <!--
+                  ERR-08: Centroid em falta no Quay
+                  ───────────────────────────────────
+                  ERRADO:   <Quay id="..."> (sem Centroid/Location)
+                  CORRECTO: Cada Quay deve ter coordenadas GPS exactas.
+                  É a localização precisa da plataforma de embarque —
+                  diferente do Centroid do StopPlace (centro geral).
+                -->
+                <Quay id="PT:STCP:Quay:Bolhao_IDA:LOC" version="1">
+                  <Name>Bolhão — Sentido Castelo do Queijo</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.607115</Longitude>
+                      <Latitude>41.151868</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+              </quays>
+            </StopPlace>
+
+          </stopPlaces>
+        </SiteFrame>
+
+        <ServiceFrame id="PT:STCP:ServiceFrame:Erros_SvF:LOC" version="1">
+          <lines>
+
+            <!--
+              ERR-06: PublicCode em falta na Line
+              ─────────────────────────────────────
+              ERRADO:   <Line id="..."> (sem PublicCode)
+              CORRECTO: PublicCode é campo M no Perfil PT.
+              É o número/código que o passageiro vê nos painéis e aplicações.
+              Sem este campo, os sistemas de informação ao passageiro não
+              conseguem apresentar a linha correctamente.
+            -->
+            <Line id="PT:STCP:Line:200:LOC" version="1">
+              <Name>Linha 200 — Bolhão / Castelo do Queijo</Name>
+              <PublicCode>200</PublicCode>
+              <TransportMode>bus</TransportMode>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+            </Line>
+
+          </lines>
+
+          <scheduledStopPoints>
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1">
+              <Name>Bolhão</Name>
+            </ScheduledStopPoint>
+            <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1">
+              <Name>Castelo do Queijo</Name>
+            </ScheduledStopPoint>
+          </scheduledStopPoints>
+
+          <stopAssignments>
+            <!--
+              ERR-04: Referência para ID inexistente
+              ────────────────────────────────────────
+              ERRADO:   <QuayRef ref="PT:STCP:Quay:Bolhao_NAOEXISTE:LOC" .../>
+              CORRECTO: O ref deve apontar para um ID definido no mesmo ficheiro
+              ou no mesmo pacote ZIP.
+
+              Este erro é muito comum quando se copiam IDs manualmente e se
+              comete um erro de digitação, ou quando o SiteFrame e o ServiceFrame
+              estão em ficheiros separados do ZIP mas um não inclui o outro.
+            -->
+            <PassengerStopAssignment id="PT:STCP:PSA:BLRB1:LOC" version="1" order="1">
+              <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+              <StopPlaceRef ref="PT:STCP:StopPlace:Bolhao:LOC" version="1"/>
+              <!-- ID correcto — existe no SiteFrame acima -->
+              <QuayRef ref="PT:STCP:Quay:Bolhao_IDA:LOC" version="1"/>
+            </PassengerStopAssignment>
+          </stopAssignments>
+
+        </ServiceFrame>
+
+        <ServiceCalendarFrame id="PT:STCP:SCF:Erros_SCF:LOC" version="1">
+          <dayTypes>
+            <DayType id="PT:STCP:DayType:DiasUteis:LOC" version="1">
+              <Name>Dias Úteis</Name>
+              <properties>
+                <PropertyOfDay>
+                  <DaysOfWeek>Monday Tuesday Wednesday Thursday Friday</DaysOfWeek>
+                </PropertyOfDay>
+              </properties>
+            </DayType>
+          </dayTypes>
+          <operatingDays>
+            <OperatingDay id="PT:STCP:OperatingDay:20260430:LOC" version="1">
+              <CalendarDate>2026-04-30</CalendarDate>
+            </OperatingDay>
+          </operatingDays>
+          <dayTypeAssignments>
+            <DayTypeAssignment id="PT:STCP:DTA:DU_20260430:LOC" version="1" order="1">
+              <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              <OperatingDayRef ref="PT:STCP:OperatingDay:20260430:LOC" version="1"/>
+              <isAvailable>true</isAvailable>
+            </DayTypeAssignment>
+          </dayTypeAssignments>
+        </ServiceCalendarFrame>
+
+        <TimetableFrame id="PT:STCP:TimetableFrame:Erros_TF:LOC" version="1">
+
+          <!--
+            Para o ServiceJourneyPattern e Route mínimos (necessários para referência):
+          -->
+          <vehicleJourneys>
+            <ServiceJourney id="PT:STCP:ServiceJourney:200_DU_0600:LOC" version="1">
+              <Name>200 IDA — DU 06:00</Name>
+              <DayTypeRefs>
+                <DayTypeRef ref="PT:STCP:DayType:DiasUteis:LOC" version="1"/>
+              </DayTypeRefs>
+              <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
+              <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+
+              <passingTimes>
+                <!--
+                  ERR-10: DepartureTime em falta no terminal de partida
+                  ────────────────────────────────────────────────────────
+                  ERRADO (terminal de partida):
+                    <TimetabledPassingTime>
+                      <StopPointInJourneyPatternRef ref="...IDA_01..." />
+                      <ArrivalTime>06:00:00</ArrivalTime>  ← ERRADO no terminal de início
+                    </TimetabledPassingTime>
+
+                  CORRECTO: O terminal de PARTIDA deve ter DepartureTime (não ArrivalTime).
+                  O terminal de CHEGADA deve ter ArrivalTime (não DepartureTime).
+                  Paragens intermédias têm ambos.
+
+                  Regra:
+                    Primeira paragem (ForBoarding=true, ForAlighting=false): DepartureTime
+                    Última paragem (ForBoarding=false, ForAlighting=true): ArrivalTime
+                    Paragens intermédias: ArrivalTime + DepartureTime
+                -->
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"/>
+                  <DepartureTime>06:00:00</DepartureTime>
+                </TimetabledPassingTime>
+                <TimetabledPassingTime>
+                  <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
+                  <ArrivalTime>06:40:00</ArrivalTime>
+                </TimetabledPassingTime>
+              </passingTimes>
+            </ServiceJourney>
+          </vehicleJourneys>
+
+        </TimetableFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

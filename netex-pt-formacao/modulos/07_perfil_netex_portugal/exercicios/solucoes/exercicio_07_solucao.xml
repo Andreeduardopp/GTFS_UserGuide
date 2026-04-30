@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SOLUÇÃO — Exercício 7: Auditoria de Conformidade com o Perfil PT
+  =================================================================
+  Módulo 7 — Perfil NeTEx Portugal
+
+  ERROS CORRIGIDOS:
+  E1: ParticipantRef "CARRIS" → "PT:Carris" (formato PT:<org> obrigatório)
+  E2: CompositeFrame id "CompositeFrame_Carris_L15" → "PT:Carris:CompositeFrame:L15:LOC"
+  E3: validBetween sem ToDate → adicionado ToDate=2027-04-29
+  E4: Operator sem ContactDetails/Url → adicionado Url=https://www.carris.pt
+  E5: Line sem PublicCode → adicionado PublicCode=15E
+  E6: ScheduledStopPoint:FIG version="0" → version="1"
+  E7: StopPlace:Figueira sem StopPlaceType → adicionado StopPlaceType=onstreetTram
+
+  ADIÇÕES SOLICITADAS:
+  + Authority IMT no ResourceFrame
+  + Quay da paragem Algés no SiteFrame
+  + PassengerStopAssignment para Algés no ServiceFrame
+
+  Respostas às Questões de Reflexão:
+
+  1. Validação de schema vs validação de perfil:
+     - Validação de schema (XSD): verifica se o XML está estruturalmente correto —
+       os elementos existem no schema NeTEx, os tipos estão corretos, etc.
+       Um ficheiro pode passar esta validação e ainda ser inutilizável.
+     - Validação de perfil: verifica se os campos OBRIGATÓRIOS para o contexto
+       nacional estão presentes e corretos (ex: PublicCode na Line, StopPlaceType
+       no StopPlace, formato IFOPT nos IDs).
+     O NAP precisa de ambas porque: o schema garante que o ficheiro é NeTEx válido;
+     o perfil garante que o ficheiro é útil para o sistema nacional.
+
+  2. version="0" — problema prático:
+     A convenção NeTEx usa version como contador de revisões:
+       - version="1" = primeira versão do objeto
+       - version="2" = primeiro update
+       - version="0" = ambíguo (seria "antes da versão 1"?)
+     Num sistema de gestão de dados, version="0" cria problemas:
+       a) Sistemas que fazem diff entre versões podem não saber o que fazer com "0"
+       b) Se o operador enviar um update com version="1", qual é o mais recente?
+       c) O NAP Portugal usa version para ordenar e comparar objetos recebidos ao longo
+          do tempo — começar em "0" quebraria essa ordenação.
+     O Perfil PT exige ≥1 para evitar esta ambiguidade.
+
+  3. ToDate obrigatório:
+     Vantagens para o NAP:
+       - Permite ao sistema remover automaticamente dados expirados
+       - Garante que dados de um horário de verão não ficam "vivos" para sempre
+       - Facilita auditoria: "quais os dados válidos para esta data?"
+       - Permite planificar quando pedir ao operador dados novos
+     Desvantagens para operadores:
+       - Obriga a definir uma data de fim, que pode ser difícil (ex: rede estável)
+       - Se esquecerem de renovar, os dados desaparecem do NAP automaticamente
+     Solução prática: usar ToDate 12 meses à frente (renovação anual), o que é
+     consistente com os feeds GTFS que também têm datas de fim.
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+
+  <!-- CORRECÇÃO E1: "CARRIS" → "PT:Carris" (formato PT:<org> obrigatório) -->
+  <ParticipantRef>PT:Carris</ParticipantRef>
+
+  <dataObjects>
+    <!-- CORRECÇÃO E2: id sem prefixo PT: → formato IFOPT correto -->
+    <CompositeFrame id="PT:Carris:CompositeFrame:L15:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <!-- CORRECÇÃO E3: ToDate obrigatório no Perfil PT -->
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <ResourceFrame id="PT:Carris:ResourceFrame:Carris_RF:LOC" version="1">
+          <organisations>
+
+            <!-- ADIÇÃO: Authority IMT (em falta no ficheiro original) -->
+            <Authority id="PT:IMT:Authority:IMT:LOC" version="1">
+              <Name>IMT — Instituto da Mobilidade e dos Transportes</Name>
+              <ContactDetails>
+                <Email>info@imt-ip.pt</Email>
+                <Url>https://www.imt-ip.pt</Url>
+              </ContactDetails>
+              <OrganisationType>authority</OrganisationType>
+            </Authority>
+
+            <Operator id="PT:Carris:Operator:Carris:LOC" version="1">
+              <Name>Carris</Name>
+              <ShortName>Carris</ShortName>
+              <!-- CORRECÇÃO E4: ContactDetails/Url obrigatório no Perfil PT -->
+              <ContactDetails>
+                <Url>https://www.carris.pt</Url>
+                <Email>carris@carris.pt</Email>
+              </ContactDetails>
+              <OrganisationType>operator</OrganisationType>
+            </Operator>
+
+          </organisations>
+        </ResourceFrame>
+
+        <ServiceFrame id="PT:Carris:ServiceFrame:L15_SvF:LOC" version="1">
+          <lines>
+            <Line id="PT:Carris:Line:15E:LOC" version="1">
+              <Name>Linha 15E — Praça da Figueira / Algés</Name>
+              <ShortName>15E</ShortName>
+              <!-- CORRECÇÃO E5: PublicCode obrigatório no Perfil PT -->
+              <PublicCode>15E</PublicCode>
+              <TransportMode>tram</TransportMode>
+              <OperatorRef ref="PT:Carris:Operator:Carris:LOC" version="1"/>
+            </Line>
+          </lines>
+
+          <scheduledStopPoints>
+            <!-- CORRECÇÃO E6: version="0" → version="1" (Perfil PT exige ≥1) -->
+            <ScheduledStopPoint id="PT:Carris:ScheduledStopPoint:FIG:LOC" version="1">
+              <Name>Praça da Figueira</Name>
+            </ScheduledStopPoint>
+            <ScheduledStopPoint id="PT:Carris:ScheduledStopPoint:ALG:LOC" version="1">
+              <Name>Algés</Name>
+            </ScheduledStopPoint>
+          </scheduledStopPoints>
+
+          <stopAssignments>
+            <PassengerStopAssignment id="PT:Carris:PSA:FIG_Figueira:LOC" version="1" order="1">
+              <ScheduledStopPointRef ref="PT:Carris:ScheduledStopPoint:FIG:LOC" version="1"/>
+              <StopPlaceRef ref="PT:Carris:StopPlace:Figueira:LOC" version="1"/>
+              <QuayRef ref="PT:Carris:Quay:Figueira_IDA:LOC" version="1"/>
+            </PassengerStopAssignment>
+            <!-- ADIÇÃO: PassengerStopAssignment para Algés (em falta no original) -->
+            <PassengerStopAssignment id="PT:Carris:PSA:ALG_Alges:LOC" version="1" order="1">
+              <ScheduledStopPointRef ref="PT:Carris:ScheduledStopPoint:ALG:LOC" version="1"/>
+              <StopPlaceRef ref="PT:Carris:StopPlace:Alges:LOC" version="1"/>
+              <QuayRef ref="PT:Carris:Quay:Alges_VOLTA:LOC" version="1"/>
+            </PassengerStopAssignment>
+          </stopAssignments>
+
+        </ServiceFrame>
+
+        <SiteFrame id="PT:Carris:SiteFrame:L15_SF:LOC" version="1">
+          <stopPlaces>
+
+            <StopPlace id="PT:Carris:StopPlace:Figueira:LOC" version="1">
+              <Name>Praça da Figueira</Name>
+              <Centroid>
+                <Location>
+                  <Longitude>-9.137060</Longitude>
+                  <Latitude>38.714870</Latitude>
+                </Location>
+              </Centroid>
+              <!-- CORRECÇÃO E7: StopPlaceType obrigatório no Perfil PT -->
+              <StopPlaceType>onstreetTram</StopPlaceType>
+              <TransportMode>tram</TransportMode>
+              <quays>
+                <Quay id="PT:Carris:Quay:Figueira_IDA:LOC" version="1">
+                  <Name>Praça da Figueira — IDA</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-9.137060</Longitude>
+                      <Latitude>38.714870</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>tramStop</QuayType>
+                </Quay>
+              </quays>
+            </StopPlace>
+
+            <!-- ADIÇÃO: StopPlace e Quay da paragem Algés (em falta no original) -->
+            <StopPlace id="PT:Carris:StopPlace:Alges:LOC" version="1">
+              <Name>Algés</Name>
+              <Centroid>
+                <Location>
+                  <Longitude>-9.232000</Longitude>
+                  <Latitude>38.697000</Latitude>
+                </Location>
+              </Centroid>
+              <StopPlaceType>onstreetTram</StopPlaceType>
+              <TransportMode>tram</TransportMode>
+              <quays>
+                <Quay id="PT:Carris:Quay:Alges_VOLTA:LOC" version="1">
+                  <Name>Algés — VOLTA</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-9.232000</Longitude>
+                      <Latitude>38.697000</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>tramStop</QuayType>
+                </Quay>
+              </quays>
+            </StopPlace>
+
+          </stopPlaces>
+        </SiteFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>

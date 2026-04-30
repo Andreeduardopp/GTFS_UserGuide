@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXEMPLO 04_02 — Nó Intermodal Campanhã (Porto)
+  ================================================
+  Módulo 4 — Multimodalidade e StopPlace
+
+  Campanhã é o maior nó de transferência intermodal do Porto:
+    - Comboio (CP): Regional, InterRegional, Alfa Pendular, Internacional
+    - Metro (Metro do Porto): Linha E (Violeta) — estação Campanhã
+    - Autocarro (STCP): múltiplas linhas (600, 601, 602, 800, 900...)
+    - Táxi e Partilha de Bicicleta: Gira
+
+  PROBLEMA NO GTFS:
+  ─────────────────────────────────────────────────────────────────────────
+  No GTFS, estes modos estão em feeds separados (CP, Metro Porto, STCP)
+  sem qualquer relação estrutural definida. Um sistema de pesquisa de
+  percursos só pode inferir a transferência por proximidade geográfica.
+
+  EM NETEX:
+  ─────────────────────────────────────────────────────────────────────────
+  Um único SiteFrame pode modelar toda a estação:
+    StopPlace "Campanhã" (railStation, multimodal)
+    ├── Quay CP_P1 — Plataforma 1 (comboio)
+    ├── Quay CP_P2 — Plataforma 2 (comboio)
+    ├── StopPlace "Metro Campanhã" (metroStation, adjacente)
+    │   └── Quay Metro_CP — Plataforma metro Linha E
+    ├── StopPlace "Campanhã Autocarros" (busStation, adjacente)
+    │   ├── Quay Bus_CP_A — Paragem A (sentido centro)
+    │   └── Quay Bus_CP_B — Paragem B (sentido circular)
+    └── PathLink: plataforma comboio → paragem autocarro (3 min a pé)
+       PathLink: plataforma comboio → estação metro (5 min a pé)
+
+  NOTA SOBRE OS DADOS:
+  Este exemplo usa coordenadas aproximadas de Campanhã (Porto).
+  Num sistema de produção, as coordenadas seriam obtidas de levantamento
+  de campo ou de base de dados oficial IFOPT.
+  Fonte estrutural: CEN/TS 16614-1:2024 (NeTEx Parte 1). [STD-01]
+
+  CONCEITOS NOVOS NESTE FICHEIRO:
+    - StopPlace multimodal com sub-StopPlace (hierarquia)
+    - PathLink: percurso pedonal entre duas zonas da estação
+    - AccessSpace: átrio/corredor (espaço de acesso, não de embarque)
+    - TransferDuration: tempo de transferência para sistemas de planificação
+-->
+<PublicationDelivery
+    xmlns="http://www.netex.org.uk/netex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0">
+
+  <PublicationTimestamp>2026-04-30T00:00:00Z</PublicationTimestamp>
+  <ParticipantRef>PT:IMT</ParticipantRef>
+
+  <dataObjects>
+    <CompositeFrame id="PT:IMT:CompositeFrame:Campanha_M04:LOC" version="1">
+      <validBetween>
+        <FromDate>2026-04-30</FromDate>
+        <ToDate>2027-04-29</ToDate>
+      </validBetween>
+      <frames>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             SiteFrame — Toda a infraestrutura física de Campanhã
+             ═══════════════════════════════════════════════════════════════ -->
+        <SiteFrame id="PT:IMT:SiteFrame:Campanha_SF:LOC" version="1">
+
+          <stopPlaces>
+
+            <!-- ─────────────────────────────────────────────────────────
+                 StopPlace RAIZ — Estação de Campanhã (comboio)
+                 StopPlaceType="railStation" → estação ferroviária
+                 Este é o StopPlace principal; os outros modos são adjacentes.
+                 ───────────────────────────────────────────────────────── -->
+            <StopPlace id="PT:CP:StopPlace:Campanha:LOC" version="1">
+              <Name>Campanhã</Name>
+              <ShortName>Campanhã</ShortName>
+
+              <Centroid>
+                <Location>
+                  <Longitude>-8.588700</Longitude>
+                  <Latitude>41.148900</Latitude>
+                </Location>
+              </Centroid>
+
+              <!--
+                StopPlaceType="railStation" → estação ferroviária.
+                Mesmo que a estação sirva também metro e autocarro (via PathLink),
+                o tipo principal é o ferroviário pois é a instalação dominante.
+              -->
+              <StopPlaceType>railStation</StopPlaceType>
+              <TransportMode>rail</TransportMode>
+
+              <!--
+                AccessSpace = espaço de acesso: um átrio, corredor, ou área
+                de circulação dentro da estação que não é uma plataforma de embarque.
+                Os passageiros atravessam o AccessSpace para chegar às plataformas.
+                Não tem equivalente em GTFS.
+              -->
+              <accessSpaces>
+                <AccessSpace id="PT:CP:AccessSpace:Campanha_Atrio:LOC" version="1">
+                  <Name>Átrio Principal — Campanhã</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.588700</Longitude>
+                      <Latitude>41.148900</Latitude>
+                    </Location>
+                  </Centroid>
+                  <!-- AccessSpaceType="concourse" → átrio de distribuição (hall da estação) -->
+                  <AccessSpaceType>concourse</AccessSpaceType>
+                </AccessSpace>
+              </accessSpaces>
+
+              <!--
+                quays = plataformas ferroviárias de Campanhã.
+                Cada vias da estação é um Quay separado.
+              -->
+              <quays>
+
+                <Quay id="PT:CP:Quay:Campanha_P1:LOC" version="1">
+                  <Name>Campanhã — Via 1</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.589100</Longitude>
+                      <Latitude>41.149200</Latitude>
+                    </Location>
+                  </Centroid>
+                  <!--
+                    QuayType="railPlatform" → plataforma ferroviária.
+                    Contrasta com "busStop", "metroplatform", etc.
+                  -->
+                  <QuayType>railPlatform</QuayType>
+                </Quay>
+
+                <Quay id="PT:CP:Quay:Campanha_P2:LOC" version="1">
+                  <Name>Campanhã — Via 2</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.589100</Longitude>
+                      <Latitude>41.149050</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>railPlatform</QuayType>
+                </Quay>
+
+              </quays>
+
+            </StopPlace>
+
+            <!-- ─────────────────────────────────────────────────────────
+                 Sub-StopPlace — Metro Porto, Estação Campanhã (Linha E)
+                 ─────────────────────────────────────────────────────────
+                 Este StopPlace é ADJACENTE (não filho direto) ao de comboio.
+                 Em GTFS, seria um stop separado num feed diferente (Metro Porto)
+                 sem qualquer ligação ao feed da CP.
+                 Em NeTEx, a proximidade e a transferência são modeladas explicitamente
+                 através dos PathLink definidos abaixo.
+            -->
+            <StopPlace id="PT:MetroPorto:StopPlace:Campanha_Metro:LOC" version="1">
+              <Name>Campanhã (Metro)</Name>
+
+              <Centroid>
+                <Location>
+                  <!-- A estação metro está ligeiramente a sul da estação de comboio -->
+                  <Longitude>-8.589300</Longitude>
+                  <Latitude>41.148500</Latitude>
+                </Location>
+              </Centroid>
+
+              <StopPlaceType>metroStation</StopPlaceType>
+              <TransportMode>metro</TransportMode>
+
+              <quays>
+                <!--
+                  Plataforma da Linha E (Violeta) do Metro Porto.
+                  O Metro Porto usa plataformas em ilha (uma plataforma para ambas as direções).
+                -->
+                <Quay id="PT:MetroPorto:Quay:Campanha_LE:LOC" version="1">
+                  <Name>Campanhã — Linha E (Violeta)</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.589300</Longitude>
+                      <Latitude>41.148500</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>metroPlatform</QuayType>
+                </Quay>
+              </quays>
+
+            </StopPlace>
+
+            <!-- ─────────────────────────────────────────────────────────
+                 Sub-StopPlace — Terminal de Autocarros, Campanhã
+                 ─────────────────────────────────────────────────────────
+                 Paragens de autocarro a sul da estação de comboio.
+                 Várias linhas STCP servem Campanhã: 600, 601, 602, 800...
+            -->
+            <StopPlace id="PT:STCP:StopPlace:Campanha_Bus:LOC" version="1">
+              <Name>Campanhã (Autocarros)</Name>
+
+              <Centroid>
+                <Location>
+                  <Longitude>-8.588200</Longitude>
+                  <Latitude>41.148200</Latitude>
+                </Location>
+              </Centroid>
+
+              <StopPlaceType>onstreetBus</StopPlaceType>
+              <TransportMode>bus</TransportMode>
+
+              <quays>
+
+                <Quay id="PT:STCP:Quay:Campanha_Bus_A:LOC" version="1">
+                  <Name>Campanhã Bus — Sentido Centro</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.588100</Longitude>
+                      <Latitude>41.148300</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+                <Quay id="PT:STCP:Quay:Campanha_Bus_B:LOC" version="1">
+                  <Name>Campanhã Bus — Sentido Circular / Periférico</Name>
+                  <Centroid>
+                    <Location>
+                      <Longitude>-8.588300</Longitude>
+                      <Latitude>41.148100</Latitude>
+                    </Location>
+                  </Centroid>
+                  <QuayType>busStop</QuayType>
+                </Quay>
+
+              </quays>
+
+            </StopPlace>
+
+          </stopPlaces>
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               pathLinks = percursos pedonais dentro do nó de transferência
+               ═══════════════════════════════════════════════════════════════
+               PathLink é o elemento que torna o NeTEx útil para planificação
+               de percursos intermodais. Descreve o percurso que um passageiro
+               tem de fazer a pé para transferir entre dois pontos.
+
+               Em GTFS, transfers.txt pode indicar o tempo de transferência,
+               mas não o percurso físico. NeTEx modela o percurso completo.
+          -->
+          <pathLinks>
+
+            <!--
+              PathLink 1: Átrio Campanhã → Estação Metro Campanhã
+              Descreve o percurso pedonal desde o átrio da estação de comboio
+              até à entrada da estação de metro.
+              Tempo estimado: 5 minutos (incluindo escadas rolantes).
+            -->
+            <PathLink id="PT:IMT:PathLink:Campanha_Atrio_Metro:LOC" version="1">
+              <Name>Átrio Campanhã → Metro Campanhã</Name>
+
+              <!--
+                From e To definem os extremos do PathLink.
+                Cada extremo referencia um objeto NeTEx existente
+                (Quay, AccessSpace, StopPlaceEntrance, etc.)
+              -->
+              <From>
+                <PlaceRef ref="PT:CP:AccessSpace:Campanha_Atrio:LOC"
+                          nameOfRefClass="AccessSpace" version="1"/>
+              </From>
+              <To>
+                <PlaceRef ref="PT:MetroPorto:StopPlace:Campanha_Metro:LOC"
+                          nameOfRefClass="StopPlace" version="1"/>
+              </To>
+
+              <!--
+                TransferDuration = o tempo que o passageiro demora a percorrer
+                este caminho. Os sistemas de planificação de percursos usam
+                este valor para calcular janelas de transferência.
+                PT5M = 5 minutos (formato ISO 8601 duration)
+              -->
+              <TransferDuration>
+                <DefaultDuration>PT5M</DefaultDuration>
+              </TransferDuration>
+
+              <!--
+                PublicUse="all" → este percurso está disponível para todos os passageiros.
+                Outros valores: "disabledPublicOnly", "authorisedPublicOnly", etc.
+              -->
+              <PublicUse>all</PublicUse>
+
+            </PathLink>
+
+            <!--
+              PathLink 2: Átrio Campanhã → Paragens de Autocarro
+              O passageiro sai da estação pela saída sul e percorre ~200m
+              até às paragens de autocarro.
+              Tempo estimado: 3 minutos.
+            -->
+            <PathLink id="PT:IMT:PathLink:Campanha_Atrio_Bus:LOC" version="1">
+              <Name>Átrio Campanhã → Paragens de Autocarro</Name>
+
+              <From>
+                <PlaceRef ref="PT:CP:AccessSpace:Campanha_Atrio:LOC"
+                          nameOfRefClass="AccessSpace" version="1"/>
+              </From>
+              <To>
+                <PlaceRef ref="PT:STCP:StopPlace:Campanha_Bus:LOC"
+                          nameOfRefClass="StopPlace" version="1"/>
+              </To>
+
+              <TransferDuration>
+                <DefaultDuration>PT3M</DefaultDuration>
+              </TransferDuration>
+
+              <PublicUse>all</PublicUse>
+
+            </PathLink>
+
+            <!--
+              PathLink 3: Metro → Paragens de Autocarro (transferência directa)
+              Passageiros que chegam de metro e apanham autocarro sem passar
+              pelo átrio principal da estação de comboio.
+              Tempo estimado: 4 minutos.
+            -->
+            <PathLink id="PT:IMT:PathLink:Campanha_Metro_Bus:LOC" version="1">
+              <Name>Metro Campanhã → Paragens de Autocarro</Name>
+
+              <From>
+                <PlaceRef ref="PT:MetroPorto:StopPlace:Campanha_Metro:LOC"
+                          nameOfRefClass="StopPlace" version="1"/>
+              </From>
+              <To>
+                <PlaceRef ref="PT:STCP:StopPlace:Campanha_Bus:LOC"
+                          nameOfRefClass="StopPlace" version="1"/>
+              </To>
+
+              <TransferDuration>
+                <DefaultDuration>PT4M</DefaultDuration>
+              </TransferDuration>
+
+              <PublicUse>all</PublicUse>
+
+            </PathLink>
+
+          </pathLinks>
+
+        </SiteFrame>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             ServiceFrame — ScheduledStopPoints e PassengerStopAssignment
+             (Exemplo com plataforma de comboio e metro apenas)
+             ═══════════════════════════════════════════════════════════════ -->
+        <ServiceFrame id="PT:IMT:ServiceFrame:Campanha_SvF:LOC" version="1">
+
+          <scheduledStopPoints>
+
+            <!-- SSP para comboios com paragem em Campanhã Via 1 -->
+            <ScheduledStopPoint id="PT:CP:ScheduledStopPoint:Campanha:LOC" version="1">
+              <Name>Campanhã</Name>
+            </ScheduledStopPoint>
+
+            <!-- SSP para metro linha E em Campanhã -->
+            <ScheduledStopPoint id="PT:MetroPorto:ScheduledStopPoint:Campanha:LOC" version="1">
+              <Name>Campanhã (Metro)</Name>
+            </ScheduledStopPoint>
+
+          </scheduledStopPoints>
+
+          <stopAssignments>
+
+            <!--
+              Comboio CP → Plataforma Via 1 de Campanhã.
+              Nota: numa estação real da CP, haveria múltiplas PSA
+              (uma por plataforma usada), mas aqui simplificamos.
+            -->
+            <PassengerStopAssignment
+                id="PT:CP:PSA:Campanha_P1:LOC"
+                version="1"
+                order="1">
+              <ScheduledStopPointRef ref="PT:CP:ScheduledStopPoint:Campanha:LOC" version="1"/>
+              <StopPlaceRef ref="PT:CP:StopPlace:Campanha:LOC" version="1"/>
+              <QuayRef ref="PT:CP:Quay:Campanha_P1:LOC" version="1"/>
+            </PassengerStopAssignment>
+
+            <!-- Metro Linha E → Plataforma metro de Campanhã -->
+            <PassengerStopAssignment
+                id="PT:MetroPorto:PSA:Campanha_LE:LOC"
+                version="1"
+                order="1">
+              <ScheduledStopPointRef ref="PT:MetroPorto:ScheduledStopPoint:Campanha:LOC" version="1"/>
+              <StopPlaceRef ref="PT:MetroPorto:StopPlace:Campanha_Metro:LOC" version="1"/>
+              <QuayRef ref="PT:MetroPorto:Quay:Campanha_LE:LOC" version="1"/>
+            </PassengerStopAssignment>
+
+          </stopAssignments>
+
+        </ServiceFrame>
+
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+
+</PublicationDelivery>
