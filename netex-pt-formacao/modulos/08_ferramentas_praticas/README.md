@@ -1,7 +1,5 @@
 ﻿# Módulo 8 — Ferramentas Práticas
 
-> *Tempo estimado: 1 semana*
-
 ## Objetivos de Aprendizagem
 
 Após completar este módulo, o leitor será capaz de:

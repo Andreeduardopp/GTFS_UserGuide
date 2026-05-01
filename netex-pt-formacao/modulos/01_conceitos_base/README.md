@@ -1,7 +1,5 @@
 ﻿# Módulo 1 — Conceitos Base
 
-> *Tempo estimado: 1,5 semanas*
-
 ## Objetivos de Aprendizagem
 
 Após completar este módulo, o leitor será capaz de:

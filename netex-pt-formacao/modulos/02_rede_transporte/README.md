@@ -1,7 +1,5 @@
 ﻿# Módulo 2 — Rede de Transporte
 
-> *Tempo estimado: 2 semanas*
-
 ## Objetivos de Aprendizagem
 
 Após completar este módulo, o leitor será capaz de:

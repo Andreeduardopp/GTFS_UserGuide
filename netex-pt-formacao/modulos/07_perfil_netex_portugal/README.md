@@ -1,7 +1,5 @@
 ﻿# Módulo 7 — Perfil NeTEx Portugal
 
-> *Tempo estimado: 1,5 semanas*
-
 > **Este módulo é único em todo o ecossistema de recursos NeTEx** — não existe nada equivalente em nenhuma língua sobre o perfil português especificamente.
 
 ## Objetivos de Aprendizagem

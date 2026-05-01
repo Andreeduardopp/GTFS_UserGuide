@@ -1,7 +1,5 @@
 ﻿# Módulo 3 — Horários e Calendários
 
-> *Tempo estimado: 2 semanas*
-
 ## Objetivos de Aprendizagem
 
 Após completar este módulo, o leitor será capaz de:

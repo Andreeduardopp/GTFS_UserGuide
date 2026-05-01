@@ -1,7 +1,5 @@
 ﻿# Módulo 0 — Antes de Começar
 
-> *Tempo estimado: 1 semana*
-
 ## Objetivos de Aprendizagem
 
 Após completar este módulo, o leitor será capaz de:
