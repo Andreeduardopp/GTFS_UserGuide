@@ -1,4 +1,4 @@
-# Módulo 0 — Antes de Começar
+﻿# Módulo 0 — Antes de Começar
 
 > *Tempo estimado: 1 semana*
 
@@ -18,7 +18,7 @@ Após completar este módulo, o leitor será capaz de:
 
 ### 1.1 Definição
 
-**NeTEx** (*Network Timetable Exchange*) é um standard europeu de troca de dados de transporte público, publicado pelo CEN (Comité Europeu de Normalização) como série de normas técnicas CEN/TS 16614. [STD-01]
+**NeTEx** (*Network Timetable Exchange*) é um standard europeu de troca de dados de transporte público, publicado pelo CEN (Comité Europeu de Normalização) como série de normas técnicas CEN/TS 16614. [[STD-01]](#STD-01)
 
 O NeTEx define um formato XML para descrever:
 
@@ -30,7 +30,7 @@ O NeTEx define um formato XML para descrever:
 
 ### 1.2 Origem e Contexto
 
-O NeTEx foi desenvolvido a partir do **Transmodel** (CEN EN 12896), o modelo conceptual de referência para transporte público europeu. [STD-04] A relação é direta:
+O NeTEx foi desenvolvido a partir do **Transmodel** (CEN EN 12896), o modelo conceptual de referência para transporte público europeu. [[STD-04]](#STD-04) A relação é direta:
 
 > Transmodel define *o quê* (os conceitos). NeTEx define *como* (a troca de dados XML).
 
@@ -40,11 +40,11 @@ A primeira versão do NeTEx foi publicada em 2014. A versão atual (2024) inclui
 
 Até recentemente, a maioria dos operadores portugueses publicava os seus dados em **GTFS** (Google Transit Feed Specification). O GTFS é prático e amplamente adotado, mas:
 
-1. **É insuficiente para cumprir a regulação europeia.** O Regulamento Delegado (UE) 2024/490 obriga os operadores a partilhar dados no formato NeTEx/SIRI com o Ponto de Acesso Nacional (NAP). [REG-01]
+1. **É insuficiente para cumprir a regulação europeia.** O Regulamento Delegado (UE) 2024/490 obriga os operadores a partilhar dados no formato NeTEx/SIRI com o Ponto de Acesso Nacional (NAP). [[REG-01]](#REG-01)
 2. **Não modela toda a complexidade do serviço.** Tarifas avançadas (como o Navegante Metropolitano), acessibilidade detalhada e intermodalidade ficam fora do alcance do GTFS.
 3. **Não é interoperável a nível europeu.** O NeTEx permite que sistemas de diferentes países "falem a mesma língua", o que é essencial no espaço Schengen.
 
-Em Portugal, o **IMT-IP** (Instituto da Mobilidade e dos Transportes) é a entidade responsável pela implementação do NAP e pela definição do Perfil Nacional NeTEx Portugal. [PT-03]
+Em Portugal, o **IMT-IP** (Instituto da Mobilidade e dos Transportes) é a entidade responsável pela implementação do NAP e pela definição do Perfil Nacional NeTEx Portugal. [[PT-03]](#PT-03)
 
 ---
 
@@ -55,12 +55,12 @@ Se já trabalha com GTFS, esta tabela mostra onde cada standard se posiciona:
 | Dimensão | GTFS | NeTEx |
 |----------|------|-------|
 | **Formato** | CSV (ficheiros `.txt` num `.zip`) | XML (por norma um `.xml` por `Frame`) |
-| **Modelo conceptual** | Pragmático, sem modelo formal | Baseado no Transmodel (CEN EN 12896) [STD-04] |
+| **Modelo conceptual** | Pragmático, sem modelo formal | Baseado no Transmodel (CEN EN 12896) [[STD-04]](#STD-04) |
 | **Cobertura** | Horários, paragens, rotas, tarifas básicas | Tudo do GTFS + acessibilidade, multimodalidade, tarifas complexas, informação ao passageiro |
 | **Identificadores** | Locais (sem formato obrigatório) | Globais, hierárquicos: `PT:STCP:Line:200:LOC` |
 | **Versionamento** | Não existe | Nativo — cada objeto tem `version` e `validFrom/To` |
 | **Complexidade** | Baixa — 6 ficheiros obrigatórios | Alta — schema XSD extenso (~500 tipos XML) |
-| **Adoção** | 10.000+ agências globalmente | Obrigatório na UE (Regulamento 2024/490) [REG-01] |
+| **Adoção** | 10.000+ agências globalmente | Obrigatório na UE (Regulamento 2024/490) [[REG-01]](#REG-01) |
 | **Extensibilidade** | Via extensões ad hoc (GTFS-Flex, GTFS-Fares v2) | Nativa — perfis nacionais definem subconjuntos |
 | **Tempo real** | GTFS Realtime (Protocol Buffers) | SIRI (XML), baseado no mesmo Transmodel |
 
@@ -117,7 +117,7 @@ O NeTEx não existe isolado. Faz parte de um ecossistema de standards europeus c
 
 ### 3.1 Transmodel — A Base de Tudo
 
-O **Transmodel** é o modelo de dados de referência para transporte público europeu, mantido pelo CEN. [STD-04] Define os conceitos abstratos: o que é uma linha, uma paragem, uma viagem.
+O **Transmodel** é o modelo de dados de referência para transporte público europeu, mantido pelo CEN. [[STD-04]](#STD-04) Define os conceitos abstratos: o que é uma linha, uma paragem, uma viagem.
 
 O NeTEx e o SIRI são *implementações* do Transmodel para diferentes casos de uso:
 - **NeTEx** = dados estáticos/planeados (horários, tarifas, topologia)
@@ -127,7 +127,7 @@ Isto significa que quem aprende NeTEx também está a aprender Transmodel — os
 
 ### 3.2 O Papel do NAP
 
-O **Ponto de Acesso Nacional (NAP)** é a plataforma onde os operadores publicam os seus dados para consumo por aplicações de mobilidade, investigadores e outros stakeholders. [PT-02]
+O **Ponto de Acesso Nacional (NAP)** é a plataforma onde os operadores publicam os seus dados para consumo por aplicações de mobilidade, investigadores e outros stakeholders. [[PT-02]](#PT-02)
 
 Em Portugal, o NAP é gerido pelo **IMT-IP** e aceita dados no formato NeTEx. O Perfil Nacional NeTEx Portugal (ver Módulo 7) define exactamente que subconjunto do NeTEx é obrigatório para submissão ao NAP português.
 
@@ -137,7 +137,7 @@ Em Portugal, o NAP é gerido pelo **IMT-IP** e aceita dados no formato NeTEx. O 
 
 ### 4.1 O Regulamento MMTIS (2024/490)
 
-O **Regulamento Delegado (UE) 2024/490** — conhecido como MMTIS (Multimodal Travel Information Services) — é a principal obrigação legal para operadores portugueses. [REG-01] Substitui o regulamento anterior (2017/1926).
+O **Regulamento Delegado (UE) 2024/490** — conhecido como MMTIS (Multimodal Travel Information Services) — é a principal obrigação legal para operadores portugueses. [[REG-01]](#REG-01) Substitui o regulamento anterior (2017/1926).
 
 O regulamento obriga os estados-membros a:
 
@@ -162,7 +162,7 @@ O regulamento define obrigações por tipo de dado e prazo. Para operadores de t
 
 ### 4.3 A Diretiva ITS como Base Legal
 
-O MMTIS surge no âmbito da **Diretiva ITS 2010/40/UE** (Sistemas de Transporte Inteligentes), que criou o quadro legal para a digitalização do transporte na UE. [REG-02] Os regulamentos delegados (como o MMTIS) são os instrumentos concretos de implementação desta diretiva.
+O MMTIS surge no âmbito da **Diretiva ITS 2010/40/UE** (Sistemas de Transporte Inteligentes), que criou o quadro legal para a digitalização do transporte na UE. [[REG-02]](#REG-02) Os regulamentos delegados (como o MMTIS) são os instrumentos concretos de implementação desta diretiva.
 
 ### 4.4 Impacto Prático em Portugal
 
@@ -198,11 +198,11 @@ Extensões VS Code recomendadas:
 - **XML Tools** (Josh Johnson) — complementar
 - **GitLens** — para navegar o histórico do repositório
 
-**Validação de XML**: O **NeTEx Validator da Entur** permite validar ficheiros NeTEx contra o schema XSD e os perfis nacionais. [TOOL-01] Será introduzido no Módulo 8.
+**Validação de XML**: O **NeTEx Validator da Entur** permite validar ficheiros NeTEx contra o schema XSD e os perfis nacionais. [[TOOL-01]](#TOOL-01) Será introduzido no Módulo 8.
 
 ### 5.3 A Rede Âncora: STCP Porto
 
-Todos os exemplos XML deste curso são baseados em dados reais da **STCP (Sociedade de Transportes Colectivos do Porto)**. [DATA-03] Usamos a **Linha 200 (Bolhão → Castelo do Queijo)** como caso principal.
+Todos os exemplos XML deste curso são baseados em dados reais da **STCP (Sociedade de Transportes Colectivos do Porto)**. [[DATA-03]](#DATA-03) Usamos a **Linha 200 (Bolhão → Castelo do Queijo)** como caso principal.
 
 A escolha de dados reais (vs. uma rede fictícia) tem uma razão pedagógica: os exemplos são mais credíveis quando podemos verificar que correspondem a uma realidade que o leitor conhece ou pode consultar.
 
@@ -248,12 +248,12 @@ Módulo 8 — Ferramentas Práticas (validação, submissão ao NAP)
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1: Topologia de Rede). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-04] | CEN. "Transmodel – Reference Data Model for Public Transport." EN 12896. https://transmodel-cen.eu |
-| [STD-07] | MobilityData. "General Transit Feed Specification (GTFS)." https://gtfs.org |
-| [REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão Europeia (MMTIS — Multimodal Travel Information Services). |
-| [REG-02] | Diretiva ITS 2010/40/UE do Parlamento Europeu e do Conselho. |
-| [PT-02] | IMT. "Ponto de Acesso Nacional (NAP) Portugal." https://nap-portugal.imt-ip.pt |
-| [PT-03] | Instituto da Mobilidade e dos Transportes (IMT-IP). https://www.imt-ip.pt |
-| [TOOL-01] | Entur. "NeTEx Validator (Java)." https://github.com/entur/netex-validator-java |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP disponibilizado pela operadora. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1: Topologia de Rede). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-04"></a>[STD-04] | CEN. "Transmodel – Reference Data Model for Public Transport." EN 12896. https://transmodel-cen.eu |
+| <a id="STD-07"></a>[STD-07] | MobilityData. "General Transit Feed Specification (GTFS)." https://gtfs.org |
+| <a id="REG-01"></a>[REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão Europeia (MMTIS — Multimodal Travel Information Services). |
+| <a id="REG-02"></a>[REG-02] | Diretiva ITS 2010/40/UE do Parlamento Europeu e do Conselho. |
+| <a id="PT-02"></a>[PT-02] | IMT. "Ponto de Acesso Nacional (NAP) Portugal." https://nap-portugal.imt-ip.pt |
+| <a id="PT-03"></a>[PT-03] | Instituto da Mobilidade e dos Transportes (IMT-IP). https://www.imt-ip.pt |
+| <a id="TOOL-01"></a>[TOOL-01] | Entur. "NeTEx Validator (Java)." https://github.com/entur/netex-validator-java |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP disponibilizado pela operadora. |

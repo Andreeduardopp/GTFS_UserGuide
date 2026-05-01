@@ -1,4 +1,4 @@
-# Módulo 1 — Conceitos Base
+﻿# Módulo 1 — Conceitos Base
 
 > *Tempo estimado: 1,5 semanas*
 
@@ -18,7 +18,7 @@ Após completar este módulo, o leitor será capaz de:
 
 ### 1.1 NeTEx é Orientado a Objetos
 
-O NeTEx herda do Transmodel uma abordagem **orientada a objetos**: tudo é uma entidade com atributos e relações com outras entidades. [STD-04]
+O NeTEx herda do Transmodel uma abordagem **orientada a objetos**: tudo é uma entidade com atributos e relações com outras entidades. [[STD-04]](#STD-04)
 
 A classe raiz de quase tudo em NeTEx é `EntityInVersion`, que garante que cada objeto tem:
 
@@ -74,7 +74,7 @@ Isto é análogo às chaves estrangeiras de uma base de dados relacional.
 
 ### 2.1 O que é um Frame?
 
-Um **VersionFrame** é o contentor principal de um ficheiro NeTEx. Agrupa objetos do mesmo tipo e contexto temporal. [STD-01]
+Um **VersionFrame** é o contentor principal de um ficheiro NeTEx. Agrupa objetos do mesmo tipo e contexto temporal. [[STD-01]](#STD-01)
 
 ```xml
 <PublicationDelivery>
@@ -107,7 +107,7 @@ Um **VersionFrame** é o contentor principal de um ficheiro NeTEx. Agrupa objeto
 
 ### 2.3 PublicationDelivery — O Envelope
 
-O elemento raiz de qualquer ficheiro NeTEx é `PublicationDelivery`: [STD-01]
+O elemento raiz de qualquer ficheiro NeTEx é `PublicationDelivery`: [[STD-01]](#STD-01)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -137,7 +137,7 @@ O `ParticipantRef` identifica quem publicou os dados — neste caso, a STCP.
 
 ### 3.1 Formato dos Identificadores NeTEx
 
-Os IDs NeTEx seguem um formato hierárquico que os torna globalmente únicos: [STD-01]
+Os IDs NeTEx seguem um formato hierárquico que os torna globalmente únicos: [[STD-01]](#STD-01)
 
 ```
 <país>:<operador/autoridade>:<TipoDeObjecto>:<identificadorLocal>:<âmbito>
@@ -192,7 +192,7 @@ Cada objecto NeTEx tem um número de versão:
 
 Quando um objecto muda (ex: alteração de nome, adição de paragem), cria-se uma nova versão com um `version` incremental. As versões antigas ficam disponíveis para auditoria.
 
-**Porque isto importa para Portugal**: o Perfil Nacional NeTEx Portugal exige que todos os objetos tenham `version` e que as datas de validade sejam preenchidas correctamente antes de submissão ao NAP. [PT-01]
+**Porque isto importa para Portugal**: o Perfil Nacional NeTEx Portugal exige que todos os objetos tenham `version` e que as datas de validade sejam preenchidas correctamente antes de submissão ao NAP. [[PT-01]](#PT-01)
 
 ---
 
@@ -225,7 +225,7 @@ Cada elemento está extensivamente comentado em português para explicar **o por
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1: Topologia de Rede). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-04] | CEN. "Transmodel – Reference Data Model for Public Transport." EN 12896. https://transmodel-cen.eu |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1: Topologia de Rede). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-04"></a>[STD-04] | CEN. "Transmodel – Reference Data Model for Public Transport." EN 12896. https://transmodel-cen.eu |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |

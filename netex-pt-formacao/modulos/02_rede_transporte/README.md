@@ -1,4 +1,4 @@
-# Módulo 2 — Rede de Transporte
+﻿# Módulo 2 — Rede de Transporte
 
 > *Tempo estimado: 2 semanas*
 
@@ -17,7 +17,7 @@ Após completar este módulo, o leitor será capaz de:
 
 ### 1.1 Visão Geral
 
-O modelo de rede no NeTEx separa claramente três camadas: [STD-01]
+O modelo de rede no NeTEx separa claramente três camadas: [[STD-01]](#STD-01)
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -49,7 +49,7 @@ O modelo de rede no NeTEx separa claramente três camadas: [STD-01]
 
 ### 1.2 Line — A Linha Comercial
 
-Uma `Line` representa a linha de transporte como é conhecida pelos passageiros — o "Linha 200" ou "Metro Azul". Contém apenas informação comercial: nome, código público, cor, modo de transporte. [STD-01]
+Uma `Line` representa a linha de transporte como é conhecida pelos passageiros — o "Linha 200" ou "Metro Azul". Contém apenas informação comercial: nome, código público, cor, modo de transporte. [[STD-01]](#STD-01)
 
 **A `Line` NÃO contém a sequência de paragens.** Isso é responsabilidade da `Route`.
 
@@ -76,7 +76,7 @@ Uma `Line` representa a linha de transporte como é conhecida pelos passageiros 
 
 ### 1.3 Direction — A Direção da Linha
 
-Uma linha tem tipicamente duas direções (ida e volta). No NeTEx, cada direção é representada por um objeto `Direction`: [STD-01]
+Uma linha tem tipicamente duas direções (ida e volta). No NeTEx, cada direção é representada por um objeto `Direction`: [[STD-01]](#STD-01)
 
 ```xml
 <Direction id="PT:STCP:Direction:200_CQ:LOC" version="1">
@@ -94,7 +94,7 @@ No GTFS, a direção é apenas um campo binário `direction_id` (0 ou 1) com o `
 
 ### 1.4 Route — A Topologia
 
-Uma `Route` é uma sequência ordenada de `RoutePoint` numa determinada direção. Uma `Line` tem pelo menos duas `Route` (uma por direção), mas pode ter mais (ex: variantes de percurso). [STD-01]
+Uma `Route` é uma sequência ordenada de `RoutePoint` numa determinada direção. Uma `Line` tem pelo menos duas `Route` (uma por direção), mas pode ter mais (ex: variantes de percurso). [[STD-01]](#STD-01)
 
 ```
 Line 200
@@ -107,7 +107,7 @@ Line 200
 
 ### 1.5 RoutePoint e ScheduledStopPoint
 
-Um **`RoutePoint`** é um ponto na geometria da rota (pode ser apenas um ponto de inflexão, não necessariamente uma paragem). [STD-01]
+Um **`RoutePoint`** é um ponto na geometria da rota (pode ser apenas um ponto de inflexão, não necessariamente uma paragem). [[STD-01]](#STD-01)
 
 Um **`ScheduledStopPoint`** é um ponto específico onde o veículo pára e os passageiros podem embarcar/desembarcar. É um conceito **lógico** (associado ao horário), não físico.
 
@@ -158,7 +158,7 @@ O que o GTFS **não tem** e o NeTEx **acrescenta**:
 
 ## 3. Paragens da Linha 200 (Direção → Castelo do Queijo)
 
-Dados extraídos do feed GTFS da STCP [DATA-03]:
+Dados extraídos do feed GTFS da STCP [[DATA-03]](#DATA-03):
 
 | Seq | `stop_id` | Nome | Lat | Lon | Zona |
 |-----|-----------|------|-----|-----|------|
@@ -212,7 +212,7 @@ Dados extraídos do feed GTFS da STCP [DATA-03]:
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1: Topologia de Rede). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-04] | CEN. "Transmodel – Reference Data Model for Public Transport." EN 12896. https://transmodel-cen.eu |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1: Topologia de Rede). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-04"></a>[STD-04] | CEN. "Transmodel – Reference Data Model for Public Transport." EN 12896. https://transmodel-cen.eu |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |

@@ -1,4 +1,4 @@
-# Módulo 6 — Tarifas (Introdução)
+﻿# Módulo 6 — Tarifas (Introdução)
 
 > *Tempo estimado: 1,5 semanas*
 
@@ -33,7 +33,7 @@ O NeTEx (Parte 3 — Fares) tem um modelo de tarifas completo e muito expressivo
 
 ## 2. O FareFrame
 
-O **`FareFrame`** é o frame NeTEx dedicado às tarifas. [STD-03]
+O **`FareFrame`** é o frame NeTEx dedicado às tarifas. [[STD-03]](#STD-03)
 
 ```xml
 <FareFrame id="PT:STCP:FareFrame:Andante_FF:LOC" version="1">
@@ -49,7 +49,7 @@ O **`FareFrame`** é o frame NeTEx dedicado às tarifas. [STD-03]
 
 ## 3. TariffZone — Zonas Tarifárias
 
-Uma **`TariffZone`** define uma região geográfica à qual pertence um conjunto de paragens, para efeitos de cálculo de tarifa. [STD-03]
+Uma **`TariffZone`** define uma região geográfica à qual pertence um conjunto de paragens, para efeitos de cálculo de tarifa. [[STD-03]](#STD-03)
 
 O sistema Andante de Porto usa zonas concêntricas Z2, Z3, Z4... que representam o número mínimo de zonas para uma viagem. Cada paragem pertence a uma ou mais zonas.
 
@@ -93,7 +93,7 @@ A Linha 200 (Bolhão → Castelo do Queijo) atravessa várias zonas:
 
 ## 4. FareProduct e PreassignedFareProduct
 
-Um **`FareProduct`** é o tipo de título de transporte. O subtipo mais comum é o **`PreassignedFareProduct`** — um título com valor fixo e condições pré-definidas (ao contrário de tarifas calculadas dinamicamente). [STD-03]
+Um **`FareProduct`** é o tipo de título de transporte. O subtipo mais comum é o **`PreassignedFareProduct`** — um título com valor fixo e condições pré-definidas (ao contrário de tarifas calculadas dinamicamente). [[STD-03]](#STD-03)
 
 ### 4.1 Tipos de FareProduct relevantes para Portugal
 
@@ -138,7 +138,7 @@ Passe mensal:
 
 ## 5. SalesOfferPackage — Como o Título é Vendido
 
-O **`SalesOfferPackage`** descreve como o passageiro pode adquirir um produto tarifário: em máquina automática, online, ou em bilheteira. [STD-03]
+O **`SalesOfferPackage`** descreve como o passageiro pode adquirir um produto tarifário: em máquina automática, online, ou em bilheteira. [[STD-03]](#STD-03)
 
 ```xml
 <SalesOfferPackage id="PT:Andante:SalesOfferPackage:Z2_Maquina:LOC" version="1">
@@ -172,7 +172,7 @@ O **`SalesOfferPackage`** descreve como o passageiro pode adquirir um produto ta
 
 ## 7. Âmbito e Limitações deste Módulo
 
-O NeTEx Parte 3 (Fares) é o subsistema mais extenso e complexo do NeTEx. Este módulo cobre apenas os conceitos base. Para modelação tarifária completa, consultar: [STD-03]
+O NeTEx Parte 3 (Fares) é o subsistema mais extenso e complexo do NeTEx. Este módulo cobre apenas os conceitos base. Para modelação tarifária completa, consultar: [[STD-03]](#STD-03)
 
 | Conceito | Neste módulo | Módulo futuro |
 |----------|-------------|---------------|
@@ -202,8 +202,8 @@ O NeTEx Parte 3 (Fares) é o subsistema mais extenso e complexo do NeTEx. Este m
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-03] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-3:2024 (Parte 3 — Fares). https://github.com/NeTEx-CEN/NeTEx |
-| [REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão, de 14 de Dezembro de 2023. JO L, 2024/490. https://eur-lex.europa.eu/legal-content/PT/TXT/?uri=OJ:L_202400490 |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-03"></a>[STD-03] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-3:2024 (Parte 3 — Fares). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="REG-01"></a>[REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão, de 14 de Dezembro de 2023. JO L, 2024/490. https://eur-lex.europa.eu/legal-content/PT/TXT/?uri=OJ:L_202400490 |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |

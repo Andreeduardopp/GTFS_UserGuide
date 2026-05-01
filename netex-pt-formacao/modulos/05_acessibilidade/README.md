@@ -1,4 +1,4 @@
-# Módulo 5 — Acessibilidade
+﻿# Módulo 5 — Acessibilidade
 
 > *Tempo estimado: 1,5 semanas*
 
@@ -46,7 +46,7 @@ O NeTEx resolve isto com um modelo de acessibilidade multi-dimensional que cobre
 
 ## 2. AccessibilityAssessment — O Elemento Central
 
-O **`AccessibilityAssessment`** é o container que agrega todas as informações de acessibilidade de um objeto. [STD-01]
+O **`AccessibilityAssessment`** é o container que agrega todas as informações de acessibilidade de um objeto. [[STD-01]](#STD-01)
 
 Pode ser associado a:
 - `ServiceJourney` — acessibilidade do **veículo** nesta viagem concreta
@@ -76,7 +76,7 @@ Pode ser associado a:
 
 ### 2.2 LimitationStatusEnumeration — Os Quatro Valores
 
-Cada campo de limitação aceita um de quatro valores: [STD-01]
+Cada campo de limitação aceita um de quatro valores: [[STD-01]](#STD-01)
 
 | Valor | Significado | Quando usar |
 |-------|-------------|-------------|
@@ -128,7 +128,7 @@ Estação de metro com elevador (pode estar avariado):
 
 ## 4. AccessibilityAssessment na ServiceJourney vs StopPlace
 
-A distinção entre acessibilidade do **veículo** e da **infraestrutura** é uma das contribuições mais importantes do NeTEx para a acessibilidade real dos sistemas de transporte. [STD-01]
+A distinção entre acessibilidade do **veículo** e da **infraestrutura** é uma das contribuições mais importantes do NeTEx para a acessibilidade real dos sistemas de transporte. [[STD-01]](#STD-01)
 
 ```
 Um percurso verdadeiramente acessível requer DOIS componentes:
@@ -157,9 +157,9 @@ Se apenas o veículo for acessível mas a paragem não tiver lancil rebaixado, o
 
 ## 5. EPIAP — Perfil Europeu de Acessibilidade
 
-O **EPIAP** (European Passenger Information for Accessibility Profile) é o perfil NeTEx definido na Parte 6 da especificação CEN/TS 16614. [STD-06]
+O **EPIAP** (European Passenger Information for Accessibility Profile) é o perfil NeTEx definido na Parte 6 da especificação CEN/TS 16614. [[STD-06]](#STD-06)
 
-É o perfil que os operadores devem seguir para conformidade com o Regulamento (UE) 2024/490 (MMTIS) no que respeita a dados de acessibilidade. [REG-01]
+É o perfil que os operadores devem seguir para conformidade com o Regulamento (UE) 2024/490 (MMTIS) no que respeita a dados de acessibilidade. [[REG-01]](#REG-01)
 
 ### Campos Obrigatórios no EPIAP
 
@@ -175,7 +175,7 @@ Para um `StopPlace` submeter ao NAP com dados de acessibilidade:
 
 ### Contexto Português
 
-O Perfil Nacional NeTEx Portugal (PT-EPIP) alinha com o EPIAP europeu e acrescenta requisitos específicos para submissão ao NAP Portugal. [PT-01]
+O Perfil Nacional NeTEx Portugal (PT-EPIP) alinha com o EPIAP europeu e acrescenta requisitos específicos para submissão ao NAP Portugal. [[PT-01]](#PT-01)
 
 A IMT publicou orientações sobre os campos de acessibilidade obrigatórios para operadores portugueses. Para dados rigorosos, os operadores devem fazer levantamento de campo das suas paragens.
 
@@ -248,8 +248,8 @@ A IMT publicou orientações sobre os campos de acessibilidade obrigatórios par
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-06] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-6:2024 (Parte 6 — EPIAP). https://github.com/NeTEx-CEN/NeTEx |
-| [REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão, de 14 de Dezembro de 2023. JO L, 2024/490. https://eur-lex.europa.eu/legal-content/PT/TXT/?uri=OJ:L_202400490 |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-06"></a>[STD-06] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-6:2024 (Parte 6 — EPIAP). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="REG-01"></a>[REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão, de 14 de Dezembro de 2023. JO L, 2024/490. https://eur-lex.europa.eu/legal-content/PT/TXT/?uri=OJ:L_202400490 |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |

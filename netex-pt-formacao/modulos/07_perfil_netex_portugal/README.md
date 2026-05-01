@@ -1,4 +1,4 @@
-# Módulo 7 — Perfil NeTEx Portugal
+﻿# Módulo 7 — Perfil NeTEx Portugal
 
 > *Tempo estimado: 1,5 semanas*
 
@@ -44,7 +44,7 @@ Sem um perfil, cada operador poderia produzir NeTEx válido mas incompatível co
 
 ## 2. Perfil Nacional NeTEx Portugal (PT-EPIP)
 
-O Perfil Nacional NeTEx Portugal, também referido como **PT-EPIP** (European Passenger Information Profile — adaptação nacional), está publicado em: [PT-01]
+O Perfil Nacional NeTEx Portugal, também referido como **PT-EPIP** (European Passenger Information Profile — adaptação nacional), está publicado em: [[PT-01]](#PT-01)
 
 ```
 https://ptprofiles.azurewebsites.net
@@ -107,7 +107,7 @@ O perfil PT organiza os requisitos em três níveis:
 
 ## 3. Convenções de Identificadores no Perfil PT
 
-O Perfil PT adota o formato **IFOPT** (CEN/TS 28701) para identificadores: [STD-05]
+O Perfil PT adota o formato **IFOPT** (CEN/TS 28701) para identificadores: [[STD-05]](#STD-05)
 
 ```
 PT:<CodigoOrganizacao>:<TipoDeObjecto>:<IdLocal>:LOC
@@ -152,7 +152,7 @@ Na submissão ao NAP, o sistema pode reescrever IDs `:LOC` para IDs `:NAT` após
 
 ## 4. Estrutura de Ficheiros para o NAP Portugal
 
-O NAP Portugal aceita ficheiros NeTEx como **pacote ZIP** com a seguinte estrutura recomendada: [PT-01]
+O NAP Portugal aceita ficheiros NeTEx como **pacote ZIP** com a seguinte estrutura recomendada: [[PT-01]](#PT-01)
 
 ```
 <operador>_<tipo>_<versao>.zip
@@ -185,7 +185,7 @@ O `PublicationTimestamp` deve ser a data de geração do ficheiro. O `Participan
 
 ## 5. Comparação Perfil PT vs Perfil Francês
 
-Para quem vier do projeto `etalab/netex-france-formation`, as diferenças principais são: [PROJ-01]
+Para quem vier do projeto `etalab/netex-france-formation`, as diferenças principais são: [[PROJ-01]](#PROJ-01)
 
 | Aspeto | Perfil PT | Perfil França |
 |--------|-----------|---------------|
@@ -238,10 +238,10 @@ Para quem vier do projeto `etalab/netex-france-formation`, as diferenças princi
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-05] | CEN. "IFOPT – Identification of Fixed Objects in Public Transport." CEN/TS 28701. |
-| [REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão, de 14 de Dezembro de 2023. JO L, 2024/490. https://eur-lex.europa.eu/legal-content/PT/TXT/?uri=OJ:L_202400490 |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [PT-02] | IMT. "NAP Portugal — Portal do Ponto de Acesso Nacional." https://nap-portugal.imt-ip.pt |
-| [PROJ-01] | etalab / Direction interministérielle du numérique. "netex-france-formation." https://github.com/etalab/netex-france-formation |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-05"></a>[STD-05] | CEN. "IFOPT – Identification of Fixed Objects in Public Transport." CEN/TS 28701. |
+| <a id="REG-01"></a>[REG-01] | Regulamento Delegado (UE) 2024/490 da Comissão, de 14 de Dezembro de 2023. JO L, 2024/490. https://eur-lex.europa.eu/legal-content/PT/TXT/?uri=OJ:L_202400490 |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="PT-02"></a>[PT-02] | IMT. "NAP Portugal — Portal do Ponto de Acesso Nacional." https://nap-portugal.imt-ip.pt |
+| <a id="PROJ-01"></a>[PROJ-01] | etalab / Direction interministérielle du numérique. "netex-france-formation." https://github.com/etalab/netex-france-formation |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |

@@ -1,4 +1,4 @@
-# Módulo 3 — Horários e Calendários
+﻿# Módulo 3 — Horários e Calendários
 
 > *Tempo estimado: 2 semanas*
 
@@ -18,7 +18,7 @@ Após completar este módulo, o leitor será capaz de:
 
 ### 1.1 O que é uma ServiceJourney
 
-Uma **`ServiceJourney`** é uma viagem específica de um veículo, com horários concretos de passagem em cada paragem. É a entidade NeTEx mais próxima de uma linha de `trips.txt` + os seus `stop_times.txt`. [STD-02]
+Uma **`ServiceJourney`** é uma viagem específica de um veículo, com horários concretos de passagem em cada paragem. É a entidade NeTEx mais próxima de uma linha de `trips.txt` + os seus `stop_times.txt`. [[STD-02]](#STD-02)
 
 ```
 GTFS                              NeTEx
@@ -89,7 +89,7 @@ A STCP usa **exclusivamente `calendar_dates.txt`** com `exception_type=1` (servi
 
 ### 2.2 DayType — O Tipo de Dia
 
-Um **`DayType`** define uma categoria de dias de operação. [STD-02] Corresponde ao `service_id` do GTFS, mas é mais expressivo — pode incluir propriedades como dias da semana.
+Um **`DayType`** define uma categoria de dias de operação. [[STD-02]](#STD-02) Corresponde ao `service_id` do GTFS, mas é mais expressivo — pode incluir propriedades como dias da semana.
 
 ```xml
 <DayType id="PT:STCP:DayType:DiasUteis:LOC" version="1">
@@ -160,7 +160,7 @@ Todos estes objetos vivem no **`ServiceCalendarFrame`**:
 
 ## 3. TimetableFrame — O Frame de Horários
 
-O **`TimetableFrame`** contém todas as `ServiceJourney` de um período. [STD-02]
+O **`TimetableFrame`** contém todas as `ServiceJourney` de um período. [[STD-02]](#STD-02)
 
 ```
 ServiceCalendarFrame   ←── define QUANDO o serviço opera (DayType, OperatingDay)
@@ -189,7 +189,7 @@ Para a Linha 200 completa, o `TimetableFrame` conteria ~340 `ServiceJourney` (ID
 
 ## 5. Horários da Linha 200 — Dados Reais STCP
 
-Tempos de passagem reais para a partida das 06:00 de Bolhão, comparando os 3 tipos de serviço: [DATA-03]
+Tempos de passagem reais para a partida das 06:00 de Bolhão, comparando os 3 tipos de serviço: [[DATA-03]](#DATA-03)
 
 | Paragem | Dias Úteis | Sábados | Dom./Feriados |
 |---------|-----------|---------|---------------|
@@ -219,7 +219,7 @@ Ligeira diferença no Carmo (+1 min em dias úteis) — provavelmente maior trá
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-02] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-2:2024 (Parte 2: Horários). https://github.com/NeTEx-CEN/NeTEx |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-02"></a>[STD-02] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-2:2024 (Parte 2: Horários). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |

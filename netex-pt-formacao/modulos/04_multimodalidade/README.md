@@ -1,4 +1,4 @@
-# Módulo 4 — Multimodalidade e StopPlace
+﻿# Módulo 4 — Multimodalidade e StopPlace
 
 > *Tempo estimado: 1,5 semanas*
 
@@ -52,7 +52,7 @@ Camada 3 — LIGAÇÃO (ServiceFrame):
 
 ## 2. SiteFrame — O Frame dos Lugares Físicos
 
-Todos os objetos físicos vivem no **`SiteFrame`**: [STD-01]
+Todos os objetos físicos vivem no **`SiteFrame`**: [[STD-01]](#STD-01)
 
 ```xml
 <SiteFrame id="PT:STCP:SiteFrame:Porto_SF:LOC" version="1">
@@ -71,7 +71,7 @@ O `SiteFrame` é o único frame que não tem equivalente direto em GTFS — é a
 
 ### 3.1 StopPlace
 
-Um **`StopPlace`** é o local físico — o cruzamento, a praça, o edifício ou a estação onde os passageiros acedem ao transporte. [STD-01]
+Um **`StopPlace`** é o local físico — o cruzamento, a praça, o edifício ou a estação onde os passageiros acedem ao transporte. [[STD-01]](#STD-01)
 
 Um `StopPlace` pode ter:
 - **Múltiplos `Quay`** — uma plataforma por direção/modo
@@ -95,7 +95,7 @@ Um `StopPlace` pode ter:
 
 ### 3.2 Quay
 
-Um **`Quay`** é a plataforma específica onde os passageiros embarcam/desembarcam de um veículo. [STD-01] Cada `Quay` tem coordenadas próprias (o ponto exato na rua) e pode ter informação de acessibilidade.
+Um **`Quay`** é a plataforma específica onde os passageiros embarcam/desembarcam de um veículo. [[STD-01]](#STD-01) Cada `Quay` tem coordenadas próprias (o ponto exato na rua) e pode ter informação de acessibilidade.
 
 ```xml
 <Quay id="PT:STCP:Quay:Bolhao_IDA:LOC" version="1">
@@ -126,7 +126,7 @@ Um **`Quay`** é a plataforma específica onde os passageiros embarcam/desembarc
 
 ## 4. PassengerStopAssignment — A Ponte Lógico/Físico
 
-O **`PassengerStopAssignment`** é o elemento que liga a camada lógica (`ScheduledStopPoint`, definida nos Módulos 2 e 3) à camada física (`Quay`). [STD-01]
+O **`PassengerStopAssignment`** é o elemento que liga a camada lógica (`ScheduledStopPoint`, definida nos Módulos 2 e 3) à camada física (`Quay`). [[STD-01]](#STD-01)
 
 ```xml
 <!-- No ServiceFrame, junto aos scheduledStopPoints -->
@@ -174,7 +174,7 @@ Para modelar a transferência entre autocarro e metro, o `PathLink` descreve o p
 
 ## 6. StopPlaceType — Tipos de Paragem
 
-O campo `StopPlaceType` classifica o lugar físico: [STD-01]
+O campo `StopPlaceType` classifica o lugar físico: [[STD-01]](#STD-01)
 
 | Valor | Descrição | Exemplo Porto |
 |-------|-----------|---------------|
@@ -190,7 +190,7 @@ O campo `StopPlaceType` classifica o lugar físico: [STD-01]
 
 ## 7. IFOPT — Identificação de Objectos Fixos
 
-O **IFOPT** (Identification of Fixed Objects in Public Transport — CEN/TS 28701) é o standard europeu para identificação única de paragens. [STD-05]
+O **IFOPT** (Identification of Fixed Objects in Public Transport — CEN/TS 28701) é o standard europeu para identificação única de paragens. [[STD-05]](#STD-05)
 
 O formato de ID IFOPT para Portugal:
 
@@ -198,7 +198,7 @@ O formato de ID IFOPT para Portugal:
 PT:NomeLocalidade:TipoDeObjecto:IdentificadorLocal
 ```
 
-O Perfil Nacional NeTEx Portugal adopta o formato IFOPT para os `StopPlace` e `Quay`, alinhando com o sistema europeu de identificação de paragens (STOP.DB europeia). [PT-01]
+O Perfil Nacional NeTEx Portugal adopta o formato IFOPT para os `StopPlace` e `Quay`, alinhando com o sistema europeu de identificação de paragens (STOP.DB europeia). [[PT-01]](#PT-01)
 
 Em termos práticos, no Perfil PT o `id` de um `StopPlace` deve seguir a convenção:
 ```
@@ -225,7 +225,7 @@ Onde `Bolhao` é o identificador local reconhecido pelo operador/autoridade.
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
-| [STD-05] | CEN. "IFOPT – Identification of Fixed Objects in Public Transport." CEN/TS 28701. |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024 (Parte 1). https://github.com/NeTEx-CEN/NeTEx |
+| <a id="STD-05"></a>[STD-05] | CEN. "IFOPT – Identification of Fixed Objects in Public Transport." CEN/TS 28701. |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="DATA-03"></a>[DATA-03] | STCP. "Feed GTFS STCP Porto (versão Escolar 228, 2026-04-30)." Feed oficial STCP. |

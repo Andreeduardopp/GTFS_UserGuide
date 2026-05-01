@@ -1,4 +1,4 @@
-# Módulo 8 — Ferramentas Práticas
+﻿# Módulo 8 — Ferramentas Práticas
 
 > *Tempo estimado: 1 semana*
 
@@ -16,7 +16,7 @@ Após completar este módulo, o leitor será capaz de:
 
 ## 1. Validação — netex-validator (Entur)
 
-O **`netex-validator`** é a ferramenta de validação NeTEx de referência, desenvolvida e mantida pela Entur (NAP da Noruega). É open-source e é usada como base por vários NAPs europeus, incluindo o sistema de validação do NAP Portugal. [TOOL-01]
+O **`netex-validator`** é a ferramenta de validação NeTEx de referência, desenvolvida e mantida pela Entur (NAP da Noruega). É open-source e é usada como base por vários NAPs europeus, incluindo o sistema de validação do NAP Portugal. [[TOOL-01]](#TOOL-01)
 
 ### 1.1 Instalação
 
@@ -128,7 +128,7 @@ A conversão automática entre GTFS e NeTEx é um problema parcialmente resolvid
 
 ### 3.2 Chouette
 
-O **Chouette** é a ferramenta open-source da AFIMB (França) para gestão e conversão de dados de transporte. Suporta GTFS, NeTEx, e outros formatos. [TOOL-02]
+O **Chouette** é a ferramenta open-source da AFIMB (França) para gestão e conversão de dados de transporte. Suporta GTFS, NeTEx, e outros formatos. [[TOOL-02]](#TOOL-02)
 
 ```
 Repositório: https://github.com/entur/chouette
@@ -147,7 +147,7 @@ Para operadores portugueses que partem de GTFS:
 
 ## 4. Navegar o Schema XSD do NeTEx
 
-O schema XSD completo do NeTEx está disponível no repositório oficial: [STD-01]
+O schema XSD completo do NeTEx está disponível no repositório oficial: [[STD-01]](#STD-01)
 
 ```
 https://github.com/NeTEx-CEN/NeTEx/tree/master/xsd
@@ -265,9 +265,9 @@ Use esta checklist antes de cada submissão ao NAP Portugal:
 
 | ID | Referência |
 |----|-----------|
-| [STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024. https://github.com/NeTEx-CEN/NeTEx |
-| [PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
-| [PT-02] | IMT. "NAP Portugal — Portal do Ponto de Acesso Nacional." https://nap-portugal.imt-ip.pt |
-| [TOOL-01] | Entur AS. "netex-validator-java." https://github.com/entur/netex-validator-java |
-| [TOOL-02] | Entur AS (fork de AFIMB). "Chouette." https://github.com/entur/chouette |
-| [TOOL-03] | Red Hat. "VSCode XML Extension." https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml |
+| <a id="STD-01"></a>[STD-01] | CEN. "NeTEx – Network Timetable Exchange." CEN/TS 16614-1:2024. https://github.com/NeTEx-CEN/NeTEx |
+| <a id="PT-01"></a>[PT-01] | IMT. "Perfil Nacional NeTEx Portugal." https://ptprofiles.azurewebsites.net |
+| <a id="PT-02"></a>[PT-02] | IMT. "NAP Portugal — Portal do Ponto de Acesso Nacional." https://nap-portugal.imt-ip.pt |
+| <a id="TOOL-01"></a>[TOOL-01] | Entur AS. "netex-validator-java." https://github.com/entur/netex-validator-java |
+| <a id="TOOL-02"></a>[TOOL-02] | Entur AS (fork de AFIMB). "Chouette." https://github.com/entur/chouette |
+| <a id="TOOL-03"></a>[TOOL-03] | Red Hat. "VSCode XML Extension." https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml |
