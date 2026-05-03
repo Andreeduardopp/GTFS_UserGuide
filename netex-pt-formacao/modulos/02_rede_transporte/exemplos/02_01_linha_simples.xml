@@ -175,7 +175,7 @@
               GTFS: stop_id=MFZ1, lat=41.155048, lon=-8.673343, zone_id=PRT2
 
               Nota: a mudança de zona tarifária (PRT1 → PRT2) ocorre entre a
-              paragem de Lordelo (LRD1, seq. 15) e esta.
+              paragem de Jardim Botânico (JB1, seq. 14, PRT1) e Lordelo (LRD1, seq. 15, PRT2).
             -->
             <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1">
               <Name>Mercado da Foz</Name>
@@ -223,49 +223,43 @@
               <DirectionType>outbound</DirectionType>
 
               <!--
-                pointsInSequence: lista de RoutePoint na ordem do percurso.
-                Cada RoutePoint referencia um ScheduledStopPoint.
+                pointsInSequence: lista de PointOnRoute na ordem do percurso.
+                Cada PointOnRoute referencia um ponto da rota.
 
-                Nota: numa Route mais detalhada, os RoutePoint também podem
-                incluir RouteLink com geometria GeoJSON/GML.
-                Neste exemplo simplificado, usamos apenas os 5 pontos principais.
+                Nota: numa implementação completa, cada PointOnRoute referenciaria
+                um RoutePoint distinto. Neste exemplo simplificado, referenciamos
+                diretamente os ScheduledStopPoint via PointRef.
+                Usamos apenas os 5 pontos principais.
+
+                ForAlighting/ForBoarding NÃO pertencem à Route (topologia).
+                Essas propriedades pertencem ao ServiceJourneyPattern (abaixo).
               -->
               <pointsInSequence>
 
-                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_01:LOC" version="1"
-                                       order="1">
-                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
-                  <ForAlighting>false</ForAlighting>  <!-- terminal de partida: não se sai aqui -->
-                  <ForBoarding>true</ForBoarding>
-                </PointInJourneyPattern>
+                <PointOnRoute id="PT:STCP:PointOnRoute:200_IDA_01:LOC" version="1"
+                              order="1">
+                  <PointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
+                </PointOnRoute>
 
-                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_02:LOC" version="1"
-                                       order="2">
-                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1"/>
-                  <ForAlighting>true</ForAlighting>
-                  <ForBoarding>true</ForBoarding>
-                </PointInJourneyPattern>
+                <PointOnRoute id="PT:STCP:PointOnRoute:200_IDA_02:LOC" version="1"
+                              order="2">
+                  <PointRef ref="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1"/>
+                </PointOnRoute>
 
-                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_03:LOC" version="1"
-                                       order="3">
-                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:PRG4:LOC" version="1"/>
-                  <ForAlighting>true</ForAlighting>
-                  <ForBoarding>true</ForBoarding>
-                </PointInJourneyPattern>
+                <PointOnRoute id="PT:STCP:PointOnRoute:200_IDA_03:LOC" version="1"
+                              order="3">
+                  <PointRef ref="PT:STCP:ScheduledStopPoint:PRG4:LOC" version="1"/>
+                </PointOnRoute>
 
-                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_04:LOC" version="1"
-                                       order="4">
-                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1"/>
-                  <ForAlighting>true</ForAlighting>
-                  <ForBoarding>true</ForBoarding>
-                </PointInJourneyPattern>
+                <PointOnRoute id="PT:STCP:PointOnRoute:200_IDA_04:LOC" version="1"
+                              order="4">
+                  <PointRef ref="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1"/>
+                </PointOnRoute>
 
-                <PointInJourneyPattern id="PT:STCP:RoutePoint:200_IDA_05:LOC" version="1"
-                                       order="5">
-                  <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
-                  <ForAlighting>true</ForAlighting>
-                  <ForBoarding>false</ForBoarding>  <!-- terminal: não se embarca aqui -->
-                </PointInJourneyPattern>
+                <PointOnRoute id="PT:STCP:PointOnRoute:200_IDA_05:LOC" version="1"
+                              order="5">
+                  <PointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
+                </PointOnRoute>
 
               </pointsInSequence>
             </Route>
@@ -284,7 +278,7 @@
             (ex: viagem normal vs. viagem expresso que salta algumas paragens).
           -->
           <journeyPatterns>
-            <ServiceJourneyPattern id="PT:STCP:ServiceJourneyPattern:200_IDA_NORMAL:LOC" version="1">
+            <ServiceJourneyPattern id="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1">
               <Name>200 IDA — Normal (todas as paragens)</Name>
               <RouteRef ref="PT:STCP:Route:200_IDA:LOC" version="1"/>
               <DirectionRef ref="PT:STCP:Direction:200_CQ:LOC" version="1"/>
@@ -292,7 +286,7 @@
 
               <pointsInSequence>
 
-                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_01:LOC" version="1"
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_01:LOC" version="1"
                                            order="1">
                   <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:BLRB1:LOC" version="1"/>
                   <ForAlighting>false</ForAlighting>
@@ -300,28 +294,28 @@
                   <DestinationDisplayRef ref="PT:STCP:DestinationDisplay:CQ:LOC" version="1"/>
                 </StopPointInJourneyPattern>
 
-                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_02:LOC" version="1"
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_02:LOC" version="1"
                                            order="2">
                   <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1"/>
                   <ForAlighting>true</ForAlighting>
                   <ForBoarding>true</ForBoarding>
                 </StopPointInJourneyPattern>
 
-                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_03:LOC" version="1"
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_03:LOC" version="1"
                                            order="3">
                   <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:PRG4:LOC" version="1"/>
                   <ForAlighting>true</ForAlighting>
                   <ForBoarding>true</ForBoarding>
                 </StopPointInJourneyPattern>
 
-                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_04:LOC" version="1"
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_04:LOC" version="1"
                                            order="4">
                   <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1"/>
                   <ForAlighting>true</ForAlighting>
                   <ForBoarding>true</ForBoarding>
                 </StopPointInJourneyPattern>
 
-                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_N_05:LOC" version="1"
+                <StopPointInJourneyPattern id="PT:STCP:SPIJP:200_IDA_05:LOC" version="1"
                                            order="5">
                   <ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CQ10:LOC" version="1"/>
                   <ForAlighting>true</ForAlighting>

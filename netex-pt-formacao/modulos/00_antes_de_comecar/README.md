@@ -1,5 +1,7 @@
 ﻿# Módulo 0 — Antes de Começar
 
+> *Tempo estimado: 1–2 horas*
+
 ## Objetivos de Aprendizagem
 
 Após completar este módulo, o leitor será capaz de:
@@ -32,11 +34,11 @@ O NeTEx foi desenvolvido a partir do **Transmodel** (CEN EN 12896), o modelo con
 
 > Transmodel define *o quê* (os conceitos). NeTEx define *como* (a troca de dados XML).
 
-A primeira versão do NeTEx foi publicada em 2014. A versão atual (2024) inclui três partes principais e uma parte dedicada à informação ao passageiro (EPIAP).
+A primeira versão do NeTEx foi publicada em 2014. A versão atual (2024) inclui três partes principais e uma parte dedicada à informação ao passageiro (**EPIAP** — *European Passenger Information and Access Profile*).
 
 ### 1.3 Porque Importa para Operadores Portugueses
 
-Até recentemente, a maioria dos operadores portugueses publicava os seus dados em **GTFS** (Google Transit Feed Specification). O GTFS é prático e amplamente adotado, mas:
+Até recentemente, a maioria dos operadores portugueses publicava os seus dados em **GTFS** (Google Transit Feed Specification). [[STD-07]](#STD-07) O GTFS é prático e amplamente adotado, mas:
 
 1. **É insuficiente para cumprir a regulação europeia.** O Regulamento Delegado (UE) 2024/490 obriga os operadores a partilhar dados no formato NeTEx/SIRI com o Ponto de Acesso Nacional (NAP). [[REG-01]](#REG-01)
 2. **Não modela toda a complexidade do serviço.** Tarifas avançadas (como o Navegante Metropolitano), acessibilidade detalhada e intermodalidade ficam fora do alcance do GTFS.
@@ -127,7 +129,7 @@ Isto significa que quem aprende NeTEx também está a aprender Transmodel — os
 
 O **Ponto de Acesso Nacional (NAP)** é a plataforma onde os operadores publicam os seus dados para consumo por aplicações de mobilidade, investigadores e outros stakeholders. [[PT-02]](#PT-02)
 
-Em Portugal, o NAP é gerido pelo **IMT-IP** e aceita dados no formato NeTEx. O Perfil Nacional NeTEx Portugal (ver Módulo 7) define exactamente que subconjunto do NeTEx é obrigatório para submissão ao NAP português.
+Em Portugal, o NAP é gerido pelo **IMT-IP** e aceita dados no formato NeTEx. O Perfil Nacional NeTEx Portugal (ver Módulo 7) define exatamente que subconjunto do NeTEx é obrigatório para submissão ao NAP português.
 
 ---
 
@@ -154,8 +156,8 @@ O regulamento define obrigações por tipo de dado e prazo. Para operadores de t
 | Paragens e redes | NeTEx Parte 1 | Obrigatório |
 | Horários | NeTEx Parte 2 | Obrigatório |
 | Tarifas básicas | NeTEx Parte 3 | Recomendado |
-| Acessibilidade | NeTEx Parte 6 (EPIAP) | Recomendado |
-| Tempo real (posições) | SIRI VM | Obrigatório |
+| Acessibilidade | Perfil EPIAP | Recomendado |
+| Tempo real — posições | SIRI ET/VM | Obrigatório |
 | Perturbações | SIRI SX | Recomendado |
 
 ### 4.3 A Diretiva ITS como Base Legal
@@ -168,7 +170,7 @@ Para um técnico de um operador português, as implicações práticas são:
 
 1. O feed GTFS existente **não é suficiente** para cumprir a regulação — é preciso converter ou criar dados NeTEx
 2. Os dados devem ser submetidos ao **NAP Portugal** com um perfil validado
-3. O **Perfil Nacional NeTEx Portugal** (definido pelo IMT) especifica exactamente o que é obrigatório vs opcional para Portugal (ver Módulo 7)
+3. O **Perfil Nacional NeTEx Portugal** (definido pelo IMT) especifica exatamente o que é obrigatório vs opcional para Portugal (ver Módulo 7)
 
 ---
 
@@ -193,7 +195,6 @@ O que deve saber antes de começar:
 
 Extensões VS Code recomendadas:
 - **XML** (Red Hat) — validação, formatação e navegação de ficheiros XML
-- **XML Tools** (Josh Johnson) — complementar
 - **GitLens** — para navegar o histórico do repositório
 
 **Validação de XML**: O **NeTEx Validator da Entur** permite validar ficheiros NeTEx contra o schema XSD e os perfis nacionais. [[TOOL-01]](#TOOL-01) Será introduzido no Módulo 8.
@@ -204,7 +205,7 @@ Todos os exemplos XML deste curso são baseados em dados reais da **STCP (Socied
 
 A escolha de dados reais (vs. uma rede fictícia) tem uma razão pedagógica: os exemplos são mais credíveis quando podemos verificar que correspondem a uma realidade que o leitor conhece ou pode consultar.
 
-Os ficheiros GTFS de base estão disponíveis em `exemplos/rede_exemplo_portugal/gtfs/`.
+Os ficheiros GTFS de base estão disponíveis em `netex-pt-formacao/exemplos/rede_exemplo_portugal/gtfs/` (raiz do repositório).
 
 ### 5.4 Estrutura de Cada Módulo
 

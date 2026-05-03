@@ -1,7 +1,6 @@
 # Exercício 2 — Converter GTFS para NeTEx: Rede de Transporte
 
 > **Módulo 2 — Rede de Transporte**
-> Tempo estimado: 60–90 minutos
 
 ---
 

@@ -65,6 +65,16 @@
 
           <stopPlaces>
 
+            <!--
+              NOTA PEDAGÓGICA: Neste exemplo, os 3 StopPlaces (comboio, metro, bus)
+              são definidos como elementos irmãos (flat). Numa implementação de
+              produção, deveriam usar-se mecanismos de agrupamento como:
+                - parentSiteRef no sub-StopPlace apontando para o StopPlace principal
+                - ou GroupOfStopPlaces para agrupar os StopPlaces do nó intermodal
+              Aqui optamos pela estrutura flat + PathLink para simplificar a
+              introdução ao conceito de intermodalidade.
+            -->
+
             <!-- ─────────────────────────────────────────────────────────
                  StopPlace RAIZ — Estação de Campanhã (comboio)
                  StopPlaceType="railStation" → estação ferroviária

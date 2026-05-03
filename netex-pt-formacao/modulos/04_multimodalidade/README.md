@@ -1,4 +1,4 @@
-﻿# Módulo 4 — Multimodalidade e StopPlace
+# Módulo 4 — Multimodalidade e StopPlace
 
 ## Objetivos de Aprendizagem
 
@@ -119,6 +119,8 @@ Um **`Quay`** é a plataforma específica onde os passageiros embarcam/desembarc
 | `parent_station` | implícito (Quay está dentro de StopPlace) | NeTEx usa hierarquia XML |
 | *(não existe)* | `StopPlaceType` | Tipo físico da paragem |
 | *(não existe)* | `AccessibilityAssessment` | Acessibilidade da infraestrutura |
+
+> **Nota:** No Módulo 2, os `ScheduledStopPoint` incluíam `Location` por conveniência pedagógica. Na arquitectura NeTEx correcta, o `ScheduledStopPoint` é uma abstracção **puramente lógica** — as coordenadas físicas pertencem ao `Quay`, ligado via `PassengerStopAssignment`. O campo `stop_code` do GTFS mapeia para `Quay/PublicCode`.
 
 ---
 

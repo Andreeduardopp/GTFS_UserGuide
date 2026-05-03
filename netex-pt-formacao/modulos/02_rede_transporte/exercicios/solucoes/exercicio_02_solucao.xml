@@ -65,6 +65,12 @@
 
         <ServiceFrame id="PT:STCP:ServiceFrame:Exercicio02_SF:LOC" version="1">
 
+          <!-- Network: rede STCP, consistente com os exemplos do módulo -->
+          <Network id="PT:STCP:Network:STCP_Porto:LOC" version="1">
+            <Name>Rede de Autocarros STCP — Porto</Name>
+            <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+          </Network>
+
           <!-- PARTE B: Line e Direction -->
 
           <!--
@@ -87,6 +93,7 @@
                 <TextColour>FFFFFF</TextColour>
               </Presentation>
               <OperatorRef ref="PT:STCP:Operator:STCP:LOC" version="1"/>
+              <NetworkRef ref="PT:STCP:Network:STCP_Porto:LOC" version="1"/>
               <Url>https://www.stcp.pt/pt/viajar/linhas/?linha=201</Url>
             </Line>
           </lines>
@@ -173,12 +180,12 @@
               <DirectionRef ref="PT:STCP:Direction:201_VISO:LOC" version="1"/>
               <DirectionType>outbound</DirectionType>
               <pointsInSequence>
-                <PointInJourneyPattern id="PT:STCP:RP:201_IDA_01:LOC" version="1" order="1"><ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:AL1:LOC" version="1"/></PointInJourneyPattern>
-                <PointInJourneyPattern id="PT:STCP:RP:201_IDA_02:LOC" version="1" order="2"><ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:TRD6:LOC" version="1"/></PointInJourneyPattern>
-                <PointInJourneyPattern id="PT:STCP:RP:201_IDA_03:LOC" version="1" order="3"><ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:PRFL:LOC" version="1"/></PointInJourneyPattern>
-                <PointInJourneyPattern id="PT:STCP:RP:201_IDA_04:LOC" version="1" order="4"><ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:GGF:LOC" version="1"/></PointInJourneyPattern>
-                <PointInJourneyPattern id="PT:STCP:RP:201_IDA_05:LOC" version="1" order="5"><ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1"/></PointInJourneyPattern>
-                <PointInJourneyPattern id="PT:STCP:RP:201_IDA_06:LOC" version="1" order="6"><ScheduledStopPointRef ref="PT:STCP:ScheduledStopPoint:HSA5:LOC" version="1"/></PointInJourneyPattern>
+                <PointOnRoute id="PT:STCP:PointOnRoute:201_IDA_01:LOC" version="1" order="1"><PointRef ref="PT:STCP:ScheduledStopPoint:AL1:LOC" version="1"/></PointOnRoute>
+                <PointOnRoute id="PT:STCP:PointOnRoute:201_IDA_02:LOC" version="1" order="2"><PointRef ref="PT:STCP:ScheduledStopPoint:TRD6:LOC" version="1"/></PointOnRoute>
+                <PointOnRoute id="PT:STCP:PointOnRoute:201_IDA_03:LOC" version="1" order="3"><PointRef ref="PT:STCP:ScheduledStopPoint:PRFL:LOC" version="1"/></PointOnRoute>
+                <PointOnRoute id="PT:STCP:PointOnRoute:201_IDA_04:LOC" version="1" order="4"><PointRef ref="PT:STCP:ScheduledStopPoint:GGF:LOC" version="1"/></PointOnRoute>
+                <PointOnRoute id="PT:STCP:PointOnRoute:201_IDA_05:LOC" version="1" order="5"><PointRef ref="PT:STCP:ScheduledStopPoint:CMO:LOC" version="1"/></PointOnRoute>
+                <PointOnRoute id="PT:STCP:PointOnRoute:201_IDA_06:LOC" version="1" order="6"><PointRef ref="PT:STCP:ScheduledStopPoint:HSA5:LOC" version="1"/></PointOnRoute>
               </pointsInSequence>
             </Route>
           </routes>

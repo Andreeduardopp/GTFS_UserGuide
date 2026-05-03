@@ -164,30 +164,30 @@
           <salesOfferPackages>
 
             <!-- Canal 1: Máquinas automáticas -->
-            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:Naval_Maquina:LOC" version="1">
+            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:NavMun_Maquina:LOC" version="1">
               <Name>Navegante Municipal — Máquina automática</Name>
               <salesOfferPackageElements>
-                <SalesOfferPackageElement id="PT:Carris:SOPE:Naval_Maquina_01:LOC" version="1" order="1">
+                <SalesOfferPackageElement id="PT:Carris:SOPE:NavMun_Maquina_01:LOC" version="1" order="1">
                   <FareProductRef ref="PT:Carris:FareProduct:Navegante_Municipal:LOC" version="1"/>
                 </SalesOfferPackageElement>
               </salesOfferPackageElements>
             </SalesOfferPackage>
 
             <!-- Canal 2: App Lisboa Move-Me (canal digital) -->
-            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:Naval_App:LOC" version="1">
+            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:NavMun_App:LOC" version="1">
               <Name>Navegante Municipal — App Lisboa Move-Me</Name>
               <salesOfferPackageElements>
-                <SalesOfferPackageElement id="PT:Carris:SOPE:Naval_App_01:LOC" version="1" order="1">
+                <SalesOfferPackageElement id="PT:Carris:SOPE:NavMun_App_01:LOC" version="1" order="1">
                   <FareProductRef ref="PT:Carris:FareProduct:Navegante_Municipal:LOC" version="1"/>
                 </SalesOfferPackageElement>
               </salesOfferPackageElements>
             </SalesOfferPackage>
 
             <!-- Canal 3: Balcões Carris -->
-            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:Naval_Balcao:LOC" version="1">
+            <SalesOfferPackage id="PT:Carris:SalesOfferPackage:NavMun_Balcao:LOC" version="1">
               <Name>Navegante Municipal — Balcão Carris</Name>
               <salesOfferPackageElements>
-                <SalesOfferPackageElement id="PT:Carris:SOPE:Naval_Balcao_01:LOC" version="1" order="1">
+                <SalesOfferPackageElement id="PT:Carris:SOPE:NavMun_Balcao_01:LOC" version="1" order="1">
                   <FareProductRef ref="PT:Carris:FareProduct:Navegante_Municipal:LOC" version="1"/>
                 </SalesOfferPackageElement>
               </salesOfferPackageElements>

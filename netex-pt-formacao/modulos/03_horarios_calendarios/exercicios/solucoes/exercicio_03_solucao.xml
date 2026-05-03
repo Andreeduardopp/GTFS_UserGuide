@@ -54,14 +54,17 @@
           <dayTypes>
             <DayType id="PT:STCP:DayType:DiasUteis:LOC" version="1">
               <Name>Dias Úteis</Name>
+              <ShortName>DU</ShortName>
               <properties><PropertyOfDay><DaysOfWeek>Monday Tuesday Wednesday Thursday Friday</DaysOfWeek></PropertyOfDay></properties>
             </DayType>
             <DayType id="PT:STCP:DayType:Sabados:LOC" version="1">
               <Name>Sábados</Name>
+              <ShortName>SAB</ShortName>
               <properties><PropertyOfDay><DaysOfWeek>Saturday</DaysOfWeek></PropertyOfDay></properties>
             </DayType>
             <DayType id="PT:STCP:DayType:DomingosFeriados:LOC" version="1">
               <Name>Domingos e Feriados</Name>
+              <ShortName>DF</ShortName>
               <properties><PropertyOfDay><DaysOfWeek>Sunday</DaysOfWeek></PropertyOfDay></properties>
             </DayType>
           </dayTypes>

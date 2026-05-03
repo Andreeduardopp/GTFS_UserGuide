@@ -1,6 +1,6 @@
 # Exercício 6 — Modelar o Navegante Municipal Lisboa
 
-> *Módulo 6 — Tarifas (Introdução)*
+> **Módulo 6 — Tarifas (Introdução)**
 
 ---
 
@@ -95,6 +95,17 @@ Como descreveria no NeTEx que um `PreassignedFareProduct` é válido para múlti
 Um passe mensal Navegante é válido por 1 mês a partir da data de ativação e pode ser renovado automaticamente (débito direto). Em GTFS este conceito não existe.
 
 Como usaria o elemento `UsageValidityPeriod` do NeTEx para modelar: (a) a validade de 1 mês, (b) a renovação automática? Que valores de `UsageTrigger` faria sentido usar?
+
+---
+
+## Autoavaliação
+
+- [ ] A `TariffZone` tem `id` no formato `PT:<operador>:TariffZone:<local>:LOC`?
+- [ ] Os `ScheduledStopPoint` têm `TariffZoneRef` apontando para a zona correta?
+- [ ] O `PreassignedFareProduct` tem `conditionSummary` com `TravelDocumentType` e `RequiresCard`?
+- [ ] Existem pelo menos 3 `SalesOfferPackage` (um por canal de venda)?
+- [ ] Cada `SalesOfferPackageElement` referencia o `FareProductRef` correto?
+- [ ] O Navegante Jovem está modelado como produto separado com nota sobre `SaleDiscountRight`?
 
 ---
 

@@ -1,7 +1,6 @@
 # Exercício 3 — Converter calendar_dates.txt e stop_times.txt para NeTEx
 
 > **Módulo 3 — Horários e Calendários**
-> Tempo estimado: 60–90 minutos
 
 ---
 
@@ -91,7 +90,7 @@ Crie a `ServiceJourney` para a viagem `200_DU_0620`:
 
 Crie a `ServiceJourney` para a viagem `200_SAB_0600`:
 - Estrutura igual à da Parte B, mas com `DayTypeRef` → `Sabados`
-- Horários do sábado (ligeiramente diferentes nos dias úteis)
+- Horários do sábado (ligeiramente diferentes dos dias úteis)
 
 ---
 

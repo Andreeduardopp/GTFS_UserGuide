@@ -297,6 +297,10 @@
                 A ServiceJourney não repete a lista de paragens — apenas os tempos.
                 Os StopPointInJourneyPatternRef nos TimetabledPassingTime
                 são o elo de ligação entre o tempo e a paragem.
+
+                Nota: o DestinationDisplay ("Castelo do Queijo") é herdado do
+                ServiceJourneyPattern — não precisa de ser repetido aqui,
+                exceto se esta viagem tiver um destino diferente do padrão.
               -->
               <JourneyPatternRef ref="PT:STCP:SJP:200_IDA_NORMAL:LOC" version="1"/>
 

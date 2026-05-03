@@ -100,6 +100,9 @@
                 <Quay id="PT:STCP:Quay:Bolhao_IDA:LOC" version="1">
                   <Name>Bolhão — Sentido Castelo do Queijo</Name>
 
+                  <!-- PublicCode: código público da plataforma (equivale ao stop_code GTFS) -->
+                  <PublicCode>BLRB1</PublicCode>
+
                   <!-- Coordenadas desta plataforma específica — equivale ao stop_lat/stop_lon do BLRB1 -->
                   <Centroid>
                     <Location>
@@ -120,6 +123,7 @@
                 -->
                 <Quay id="PT:STCP:Quay:Bolhao_VOLTA:LOC" version="1">
                   <Name>Bolhão — Sentido Aliados / Centro</Name>
+                  <PublicCode>BLRB2</PublicCode>
 
                   <!-- Coordenadas ligeiramente diferentes — BLRB2 está na outra face da rua -->
                   <Centroid>

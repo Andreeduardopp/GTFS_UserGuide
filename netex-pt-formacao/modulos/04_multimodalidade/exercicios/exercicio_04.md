@@ -90,6 +90,17 @@ Como usaria os mecanismos de versionamento do NeTEx (`validBetween`, nova `versi
 
 ---
 
+## Autoavaliação
+
+- [ ] O `StopPlace` de autocarro tem `StopPlaceType=onstreetBus` e `TransportMode=bus`?
+- [ ] Cada `Quay` tem coordenadas próprias (`Centroid/Location`) extraídas do GTFS?
+- [ ] O `StopPlace` de metro tem `StopPlaceType=metroStation` e `TransportMode=metro`?
+- [ ] Os `PathLink` têm `From`, `To` e `TransferDuration` com formato ISO 8601 (`PT3M`, `PT4M`)?
+- [ ] Cada `PassengerStopAssignment` liga um `ScheduledStopPoint` a um `StopPlaceRef` **e** a um `QuayRef`?
+- [ ] Os `id` seguem o formato `PT:<operador>:<ObjectType>:<local>:LOC`?
+
+---
+
 ## Solução
 
 Consulte [`solucoes/exercicio_04_solucao.xml`](solucoes/exercicio_04_solucao.xml)

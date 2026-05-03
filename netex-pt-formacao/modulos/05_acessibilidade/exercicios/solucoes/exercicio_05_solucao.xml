@@ -117,11 +117,11 @@
 
             <!-- PRG4 — wheelchair_boarding=0 → WheelchairAccess=unknown -->
             <StopPlace id="PT:STCP:StopPlace:PracaRepublica:LOC" version="1">
-              <Name>Praça da República</Name>
+              <Name>Praça da Galiza</Name>
               <StopPlaceType>onstreetBus</StopPlaceType>
               <quays>
                 <Quay id="PT:STCP:Quay:PRG4:LOC" version="1">
-                  <Name>Praça da República (PRG4)</Name>
+                  <Name>Praça da Galiza (PRG4)</Name>
                   <Centroid><Location><Longitude>-8.629470</Longitude><Latitude>41.156670</Latitude></Location></Centroid>
                   <QuayType>busStop</QuayType>
                   <!--
@@ -146,7 +146,7 @@
 
             <!-- MFZ1 — PARTE C: versionamento antes e depois das obras -->
             <StopPlace id="PT:STCP:StopPlace:MarechalFontaine:LOC" version="1">
-              <Name>Marechal Fontaine</Name>
+              <Name>Mercado da Foz</Name>
               <StopPlaceType>onstreetBus</StopPlaceType>
               <quays>
 
@@ -155,7 +155,7 @@
                   Válido até 2026-03-01 (data das obras).
                 -->
                 <Quay id="PT:STCP:Quay:MFZ1:LOC" version="1">
-                  <Name>Marechal Fontaine (MFZ1)</Name>
+                  <Name>Mercado da Foz (MFZ1)</Name>
                   <validBetween>
                     <FromDate>2026-01-01</FromDate>
                     <ToDate>2026-03-01</ToDate>
@@ -182,7 +182,7 @@
                   Coordenadas mantidas (mesma localização, apenas renovação).
                 -->
                 <Quay id="PT:STCP:Quay:MFZ1:LOC" version="2">
-                  <Name>Marechal Fontaine (MFZ1) — renovada</Name>
+                  <Name>Mercado da Foz (MFZ1) — renovada</Name>
                   <validBetween>
                     <FromDate>2026-03-01</FromDate>
                   </validBetween>
@@ -257,7 +257,7 @@
                 </TimetabledPassingTime>
                 <TimetabledPassingTime>
                   <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
-                  <ArrivalTime>06:40:00</ArrivalTime>
+                  <ArrivalTime>06:27:00</ArrivalTime>
                 </TimetabledPassingTime>
               </passingTimes>
             </ServiceJourney>

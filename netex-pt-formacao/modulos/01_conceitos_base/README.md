@@ -1,4 +1,4 @@
-﻿# Módulo 1 — Conceitos Base
+# Módulo 1 — Conceitos Base
 
 ## Objetivos de Aprendizagem
 
@@ -34,7 +34,9 @@ EntityInVersion
 └── ...             (atributos específicos de cada subclasse)
 ```
 
-Em GTFS, os objectos são linhas de CSV sem versão nem validade. Em NeTEx, cada objecto "sabe" quando foi criado, qual é a sua versão, e quando deixa de ser válido.
+> **Nota:** Em XML, `id` e `version` são atributos XML (`<Line id="..." version="...">`), enquanto `validBetween` é um **elemento filho** (`<validBetween><FromDate>...</FromDate></validBetween>`).
+
+Em GTFS, os objetos são linhas de CSV sem versão nem validade. Em NeTEx, cada objeto "sabe" quando foi criado, qual é a sua versão, e quando deixa de ser válido.
 
 ### 1.2 Hierarquia de Classes Simplificada
 
@@ -91,6 +93,8 @@ Um **VersionFrame** é o contentor principal de um ficheiro NeTEx. Agrupa objeto
 </PublicationDelivery>
 ```
 
+> *Nota: os frames são mostrados de forma abreviada — cada um é um elemento XML completo com a respetiva tag de fecho (`</ResourceFrame>`, `</ServiceFrame>`, etc.).*
+
 ### 2.2 Tipos de Frame
 
 | Frame | Conteúdo | Equivalente GTFS (aproximado) |
@@ -138,7 +142,7 @@ O `ParticipantRef` identifica quem publicou os dados — neste caso, a STCP.
 Os IDs NeTEx seguem um formato hierárquico que os torna globalmente únicos: [[STD-01]](#STD-01)
 
 ```
-<país>:<operador/autoridade>:<TipoDeObjecto>:<identificadorLocal>:<âmbito>
+<país>:<operador/autoridade>:<TipoDeObjeto>:<identificadorLocal>:<âmbito>
 ```
 
 Exemplos:
@@ -149,7 +153,13 @@ Exemplos:
 | `PT:IMT:Authority:IMT:LOC` | País=PT, Autoridade=IMT, Tipo=Authority, Local=IMT |
 | `PT:STCP:StopPlace:BLRB:LOC` | País=PT, Operador=STCP, Tipo=StopPlace, Local=BLRB (Bolhão) |
 
-O sufixo `:LOC` indica que o identificador é local (válido apenas no âmbito nacional). Para identificadores com validade europeia, usam-se outros sufixos (`:GLO`, `:TAP`, etc.).
+O sufixo `:LOC` indica que o identificador é local (válido apenas no âmbito nacional). Para identificadores com validade europeia, usam-se outros sufixos:
+
+| Sufixo | Âmbito | Quando usar |
+|--------|--------|-------------|
+| `:LOC` | Nacional | Identificadores para o NAP Portugal (caso mais comum) |
+| `:GLO` | Europeu | Objetos partilhados entre países |
+| `:TAP` | TAP-TSI | Dados ferroviários sob regulação TAP |
 
 **Comparação com GTFS:**
 
@@ -172,7 +182,7 @@ Quando um objecto NeTEx precisa de referenciar outro, usa o atributo `ref`:
 </Route>
 ```
 
-O atributo `version` na referência garante que se está a referenciar uma versão específica do objecto.
+O atributo `version` na referência garante que se está a referenciar uma versão específica do objeto.
 
 ### 3.3 Versionamento
 
@@ -190,7 +200,7 @@ Cada objecto NeTEx tem um número de versão:
 
 Quando um objecto muda (ex: alteração de nome, adição de paragem), cria-se uma nova versão com um `version` incremental. As versões antigas ficam disponíveis para auditoria.
 
-**Porque isto importa para Portugal**: o Perfil Nacional NeTEx Portugal exige que todos os objetos tenham `version` e que as datas de validade sejam preenchidas correctamente antes de submissão ao NAP. [[PT-01]](#PT-01)
+**Porque isto importa para Portugal**: o Perfil Nacional NeTEx Portugal exige que todos os objetos tenham `version` e que as datas de validade sejam preenchidas corretamente antes de submissão ao NAP. [[PT-01]](#PT-01)
 
 ---
 

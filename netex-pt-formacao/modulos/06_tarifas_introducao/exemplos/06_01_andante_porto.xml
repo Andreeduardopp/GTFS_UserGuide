@@ -82,11 +82,11 @@
             </ScheduledStopPoint>
 
             <!--
-              Marechal Fontaine (MFZ1) está em Z3 — periferia imediata do Porto.
+              Mercado da Foz (MFZ1) está em Z3 — periferia imediata do Porto.
               Uma viagem de Bolhão (Z2) a MFZ1 (Z3) requer bilhete Z3.
             -->
             <ScheduledStopPoint id="PT:STCP:ScheduledStopPoint:MFZ1:LOC" version="1">
-              <Name>Marechal Fontaine</Name>
+              <Name>Mercado da Foz</Name>
               <tariffZones>
                 <TariffZoneRef ref="PT:Andante:TariffZone:Z3:LOC" version="1"/>
               </tariffZones>

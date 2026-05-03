@@ -1,4 +1,4 @@
-﻿# Módulo 2 — Rede de Transporte
+# Módulo 2 — Rede de Transporte
 
 ## Objetivos de Aprendizagem
 
@@ -59,6 +59,8 @@ Uma `Line` representa a linha de transporte como é conhecida pelos passageiros 
   <TransportMode>bus</TransportMode>
 </Line>
 ```
+
+> **Nota sobre nomes:** Nos exemplos XML deste curso, os nomes de paragens são expandidos para a forma completa (ex: `Hosp. St. António` → `Hospital Santo António`, `Univ. Católica` → `Universidade Católica`). O NeTEx encoraja nomes legíveis e completos no campo `Name`, ao contrário do GTFS que frequentemente usa abreviaturas por limitações de espaço.
 
 **Comparação GTFS ↔ NeTEx para a Linha 200:**
 

@@ -27,18 +27,20 @@
      Quay correto consoante a direção (inbound/outbound).
 
   3. Versioning para obras / relocalização temporária:
-     Abordagem correta em NeTEx:
-       a) MANTER o Quay original com validBetween até à data das obras:
-          <Quay id="...Trindade_TRD1:LOC" version="1">
-            <validBetween><FromDate>2026-04-30</FromDate><ToDate>2025-03-15</ToDate></validBetween>
-       b) CRIAR um novo Quay com version="2" e as novas coordenadas:
-          <Quay id="...Trindade_TRD1:LOC" version="2">
-            <validBetween><FromDate>2025-03-15</FromDate><ToDate>2025-09-30</ToDate></validBetween>
-            <Centroid>... (Rua de Passos Manuel) ...</Centroid>
-       c) CRIAR um Quay version="3" quando as obras terminam (volta à posição original)
-     Desta forma, um sistema de planificação que consulte para uma data específica
-     obtém sempre as coordenadas corretas para essa data. Nada é eliminado —
-     o histórico fica preservado no modelo NeTEx.
+      Abordagem correta em NeTEx:
+        a) MANTER o Quay original com validBetween até à data das obras:
+           <Quay id="...Trindade_TRD1:LOC" version="1">
+             <validBetween><FromDate>2024-01-01</FromDate><ToDate>2025-03-15</ToDate></validBetween>
+        b) CRIAR um novo Quay com version="2" e as novas coordenadas temporárias:
+           <Quay id="...Trindade_TRD1:LOC" version="2">
+             <validBetween><FromDate>2025-03-15</FromDate><ToDate>2025-09-30</ToDate></validBetween>
+             <Centroid>... (Rua de Passos Manuel) ...</Centroid>
+        c) CRIAR um Quay version="3" quando as obras terminam (volta à posição original):
+           <Quay id="...Trindade_TRD1:LOC" version="3">
+             <validBetween><FromDate>2025-09-30</FromDate></validBetween>
+      Desta forma, um sistema de planificação que consulte para uma data específica
+      obtém sempre as coordenadas corretas para essa data. Nada é eliminado —
+      o histórico fica preservado no modelo NeTEx.
 -->
 <PublicationDelivery
     xmlns="http://www.netex.org.uk/netex"

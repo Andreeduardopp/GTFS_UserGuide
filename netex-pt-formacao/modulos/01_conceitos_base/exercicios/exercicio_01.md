@@ -1,7 +1,6 @@
 # Exercício 1 — Identificadores e Referências NeTEx
 
 > **Módulo 1 — Conceitos Base**
-> Tempo estimado: 30–45 minutos
 
 ---
 
@@ -51,10 +50,9 @@ Os seguintes fragmentos XML têm erros. Identifique e corrija cada um:
 </Route>
 ```
 
-**Fragmento 3:**
+**Fragmento 3:** O fragmento seguinte tem um atributo obrigatório em falta. Identifique-o e acrescente-o.
 ```xml
 <Operator id="PT:STCP:Operator:STCP:LOC">
-  <!-- Falta um atributo obrigatório -->
   <Name>STCP</Name>
 </Operator>
 ```
@@ -73,7 +71,7 @@ STCP,"Sociedade de Transportes Colectivos do Porto, E.I.M., S.A",http://www.stcp
 **Tarefa:** Crie um `ResourceFrame` NeTEx completo com:
 1. Um `Authority` para o IMT (entidade reguladora)
 2. Um `Operator` para a STCP com todos os campos equivalentes ao GTFS
-3. Identificadores correctos para ambos
+3. Identificadores corretos para ambos
 4. `validBetween` com `FromDate` de 2026-04-30
 
 ---
@@ -94,4 +92,5 @@ Após consultar a solução, verifique:
 - [ ] O `Operator` tem o atributo `version`?
 - [ ] A referência `lineRef` usa o ID completo do objecto referenciado?
 - [ ] O `ResourceFrame` tem `id` e `version`?
-- [ ] O `validBetween` tem o formato de data correcto (`YYYY-MM-DD`)?
+- [ ] O `validBetween` usa elementos `<FromDate>` e `<ToDate>`, não atributos XML?
+- [ ] O `validBetween` tem o formato de data correto (`YYYY-MM-DD`)?

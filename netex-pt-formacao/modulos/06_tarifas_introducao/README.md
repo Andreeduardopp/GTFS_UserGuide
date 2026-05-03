@@ -1,4 +1,4 @@
-﻿# Módulo 6 — Tarifas (Introdução)
+# Módulo 6 — Tarifas (Introdução)
 
 ## Objetivos de Aprendizagem
 
@@ -82,10 +82,12 @@ A Linha 200 (Bolhão → Castelo do Queijo) atravessa várias zonas:
 | Zona | Paragens (exemplos) | Preço de base Andante |
 |------|--------------------|-----------------------|
 | Z2 | Bolhão, Carmo, Trindade (centro do Porto) | 1,20 € |
-| Z3 | Ramalde, Marechal Fontaine (periferia imediata) | 1,60 € |
+| Z3 | Ramalde, Mercado da Foz (periferia imediata) | 1,60 € |
 | Z4 | Castelo do Queijo (extremidade da linha) | 1,85 € |
 
 *Nota: preços indicativos — verificar valores atuais em andante.net*
+
+> **Nota pedagógica:** Os exemplos XML deste módulo omitem o elemento `FarePrice/Amount` por simplificação. Numa implementação de produção, cada `PreassignedFareProduct` teria um `FarePrice` com `Amount` e `Currency` (ex: `1.20 EUR` para Z2). A modelação completa de preços está na Parte 3 do NeTEx.
 
 ---
 

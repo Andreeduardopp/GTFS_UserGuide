@@ -1,6 +1,6 @@
 # Exercício 5 — Auditar a Acessibilidade da Linha 200
 
-> *Módulo 5 — Acessibilidade*
+> **Módulo 5 — Acessibilidade**
 
 ---
 
@@ -16,8 +16,8 @@ A STCP está a preparar a submissão de dados de acessibilidade ao NAP Portugal,
 |---------|-----------|----------|----------|---------------------|
 | BLRB1 | Bolhão | 41.151868 | -8.607115 | 1 |
 | CMO | Carmo | 41.146210 | -8.614560 | 1 |
-| PRG4 | Praça da República | 41.156670 | -8.629470 | 0 |
-| MFZ1 | Marechal Fontaine | 41.157610 | -8.636440 | 2 |
+| PRG4 | Praça da Galiza | 41.156670 | -8.629470 | 0 |
+| MFZ1 | Mercado da Foz | 41.157610 | -8.636440 | 2 |
 | CQ10 | Castelo do Queijo | 41.168930 | -8.676240 | 1 |
 
 **trips.txt** (extrato — `wheelchair_accessible`):
@@ -81,6 +81,17 @@ Como é que um sistema de pesquisa de percursos (tipo Moovit ou Google Maps) dev
 
 **3. Manutenção de dados ao longo do tempo**
 O elevador da estação de metro de Campanhã (modelada no Módulo 4) avariou temporariamente de 2026-05-01 a 2026-05-15. Como representaria esta situação em NeTEx sem apagar a informação de acessibilidade original?
+
+---
+
+## Autoavaliação
+
+- [ ] O mapeamento `wheelchair_boarding=0` usa `unknown` (não `no`)?
+- [ ] O mapeamento `wheelchair_boarding=2` usa `no` (não `unknown`)?
+- [ ] Cada `AccessibilityAssessment` tem `MobilityImpairedAccess` como campo geral?
+- [ ] Os campos `StepFreeAccess`, `AudibleSignalsAvailable`, `VisualSignsAvailable` são `unknown` quando não há informação GTFS?
+- [ ] A Parte C usa `validBetween` com `FromDate`/`ToDate` para separar as versões do Quay?
+- [ ] As `ServiceJourney` da Parte B têm `DayTypeRef` e `JourneyPatternRef` corretos?
 
 ---
 

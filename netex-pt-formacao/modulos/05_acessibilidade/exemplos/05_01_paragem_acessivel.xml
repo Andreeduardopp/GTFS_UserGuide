@@ -16,7 +16,7 @@
 
   ESTRUTURA:
     1. SiteFrame — dois Quay com AccessibilityAssessment de infraestrutura
-    2. ServiceFrame — dois ServiceJourney com AccessibilityAssessment de veículo
+    2. TimetableFrame — dois ServiceJourney com AccessibilityAssessment de veículo
 
   COMPARAÇÃO GTFS → NeTEx:
     GTFS wheelchair_boarding=1 (paragem acessível)  → Quay/AccessibilityAssessment/WheelchairAccess=yes
@@ -308,7 +308,7 @@
                 </TimetabledPassingTime>
                 <TimetabledPassingTime>
                   <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
-                  <ArrivalTime>06:40:00</ArrivalTime>
+                  <ArrivalTime>06:27:00</ArrivalTime>
                 </TimetabledPassingTime>
               </passingTimes>
             </ServiceJourney>
@@ -367,7 +367,7 @@
                 </TimetabledPassingTime>
                 <TimetabledPassingTime>
                   <StopPointInJourneyPatternRef ref="PT:STCP:SPIJP:200_IDA_30:LOC" version="1"/>
-                  <ArrivalTime>23:15:00</ArrivalTime>
+                  <ArrivalTime>23:00:00</ArrivalTime>
                 </TimetabledPassingTime>
               </passingTimes>
             </ServiceJourney>
