@@ -1,0 +1,14 @@
+stop_id,stop_name,stop_lat,stop_lon,location_type,parent_station,wheelchair_boarding
+BLH_STATION,Estação Bolhão,41.150922,-8.605578,1,,1
+BLH_ENTRADA,Bolhão - Entrada Principal,41.150980,-8.605490,2,BLH_STATION,1
+BLH_ENTRADA_S,Bolhão - Entrada Sul,41.150750,-8.605700,2,BLH_STATION,2
+BLH_ATRIO,Bolhão - Átrio,41.150900,-8.605550,3,BLH_STATION,0
+BLH_GATE_IN,Bolhão - Portão Entrada,41.150880,-8.605530,3,BLH_STATION,0
+BLH_ESCADAS_TOPO,Bolhão - Topo Escadas,41.150870,-8.605520,3,BLH_STATION,0
+BLH_ELEVADOR_TOPO,Bolhão - Elevador (Rua),41.150860,-8.605540,3,BLH_STATION,1
+BLH_ELEVADOR_BASE,Bolhão - Elevador (Metro),41.150860,-8.605540,3,BLH_STATION,1
+BLH_PLAT_D,Bolhão - Plataforma Linha D,41.150850,-8.605560,0,BLH_STATION,1
+BLH_METRO_D,Bolhão - Metro Linha D (embarque),41.150840,-8.605570,0,BLH_STATION,0
+BLRB1,Bolhão (STCP Linha 200),41.151868,-8.607115,0,,1
+BLH_STCP_301,Bolhão (STCP Linha 301),41.151420,-8.606850,0,,1
+BLH_STCP_400,Bolhão (STCP Linha 400),41.151300,-8.606920,0,,2

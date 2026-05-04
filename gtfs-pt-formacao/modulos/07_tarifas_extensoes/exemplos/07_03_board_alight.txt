@@ -1,0 +1,7 @@
+trip_id,stop_id,stop_sequence,record_use,schedule_relationship,boardings,alightings,current_load
+200_DU_0700,BOLS1,1,0,0,12,0,12
+200_DU_0700,CLRG2,2,0,0,8,2,18
+200_DU_0700,ALID3,3,0,0,5,6,17
+200_DU_0700,CAST4,4,0,0,3,10,10
+200_DU_0700,HOSP5,5,0,0,1,8,3
+200_DU_0700,SJOA6,6,0,0,0,3,0

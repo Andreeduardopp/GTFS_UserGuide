@@ -1,0 +1,11 @@
+stop_id,stop_name,stop_lat,stop_lon,zone_id
+BLRB1,Bolhão,41.151868,-8.607115,PRT1
+MCBL,Mercado do Bolhão,41.149509,-8.607564,PRT1
+PRDJ,Pr. D. João I,41.147581,-8.609126,PRT1
+PRFL,Pr. Filipa de Lencastre,41.148261,-8.612768,PRT1
+GGF,Guil. G. Fernandes,41.147560,-8.614767,PRT1
+CMO,Carmo,41.147223,-8.616926,PRT1
+HSA5,Hosp. St. António,41.147766,-8.622450,PRT1
+PAL2,Palácio,41.149145,-8.625447,PRT1
+PRG4,Praça da Galiza,41.152531,-8.627041,PRT1
+JM1,Junta Massarelos,41.152694,-8.631221,PRT1
