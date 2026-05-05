@@ -58,10 +58,12 @@ Neste exemplo, o mesmo autocarro (bloco `BLK_01`) faz a IDA às 06:00 e a VOLTA 
 
 ```csv
 route_id,service_id,trip_id,trip_headsign,direction_id,shape_id,wheelchair_accessible
-200,DIAS UTEIS,200_DU_0600,Castelo do Queijo,0,shape_200_ida,1
+200,DIAS_UTEIS,200_DU_0600,Castelo do Queijo,0,shape_200_ida,1
 200,SABADOS,200_SAB_0600,Castelo do Queijo,0,shape_200_ida,1
-200,DOMINGOS|FERIADOS,200_DF_0600,Castelo do Queijo,0,shape_200_ida,1
+200,DOMINGOS_FERIADOS,200_DF_0600,Castelo do Queijo,0,shape_200_ida,1
 ```
+
+> **Nota**: os dados reais da STCP usam IDs como `DIAS UTEIS`, `SÁBADOS` e `DOMINGOS|FERIADOS` por razões históricas. Neste curso usamos IDs alfanuméricos simples (`[a-zA-Z0-9_-]`), conforme recomendado pelas Best Practices. [[BP-01]](#BP-01)
 
 Ver ficheiro: [`exemplos/03_01_trips_200.txt`](exemplos/03_01_trips_200.txt)
 

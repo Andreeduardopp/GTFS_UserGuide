@@ -27,7 +27,7 @@ Após completar este módulo, o leitor será capaz de:
 
 ### 1.2 Origem e Contexto
 
-O GTFS nasceu em 2005 de uma colaboração entre a **TriMet** (operador de transporte público de Portland, Oregon) e a **Google**. Chris Harrington (TriMet) e Bibiana McHugh (Google) criaram um formato simples para importar dados de transporte para o Google Maps. [[STD-02]](#STD-02)
+O GTFS nasceu em 2005 de uma colaboração entre a **TriMet** (operador de transporte público de Portland, Oregon) e a **Google**. Bibiana McHugh (TriMet) liderou a iniciativa de criar um formato simples para importar dados de transporte para o Google Maps. [[STD-02]](#STD-02)
 
 O formato foi originalmente designado **Google Transit Feed Specification**. Em 2010, foi renomeado para **General Transit Feed Specification**, marcando a transição de uma iniciativa proprietária da Google para um standard aberto mantido pela comunidade. [[STD-02]](#STD-02)
 

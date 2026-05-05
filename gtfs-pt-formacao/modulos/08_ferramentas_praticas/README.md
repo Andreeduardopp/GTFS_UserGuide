@@ -51,7 +51,7 @@ Com base na experiência de validação de feeds de operadores portugueses: [[DA
 | `fast_travel_between_stops` | WARNING | Velocidade implausível entre paragens consecutivas |
 | `unused_shape` | WARNING | `shape_id` definido mas não referenciado por nenhum trip |
 | `missing_feed_info_date` | WARNING | `feed_info.txt` sem `feed_start_date` ou `feed_end_date` |
-| `stop_too_far_from_shape` | WARNING | Paragem a mais de 150m da shape |
+| `stop_too_far_from_trip_shape` | WARNING | Paragem a mais de 100m da shape |
 | `duplicate_route_name` | WARNING | Duas rotas com o mesmo `route_long_name` |
 
 ### 1.4 Exemplo de Relatório

@@ -2,7 +2,7 @@
 
 Obrigado pelo interesse em contribuir para o **NeTEx PT Formação**!
 
-## 📝 Reportar Erros
+## Reportar Erros
 
 Se encontrou um erro num ficheiro XML de exemplo ou no texto de um módulo:
 
@@ -10,12 +10,12 @@ Se encontrou um erro num ficheiro XML de exemplo ou no texto de um módulo:
 2. Indique o módulo e ficheiro afetado
 3. Descreva o erro e, se possível, sugira a correção
 
-## 💡 Sugerir Novos Módulos
+## Sugerir Novos Módulos
 
 1. Abra uma **Issue** com o template `Sugestão de Módulo`
 2. Descreva o tema, o público-alvo e a relevância prática
 
-## 🔧 Submeter Exemplos XML
+## Submeter Exemplos XML
 
 1. Faça fork do repositório
 2. Crie os ficheiros XML na pasta `exemplos/` do módulo relevante
@@ -23,7 +23,7 @@ Se encontrou um erro num ficheiro XML de exemplo ou no texto de um módulo:
 4. Valide o XML com o `netex-validator` da Entur
 5. Abra um Pull Request
 
-## 📚 Citações e Referências (Obrigatório)
+## Citações e Referências (Obrigatório)
 
 > **Regra fundamental**: Todo o conteúdo deste projeto deve citar as fontes originais. Nenhuma informação deve ser apresentada sem a devida atribuição.
 
@@ -54,7 +54,7 @@ Cada módulo deve incluir uma secção **Referências** no final do `README.md`,
 - ❌ Apresentar exemplos XML baseados em dados reais sem creditar o operador
 - ❌ Usar diagramas de terceiros sem atribuição
 
-## 📐 Convenções
+### Convenções
 
 - Todos os ficheiros XML devem ser válidos contra o schema NeTEx XSD
 - Comentários em português

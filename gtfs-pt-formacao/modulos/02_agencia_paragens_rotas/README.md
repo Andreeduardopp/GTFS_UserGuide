@@ -65,10 +65,10 @@ O `stops.txt` define todos os locais de embarque e desembarque: [[STD-01]](#STD-
 |-------|------|-------------|-----------|
 | `stop_id` | ID | Sim | Identificador único |
 | `stop_code` | Texto | Não | Código público visível na paragem |
-| `stop_name` | Texto | Condicional | Nome da paragem |
+| `stop_name` | Texto | Condicional* | Nome da paragem |
 | `stop_desc` | Texto | Não | Descrição adicional |
-| `stop_lat` | Latitude | Condicional | Latitude (WGS 84) |
-| `stop_lon` | Longitude | Condicional | Longitude (WGS 84) |
+| `stop_lat` | Latitude | Condicional* | Latitude (WGS 84) |
+| `stop_lon` | Longitude | Condicional* | Longitude (WGS 84) |
 | `zone_id` | ID | Não | Zona tarifária |
 | `stop_url` | URL | Não | URL com informação da paragem |
 | `location_type` | Inteiro | Não | Tipo de local (ver 2.2) |
@@ -76,6 +76,8 @@ O `stops.txt` define todos os locais de embarque e desembarque: [[STD-01]](#STD-
 | `stop_timezone` | Timezone | Não | Fuso horário (se diferente da agência) |
 | `wheelchair_boarding` | Inteiro | Não | 0=desconhecido, 1=sim, 2=não |
 | `platform_code` | Texto | Não | Código da plataforma |
+
+*`stop_name`, `stop_lat` e `stop_lon` são obrigatórios para `location_type` 0, 1 e 2 (paragens, estações, entradas/saídas). Opcionais apenas para tipos 3 e 4 (nós genéricos, zonas de embarque).
 
 ### 2.2 Hierarquia `location_type`
 

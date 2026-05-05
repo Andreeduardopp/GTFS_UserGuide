@@ -157,8 +157,8 @@ Esta informação é crítica para:
 | Campo | Tipo | Obrigatório | Descrição |
 |-------|------|-------------|-----------|
 | `pathway_id` | ID | Sim | Identificador único do caminho |
-| `from_stop_id` | ID | Sim | Nó de origem (node, `location_type=2/3/4`) |
-| `to_stop_id` | ID | Sim | Nó de destino |
+| `from_stop_id` | ID | Sim | Nó de origem (`location_type=0/2/3/4`) |
+| `to_stop_id` | ID | Sim | Nó de destino (`location_type=0/2/3/4`) |
 | `pathway_mode` | Inteiro | Sim | Tipo de caminho (ver abaixo) |
 | `is_bidirectional` | Inteiro | Sim | 0=unidirecional, 1=bidirecional |
 | `length` | Float | Não | Comprimento em metros |

@@ -162,7 +162,12 @@ Esta abordagem é comum entre operadores que geram feeds programaticamente a par
 | `SÁBADOS` | Sábados | Sábados |
 | `DOMINGOS\|FERIADOS` | Domingos e feriados | Domingos + feriados nacionais |
 
-> **Nota**: o `service_id` `DOMINGOS|FERIADOS` contém o caractere `|` (pipe). Embora tecnicamente válido no GTFS, alguns sistemas podem ter dificuldades com este caractere. As Best Practices recomendam IDs alfanuméricos simples. [[BP-01]](#BP-01)
+> **Nota sobre os IDs reais da STCP**: os `service_id` do feed real diferem das boas práticas por razões históricas:
+> - `DIAS UTEIS` contém um espaço (Best Practices recomendam `DIAS_UTEIS`)
+> - `SÁBADOS` contém um acento (recomendado: `SABADOS`)
+> - `DOMINGOS|FERIADOS` contém um pipe (recomendado: `DOMINGOS_FERIADOS`)
+>
+> Em feeds novos, use sempre IDs alfanuméricos simples (`[a-zA-Z0-9_-]`). [[BP-01]](#BP-01)
 
 ---
 

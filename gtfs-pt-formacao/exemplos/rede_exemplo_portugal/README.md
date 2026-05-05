@@ -29,6 +29,10 @@ Todos os exemplos deste curso utilizam dados reais da **STCP (Sociedade de Trans
 | `calendar_dates.txt` | Datas de serviço (exception_type=1) | ~900 |
 | `feed_info.txt` | Metadados do feed | 1 |
 
+## Nota sobre ordem de colunas
+
+A spec GTFS permite que as colunas apareçam em qualquer ordem dentro de cada ficheiro. [[STD-01]](#STD-01) A ordem usada nestes ficheiros reais pode diferir da ordem pedagógica apresentada nos módulos (ex: `stops.txt` começa com `stop_lat` em vez de `stop_id`). Ambas são igualmente válidas.
+
 ## Fonte
 
 Dados extraídos do feed GTFS oficial da STCP (versão Escolar 228, 2026-04-30). [[DATA-01]](#DATA-01)
